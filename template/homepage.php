@@ -9,7 +9,7 @@ $ctext = new ctext();
         <?php
 		$x=1;
 		foreach($data["components"] as $val){
-			if($val->com_name != "Slider"){ continue; }
+			if($val->com_name != "Slider"){ continue; } 
 		?>
 		<div class="<?=($x==1) ? 'active ' : ''?>item" style="background-image:url('<?=WEBSITE_.$val->image?>'); background-repeat:no-repeat; background-size: cover; background-position:center">
 			<a href="<?=$val->url?>" style="display:block; width:100%; height:432px;">

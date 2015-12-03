@@ -35,8 +35,8 @@ header("Content-type: text/html; charset=utf-8");
 
 $dir_explode = explode("open.php",__FILE__);
 define("DIR",$dir_explode[0]);
-define("WEBSITE","http://404.ge/batumi/");
-define("WEBSITE_","http://404.ge/batumi");
+define("WEBSITE","http://batumi.404.ge/");
+define("WEBSITE_","http://batumi.404.ge");
 define('START_TIME', microtime(TRUE));
 define('START_MEMORY', memory_get_usage());
 define('PLUGINS', WEBSITE.'_plugins/');

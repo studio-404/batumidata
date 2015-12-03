@@ -6,8 +6,8 @@ $im = imagecreatefrompng($name);
 $im = imagecreate(100, 40);
 $string = $_SESSION['protect_x'];
 $bg = imagecolorallocate($im, 255, 255, 255);
-$red = imagecolorallocate($im, 56, 149, 206);
-$linecolor = imagecolorallocate($im, 254, 161, 0);
+$red = imagecolorallocate($im, 85, 85, 85);
+$linecolor = imagecolorallocate($im, 211, 75, 57);
 for($i=0; $i < 6; $i++) {
 imagesetthickness($im, 1);
 imageline($im, 0, rand(0,30), 120, rand(0,30), $linecolor);
