@@ -8,7 +8,7 @@ class ajax extends connection{
 		}else{
 			$_SESSION["requestWiev"]++;
 		}
-		if(isset($_SESSION["requestWiev"]) && $_SESSION["requestWiev"]>10000){
+		if(isset($_SESSION["requestWiev"]) && $_SESSION["requestWiev"]>100000){
 			//after 10 000 request shut it down
 			die('E');
 		}
@@ -17,6 +17,38 @@ class ajax extends connection{
 
 	public function requests($c){
 		$conn = $this->conn($c); 
+
+		if(Input::method("POST","b_auth")=="true" && Input::method("POST","e") && Input::method("POST","p") && Input::method("POST","c")){
+			if($_SESSION['protect_x']!=Input::method("POST","c")){
+				echo "wrongCaptcha";
+			}else{
+				$sql = 'SELECT `id`,`username`,`namelname`,`picture`,`user_type` FROM `studio404_users` WHERE `username`=:username AND `password`=:password AND `user_type`!=:user_type'; 
+				$prepare = $conn->prepare($sql); 
+				$prepare->execute(array(
+					":username"=>Input::method("POST","e"), 
+					":password"=>md5(Input::method("POST","p")),
+					":user_type"=>"administrator"
+				));
+				if($prepare->rowCount()>0){
+					$fetch = $prepare->fetch(PDO::FETCH_ASSOC); 
+					$_SESSION["batumi_username"] = $fetch['username'];  
+					$_SESSION["batumi_namelname"] = $fetch['namelname'];  
+					$_SESSION["batumi_picture"] = $fetch['picture'];  
+					$_SESSION["batumi_user_type"] = $fetch['user_type'];  
+					echo "Enter";
+				}else{
+					echo "NoUser";
+				}
+				
+			}
+			exit();
+		}
+
+		if(Input::method("POST","logout")=="true"){
+			session_destroy();
+			echo "Out";
+			exit();
+		}
 
 		if(Input::method("POST","changeusertype")=="true" && Input::method("POST","t") && $_SESSION["tradewithgeorgia_user_id"]) :
 			$userid = $_SESSION["tradewithgeorgia_user_id"]; 
