@@ -96,7 +96,8 @@
               </div><!-- /.row -->
             </div><!-- /.box-body -->
             <div class="box-footer">
-          	  <button class="btn btn-primary" type="submit">Submit</button>
+          	  <button class="btn btn-primary" type="submit">Update</button>
+          	  <button class="btn btn-primary" type="submit">Update & close</button>
             </div>
           </div><!-- /.box -->
 		</section>
