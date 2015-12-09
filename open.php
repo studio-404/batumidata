@@ -1,23 +1,4 @@
 <?php 
-// function my_session_start()
-// {
-// 	session_set_cookie_params(time()+6000,'/','tradewithgeorgia.com',false,true); 
-// 	//session_name("studio404");
-// 	if (ini_get('session.use_cookies') && isset($_COOKIE['PHPSESSID'])) {
-// 		$sessid = $_COOKIE['PHPSESSID'];
-// 	} elseif (!ini_get('session.use_only_cookies') && isset($_GET['PHPSESSID'])) {
-// 		$sessid = $_GET['PHPSESSID'];
-// 	} else {
-// 	session_start();
-// 		return false;
-// 	}
-// 	if (!preg_match('/^[a-z0-9]{32}$/', $sessid)) {
-// 		return false;
-// 	}
-// 	session_start();
-// 	return true;
-// }
-// my_session_start();  
 session_start();
 
 /*check last activity*/

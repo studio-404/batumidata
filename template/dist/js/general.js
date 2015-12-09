@@ -48,7 +48,7 @@ $(document).on("click","#system-out",function(){
 	$(".overlay-loader").fadeIn("slow");
 	$.post(AJAX_REQUEST_URL,{ logout:"true" },function(result){
 		if(result=="Out"){
-			location.reload();
+			location.href = SYSTEM_WELCOME_PAGE;
 		}else{
 			alert(MESSAGE_SIGN_OUT_PROBLEM);
 		}

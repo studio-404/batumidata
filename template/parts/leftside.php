@@ -22,9 +22,9 @@
           $slug_third = $obj->url("segment",2)."/".$obj->url("segment",3);
           ?>
           <ul class="sidebar-menu">
-            <li class="header">მთავარი მენიუ</li>
+            <!-- <li class="header">მთავარი მენიუ</li> -->
             <!-- Optionally, you can add icons to the links -->
-            <li class="<?=($slug_second=="welcome-system") ? 'active' : ''?>"><a href="<?=WEBSITE.LANG?>/<?=$c["welcome.page.class"]?>"><i class="fa fa-link"></i> <span>მთავარი</span></a></li>
+            <li class="<?=($slug_second=="welcome-system") ? 'active' : ''?>"><a href="<?=WEBSITE.LANG?>/<?=$c["welcome.page.class"]?>"><i class="fa fa-link"></i> <span><?=(LANG=="ge") ? "მთავარი" : "Home"?></span></a></li>
             <?php
             $x = 0;
             foreach ($data["welcomepage_categories"]["item"]["title"] as $val) {
@@ -53,13 +53,8 @@
             }
             ?>
 
-            <!-- <li><a href="#"><i class="fa fa-link"></i> <span>კვების ობიექტები</span></a></li>
-            <li class="treeview">
-              <a href="#"><i class="fa fa-link"></i> <span>განთავსების ობიექტები</span> <i class="fa fa-angle-left pull-right"></i></a>
-              <ul class="treeview-menu">
-                <li><a href="#">სასტუმრო</a></li>
-              </ul>
-            </li> -->
+           
+            
           </ul><!-- /.sidebar-menu -->
         </section>
         <!-- /.sidebar -->

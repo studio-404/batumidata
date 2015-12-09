@@ -7,7 +7,7 @@
 	<!-- Content Header (Page header) -->
 		<section class="content-header">
 			<h1>
-				<?=$data["text_general"][0]["title"]?>
+				<?=$data["text_general"][0]["title"]?> ( ID: #<?=$_SESSION["batumi_id"]?> )
 				<!-- <small>ჰოსტელის გვერდის მოკლე აღწერა</small> -->
 			</h1>
 			<ol class="breadcrumb">

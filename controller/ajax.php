@@ -31,6 +31,7 @@ class ajax extends connection{
 				));
 				if($prepare->rowCount()>0){
 					$fetch = $prepare->fetch(PDO::FETCH_ASSOC); 
+					$_SESSION["batumi_id"] = $fetch['id'];  
 					$_SESSION["batumi_username"] = $fetch['username'];  
 					$_SESSION["batumi_namelname"] = $fetch['namelname'];  
 					$_SESSION["batumi_picture"] = $fetch['picture'];  
