@@ -16,7 +16,54 @@
 		</section>
 
 		<section class="content">
-			test
+			<?php
+				// echo "<pre>";
+				// print_r($data["welcomepage_categories"]); 
+				// echo "</pre>";
+			?>
+			<div class="col-md-3 col-sm-6 col-xs-12">
+				<div class="info-box">
+					<span class="info-box-icon bg-aqua"><i class="ion ion-ios-gear-outline"></i></span>
+
+					<div class="info-box-content">
+						<span class="info-box-text">CPU Traffic</span>
+						<span class="info-box-number">90<small>%</small></span>
+					</div>
+				</div>
+			</div>
+
+			<div class="col-md-3 col-sm-6 col-xs-12">
+				<div class="info-box">
+					<span class="info-box-icon bg-aqua"><i class="ion ion-ios-gear-outline"></i></span>
+
+					<div class="info-box-content">
+						<span class="info-box-text">CPU Traffic</span>
+						<span class="info-box-number">90<small>%</small></span>
+					</div>
+				</div>
+			</div>
+
+			<div class="col-md-3 col-sm-6 col-xs-12">
+				<div class="info-box">
+					<span class="info-box-icon bg-aqua"><i class="ion ion-ios-gear-outline"></i></span>
+
+					<div class="info-box-content">
+						<span class="info-box-text">CPU Traffic</span>
+						<span class="info-box-number">90<small>%</small></span>
+					</div>
+				</div>
+			</div>
+
+			<div class="col-md-3 col-sm-6 col-xs-12">
+				<div class="info-box">
+					<span class="info-box-icon bg-aqua"><i class="ion ion-ios-gear-outline"></i></span>
+
+					<div class="info-box-content">
+						<span class="info-box-text">CPU Traffic</span>
+						<span class="info-box-number">90<small>%</small></span>
+					</div>
+				</div>
+			</div>
 		</section>
 	</div>
      

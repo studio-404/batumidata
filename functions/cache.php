@@ -34,6 +34,41 @@ class cache extends connection{
 			)); 
 			$fetch = $prepare->fetchAll(PDO::FETCH_ASSOC); 
 			break;
+			case "welcomepage_categories": 
+			$sql = 'SELECT `idx`,`title`,`slug` FROM `studio404_pages` WHERE `cid`=:cid AND `lang`=:lang AND `visibility`!=:visibility AND `status`!=:status';	
+			$prepare = $conn->prepare($sql); 
+			$prepare->execute(array(
+				":cid"=>4, 
+				":status"=>1, 
+				":visibility"=>1, 
+				":lang"=>LANG_ID 
+			)); 
+			$fetch = array();
+			if($prepare->rowCount() > 0){
+				$tt = $prepare->fetchAll(PDO::FETCH_ASSOC); 
+				foreach ($tt as $value) {
+					$sql2 = 'SELECT `idx`,`cid`,`title`,`slug` FROM `studio404_pages` WHERE `cid`=:cid AND `lang`=:lang AND `visibility`!=:one AND `status`!=:one';
+					$prepare2 = $conn->prepare($sql2);
+					$prepare2->execute(array(
+						":cid"=>$value['idx'], 
+						":lang"=>LANG_ID, 
+						":one"=>1
+					));
+					$fetch["item"]['idx'][] = $value['idx']; 
+					$fetch["item"]['title'][] = $value['title']; 
+					$fetch["item"]['slug'][] = $value['slug']; 
+					if($prepare2->rowCount()>0){
+						$fetch2 = $prepare2->fetchAll(PDO::FETCH_ASSOC);
+						foreach ($fetch2 as $value2) {
+							$fetch["item"]['sub'][$value['idx']]['idx'][] = $value2['idx'];
+							$fetch["item"]['sub'][$value['idx']]['cid'][] = $value2['cid'];
+							$fetch["item"]['sub'][$value['idx']]['title'][] = $value2['title'];
+							$fetch["item"]['sub'][$value['idx']]['slug'][] = $value2['slug'];
+						}
+					}
+				}
+			}
+			break;
 			case "text_general": 
 			$get_slug_from_url = new get_slug_from_url();
 			$slug = $get_slug_from_url->slug();
