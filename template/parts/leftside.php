@@ -16,6 +16,11 @@
           <!-- /.search form -->
 
           <!-- Sidebar Menu -->
+          <?php
+          $obj  = new url_controll(); // url controlls
+          $slug_second = $obj->url("segment",2);
+          $slug_third = $obj->url("segment",2)."/".$obj->url("segment",3);
+          ?>
           <ul class="sidebar-menu">
             <li class="header">მთავარი მენიუ</li>
             <!-- Optionally, you can add icons to the links -->
@@ -27,19 +32,22 @@
               $parentIdx = $data["welcomepage_categories"]["item"]['idx'][$x];
               $insideArray = $data["welcomepage_categories"]["item"]["sub"][$parentIdx]["cid"];               
               if(in_array($data["welcomepage_categories"]["item"]['idx'][$x],$insideArray)){
-                echo '<li class="treeview">';
+                $active_tree = ($data["welcomepage_categories"]["item"]["slug"][$x]==$slug_second) ? "active " : "";
+                echo '<li class="'. $active_tree.'treeview">';
                 echo '<a href="#"><i class="fa fa-link"></i> <span>'.$data["welcomepage_categories"]["item"]["title"][$x].'</span> <i class="fa fa-angle-left pull-right"></i></a>';
                 echo '<ul class="treeview-menu">';
                 $y = 0;
                 foreach ($insideArray as $value) {
-                  echo '<li><a href="'.WEBSITE.LANG.'/'.$data["welcomepage_categories"]["item"]["sub"][$parentIdx]["slug"][$y].'">'.$data["welcomepage_categories"]["item"]["sub"][$parentIdx]["title"][$y].'</a></li>';
+                  $active_tree2 = ($data["welcomepage_categories"]["item"]["sub"][$parentIdx]["slug"][$y]==$slug_third) ? ' class="active"' : '';
+                  echo '<li'.$active_tree2.'><a href="'.WEBSITE.LANG.'/'.$data["welcomepage_categories"]["item"]["sub"][$parentIdx]["slug"][$y].'">'.$data["welcomepage_categories"]["item"]["sub"][$parentIdx]["title"][$y].'</a></li>';
                   $y++;
                 }
                 
                 echo '</ul>';
                 echo '</li>';
               }else{
-                echo '<li><a href="'.WEBSITE.LANG.'/'.$data["welcomepage_categories"]["item"]["slug"][$x].'"><i class="fa fa-link"></i> <span>'.$data["welcomepage_categories"]["item"]["title"][$x].'</span></a></li>';
+                $active_tree = ($data["welcomepage_categories"]["item"]["slug"][$x]==$slug_second) ? ' class="active"' : "";
+                echo '<li'.$active_tree.'><a href="'.WEBSITE.LANG.'/'.$data["welcomepage_categories"]["item"]["slug"][$x].'"><i class="fa fa-link"></i> <span>'.$data["welcomepage_categories"]["item"]["title"][$x].'</span></a></li>';
               }
               $x++;
             }

@@ -35,7 +35,7 @@ class cache extends connection{
 			$fetch = $prepare->fetchAll(PDO::FETCH_ASSOC); 
 			break;
 			case "welcomepage_categories": 
-			$sql = 'SELECT `idx`,`title`,`slug` FROM `studio404_pages` WHERE `cid`=:cid AND `lang`=:lang AND `visibility`!=:visibility AND `status`!=:status';	
+			$sql = 'SELECT `idx`,`title`,`slug` FROM `studio404_pages` WHERE `cid`=:cid AND `lang`=:lang AND `visibility`!=:visibility AND `status`!=:status ORDER BY `position` ASC';	
 			$prepare = $conn->prepare($sql); 
 			$prepare->execute(array(
 				":cid"=>4, 
@@ -47,7 +47,7 @@ class cache extends connection{
 			if($prepare->rowCount() > 0){
 				$tt = $prepare->fetchAll(PDO::FETCH_ASSOC); 
 				foreach ($tt as $value) {
-					$sql2 = 'SELECT `idx`,`cid`,`title`,`slug` FROM `studio404_pages` WHERE `cid`=:cid AND `lang`=:lang AND `visibility`!=:one AND `status`!=:one';
+					$sql2 = 'SELECT `idx`,`cid`,`title`,`slug` FROM `studio404_pages` WHERE `cid`=:cid AND `lang`=:lang AND `visibility`!=:one AND `status`!=:one ORDER BY `position` ASC';
 					$prepare2 = $conn->prepare($sql2);
 					$prepare2->execute(array(
 						":cid"=>$value['idx'], 
