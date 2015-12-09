@@ -24,7 +24,7 @@
           <ul class="sidebar-menu">
             <li class="header">მთავარი მენიუ</li>
             <!-- Optionally, you can add icons to the links -->
-            <li class="active"><a href="<?=WEBSITE.LANG?>/<?=$c["welcome.page.class"]?>"><i class="fa fa-link"></i> <span>მთავარი</span></a></li>
+            <li class="<?=($slug_second=="welcome-system") ? 'active' : ''?>"><a href="<?=WEBSITE.LANG?>/<?=$c["welcome.page.class"]?>"><i class="fa fa-link"></i> <span>მთავარი</span></a></li>
             <?php
             $x = 0;
             foreach ($data["welcomepage_categories"]["item"]["title"] as $val) {

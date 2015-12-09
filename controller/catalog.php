@@ -11,6 +11,9 @@ class catalog extends connection{
 		$welcomepage_categories = $cache->index($c,"welcomepage_categories");
 		$data["welcomepage_categories"] = json_decode($welcomepage_categories,true);
 
+		$catalog_general = $cache->index($c,"catalog_general");
+		$data["catalog_general"] = json_decode($catalog_general,true);
+
 		@include($c["website.directory"]."/catalog.php"); 
 	}
 }
