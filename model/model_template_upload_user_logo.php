@@ -6,72 +6,72 @@ class model_template_upload_user_logo extends connection{
 
 	public function upload($c){
 		/* update manufacturer upload catalog */
-		if(isset($_FILES["ad_upload_catalog"]["name"]) && !empty($_FILES["ad_upload_catalog"]["name"])){
-			$ext = explode(".",$_FILES["ad_upload_catalog"]["name"]);
-			$ext = strtolower(end($ext));
+		// if(isset($_FILES["ad_upload_catalog"]["name"]) && !empty($_FILES["ad_upload_catalog"]["name"])){
+		// 	$ext = explode(".",$_FILES["ad_upload_catalog"]["name"]);
+		// 	$ext = strtolower(end($ext));
 
-			if($ext!="pdf" && $ext!="doc" && $ext!="docx" && $ext!="xls" && $ext!="xlsx" && $ext!="jpg"){
-				//return 2;
-			}else if($_FILES["ad_upload_catalog"]["size"]>5000000){
-				//return 2;
-			}else{
-				$fileName = md5(time()).'.'.$ext; 
-				$target_file = DIR . 'files/document/'.$fileName;
-				 if (move_uploaded_file($_FILES["ad_upload_catalog"]["tmp_name"],$target_file)) { 
-				 	$conn = $this->conn($c); 
+		// 	if($ext!="pdf" && $ext!="doc" && $ext!="docx" && $ext!="xls" && $ext!="xlsx" && $ext!="jpg"){
+		// 		//return 2;
+		// 	}else if($_FILES["ad_upload_catalog"]["size"]>5000000){
+		// 		//return 2;
+		// 	}else{
+		// 		$fileName = md5(time()).'.'.$ext; 
+		// 		$target_file = DIR . 'files/document/'.$fileName;
+		// 		 if (move_uploaded_file($_FILES["ad_upload_catalog"]["tmp_name"],$target_file)) { 
+		// 		 	$conn = $this->conn($c); 
 
-				 	$check = 'SELECT `ad_upload_catalog` FROM `studio404_users` WHERE `id`=:companyId AND `username`=:username AND `status`!=:one'; 
-				 	$pre_check = $conn->prepare($check);
-				 	$pre_check->execute(array(
-				 		":username"=>$_SESSION["tradewithgeorgia_username"], 
-				 		":companyId"=>$_SESSION["tradewithgeorgia_user_id"], 
-				 		":one"=>1
-				 	));
-				 	$ch_fetch = $pre_check->fetch(PDO::FETCH_ASSOC); 
-				 	if(!empty($ch_fetch["ad_upload_catalog"])){
-				 		$old_pic = DIR . 'files/document/'.$ch_fetch["ad_upload_catalog"]; 
-				 		@unlink($old_pic);
-				 	}
+		// 		 	$check = 'SELECT `ad_upload_catalog` FROM `studio404_users` WHERE `id`=:companyId AND `username`=:username AND `status`!=:one'; 
+		// 		 	$pre_check = $conn->prepare($check);
+		// 		 	$pre_check->execute(array(
+		// 		 		":username"=>$_SESSION["tradewithgeorgia_username"], 
+		// 		 		":companyId"=>$_SESSION["tradewithgeorgia_user_id"], 
+		// 		 		":one"=>1
+		// 		 	));
+		// 		 	$ch_fetch = $pre_check->fetch(PDO::FETCH_ASSOC); 
+		// 		 	if(!empty($ch_fetch["ad_upload_catalog"])){
+		// 		 		$old_pic = DIR . 'files/document/'.$ch_fetch["ad_upload_catalog"]; 
+		// 		 		@unlink($old_pic);
+		// 		 	}
 
-				 	$sql = 'UPDATE `studio404_users` SET `ad_upload_catalog`=:ad_upload_catalog WHERE `id`=:companyId AND `username`=:username AND `status`!=:one'; 
-				 	$prepare = $conn->prepare($sql); 
-				 	$prepare->execute(array(
-				 		":username"=>$_SESSION["tradewithgeorgia_username"], 
-				 		":companyId"=>$_SESSION["tradewithgeorgia_user_id"], 
-				 		":one"=>1, 
-				 		":ad_upload_catalog"=>$fileName
-				 	));
-				 	$_SESSION["user_data"]["ad_upload_catalog"] = $fileName;
-        			//return 1;
-    			}else{
-    				//return 2; 
-    			}
-			}
-		}
+		// 		 	$sql = 'UPDATE `studio404_users` SET `ad_upload_catalog`=:ad_upload_catalog WHERE `id`=:companyId AND `username`=:username AND `status`!=:one'; 
+		// 		 	$prepare = $conn->prepare($sql); 
+		// 		 	$prepare->execute(array(
+		// 		 		":username"=>$_SESSION["tradewithgeorgia_username"], 
+		// 		 		":companyId"=>$_SESSION["tradewithgeorgia_user_id"], 
+		// 		 		":one"=>1, 
+		// 		 		":ad_upload_catalog"=>$fileName
+		// 		 	));
+		// 		 	$_SESSION["user_data"]["ad_upload_catalog"] = $fileName;
+  //       			//return 1;
+  //   			}else{
+  //   				//return 2; 
+  //   			}
+		// 	}
+		// }
 
 
-		if(isset($_FILES["inputUserLogo"]["name"]) && !empty($_FILES["inputUserLogo"]["name"]) && isset($_SESSION["tradewithgeorgia_username"])){
-			$ext = explode(".",$_FILES["inputUserLogo"]["name"]);
+		if(isset($_FILES["profileimage"]["name"]) && !empty($_FILES["profileimage"]["name"]) && isset($_SESSION["batumi_username"])){
+			$ext = explode(".",$_FILES["profileimage"]["name"]);
 			$ext = strtolower(end($ext));
 
 			if($ext!="jpg"){
 				//return 2;
-			}else if($_FILES["inputUserLogo"]["size"]>5000000){
+			}else if($_FILES["profileimage"]["size"]>1000000){
 				//return 2;
 			}else{
-				$prefix = explode("@",$_SESSION["tradewithgeorgia_username"].$_SESSION["tradewithgeorgia_user_id"]);
+				$prefix = explode("@",$_SESSION["batumi_username"].$_SESSION["batumi_id"]);
 				if(is_array($prefix) && !empty($prefix[0])){ $prefix = $prefix[0];  }else{ $prefix = '_'; }
 				$fileName = $prefix.md5(time()).'.'.$ext; 
 				
 				$target_file = DIR . 'files/usersimage/'.$fileName;
-				 if (move_uploaded_file($_FILES["inputUserLogo"]["tmp_name"],$target_file)) {
+				 if (move_uploaded_file($_FILES["profileimage"]["tmp_name"],$target_file)) {
 				 	$conn = $this->conn($c); 
 
-				 	$check = 'SELECT `picture` FROM `studio404_users` WHERE `id`=:companyId AND `username`=:username AND `allow`!=:one AND `status`!=:one'; 
+				 	$check = 'SELECT `picture` FROM `studio404_users` WHERE `id`=:companyId AND `username`=:username AND `status`!=:one'; 
 				 	$pre_check = $conn->prepare($check);
 				 	$pre_check->execute(array(
-				 		":username"=>$_SESSION["tradewithgeorgia_username"], 
-				 		":companyId"=>$_SESSION["tradewithgeorgia_user_id"], 
+				 		":username"=>$_SESSION["batumi_username"], 
+				 		":companyId"=>$_SESSION["batumi_id"], 
 				 		":one"=>1
 				 	));
 				 	$ch_fetch = $pre_check->fetch(PDO::FETCH_ASSOC); 
@@ -80,15 +80,18 @@ class model_template_upload_user_logo extends connection{
 				 		@unlink($old_pic);
 				 	}
 
-				 	$sql = 'UPDATE `studio404_users` SET `picture`=:picture WHERE `id`=:companyId AND `username`=:username AND `allow`!=:one AND `status`!=:one'; 
+				 	$sql = 'UPDATE `studio404_users` SET `picture`=:picture WHERE `id`=:companyId AND `username`=:username AND `status`!=:one'; 
 				 	$prepare = $conn->prepare($sql); 
 				 	$prepare->execute(array(
-				 		":username"=>$_SESSION["tradewithgeorgia_username"], 
-				 		":companyId"=>$_SESSION["tradewithgeorgia_user_id"], 
+				 		":username"=>$_SESSION["batumi_username"], 
+				 		":companyId"=>$_SESSION["batumi_id"], 
 				 		":one"=>1, 
 				 		":picture"=>$fileName
 				 	));
-				 	$_SESSION["user_data"]["picture"] = $fileName;
+				 	$_SESSION["batumi_picture"] = $fileName;
+				 	if(Input::method("POST","typo")!="self"){
+				 		redirect::url(WEBSITE.LANG."/welcome-system");
+				 	}
         			//return 1;
     			}else{
     				//return 2; 

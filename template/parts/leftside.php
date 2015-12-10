@@ -3,17 +3,28 @@
 
         <!-- sidebar: style can be found in sidebar.less -->
         <section class="sidebar">
+          <?php
+            $profilePicture = ($data["userdata"]["picture"]!="") ? WEBSITE."/files/usersimage/".$data["userdata"]["picture"] : TEMPLATE."dist/img/avatar04.png";
+          ?>
+          <div class="user-panel">
+            <div class="pull-left image">
+              <img src="<?=$profilePicture?>" class="img-circle" alt="User Image">
+            </div>
+            <div class="pull-left info">
+            <p><?=$data["userdata"]["namelname"]?></p>
+            <a href="#"><i class="fa fa-circle text-success"></i> <?=$data["language_data"]["val17"]?></a>
+            </div>
+          </div>
 
-          <!-- search form (Optional) -->
+
           <form action="#" method="get" class="sidebar-form">
             <div class="input-group">
-              <input type="text" name="q" class="form-control" placeholder="ძებნა...">
+              <input type="text" name="q" class="form-control" placeholder="<?=$data["language_data"]["val3"]?>...">
               <span class="input-group-btn">
                 <button type="submit" name="search" id="search-btn" class="btn btn-flat"><i class="fa fa-search"></i></button>
               </span>
             </div>
           </form>
-          <!-- /.search form -->
 
           <!-- Sidebar Menu -->
           <?php

@@ -54,3 +54,89 @@ $(document).on("click","#system-out",function(){
 		}
 	});
 });
+
+$(document).on("click","#update-profile",function(){
+	var dlang = $(this).data("dlang");
+	update_users_profile("self",dlang);
+});
+
+$(document).on("click","#update-profile-close",function(){
+	var dlang = $(this).data("dlang");
+	update_users_profile("home",dlang);
+});
+
+function update_users_profile(type,dlang){
+	var namelname = $("#namelname").val(); 
+	var dob = $("#dob").val(); 
+	var mobile = $("#mobile").val(); 
+	var email = $("#email").val(); 
+	var address = $("#address").val();  
+
+	$(".overlay-loader").fadeIn("slow");
+	$(".help-block").fadeOut("slow");
+	if(namelname==""){
+		$(".overlay-loader").fadeOut("slow");
+		$(".namelname-required").fadeIn("slow");
+		return false;
+	}else if(mobile==""){
+		$(".overlay-loader").fadeOut("slow");
+		$(".mobile-required").fadeIn("slow");
+		return false;
+	}else if(email==""){
+		$(".overlay-loader").fadeOut("slow");
+		$(".email-required").fadeIn("slow");
+		return false;
+	}else{
+		$.post(AJAX_REQUEST_URL,{ updateUserProfile:true, n:namelname, d:dob, m:mobile, e:email, a:address, lang:dlang  },function(result){
+			if($("#profile-image").val() != ""){
+				$("#typo").val(type);
+				$("#profile-picture-form").submit();
+			}else{
+				if(type=="home"){
+					location.href = SYSTEM_WELCOME_PAGE+"/ge/welcome-system";
+				}else{
+					$(".form-message-output").html("<p>"+result+"</p>").fadeIn("slow");
+					$(".overlay-loader").fadeOut("slow");
+				}
+			}
+		});
+	}	
+}
+
+$(document).on("change","#profile-image",function(e){
+	e.stopPropagation();
+	e.preventDefault();
+	var files = e.target.files;
+
+	var noerror = false;
+	var ex = files[0].name.split(".");
+	var extLast = ex[ex.length - 1].toLowerCase();
+
+
+	var reader = new FileReader();
+    var image  = new Image();
+    reader.readAsDataURL(files[0]); 
+    reader.onload = function(_file) {
+        image.src = _file.target.result; 
+        image.onload = function() {
+            var w = this.width,
+                h = this.height,
+                t = files[0].type,
+                n = files[0].name,
+                s = ~~(files[0].size/1024);
+            if(w!=215 || h!=215 || s > 1024 || t != "image/jpeg"){
+            	$(".file-size").fadeIn("slow");
+            	var input = $("#profile-image");
+            	input.replaceWith(input.val('').clone(true));
+            	return false; 
+            }
+        };
+        image.onerror= function() {
+            $(".file-size").fadeIn("slow");
+            var input = $("#profile-image");
+            input.replaceWith(input.val('').clone(true));
+			return false; 
+        };    
+    };
+
+});

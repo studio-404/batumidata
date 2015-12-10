@@ -51,6 +51,31 @@ class ajax extends connection{
 			exit();
 		}
 
+		if(Input::method("POST","updateUserProfile")=="true" && Input::method("POST","n") && Input::method("POST","m") && Input::method("POST","e") && Input::method("POST","a") && Input::method("POST","lang")){
+			$sql = 'UPDATE `studio404_users` SET `dob`=:dob, `namelname`=:namelname, `mobile`=:mobile, `email`=:email, `address`=:address WHERE `id`=:id';
+			$prepare = $conn->prepare($sql); 
+			$dob = str_replace("/", "-", Input::method("POST","d")); 
+			$dob = strtotime($dob);
+			$prepare->execute(array(
+				":namelname"=>Input::method("POST","n"), 
+				":dob"=>$dob, 
+				":mobile"=>Input::method("POST","m"), 
+				":email"=>Input::method("POST","e"), 
+				":address"=>Input::method("POST","a"), 
+				":id"=>$_SESSION["batumi_id"]
+			));
+			
+			$insert_notification = new insert_notification();
+			$insert_notification->insert($c,$_SESSION["batumi_id"],"პროფილი განაახლა","Profile Updated");
+			if(Input::method("POST","lang")=="en"){
+				echo "Profile Updated !";
+			}else{
+				echo "პროფილი განახლდა !";
+			}
+			
+			exit();
+		}
+
 		if(Input::method("POST","changeusertype")=="true" && Input::method("POST","t") && $_SESSION["tradewithgeorgia_user_id"]) :
 			$userid = $_SESSION["tradewithgeorgia_user_id"]; 
 			$typetochange = Input::method("POST","t"); 
