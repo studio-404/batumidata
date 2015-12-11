@@ -15,31 +15,20 @@
 		</section>
 
 		<section class="content">
-			<?php
-			// echo "<pre>";
-			// print_r($data['cataloglist']);
-			// echo "</pre>";
-			?>
+		
 			<div class="row">
             	<div class="col-md-12">
-            		<a href="" class="btn btn-app" style="margin:10px 0;">
-		               	<i class="fa fa-plus"></i> Add
-		            </a>
-		            <a href="" class="btn btn-app" style="margin:10px 0 10px 10px;">
-		               	<i class="fa fa-times"></i> Delete
-		            </a>
-					<div style="clear:both"></div>
+            		
             		<div class="box">
-            			
+            			<div class="mailbox-controls">
+			                <div class="btn-group">
+			                  <button type="button" class="btn btn-default btn-sm gotoUrl" data-goto="<?=WEBSITE.LANG?>/katalogis-marTva/damateba"><i class="glyphicon glyphicon-plus"></i>&nbsp;&nbsp;<?=$data["language_data"]["val24"]?></button>
+			                   <button type="button" class="btn btn-default btn-sm" style="margin-left:5px;"><i class="fa fa-refresh"></i>&nbsp;&nbsp;<?=$data["language_data"]["val25"]?></button>
+			                </div>
+			             </div>
 
 	            		<table id="example1" class="table table-bordered dataTable">
 	            			<tr>
-	            				<th>
-	            					<div class="icheckbox_flat-blue checked" aria-checked="true" aria-disabled="false">
-	            							<input type="checkbox" style="position: absolute; opacity: 0;">
-	            							<ins class="iCheck-helper" style="position: absolute; top: 0%; left: 0%; display: block; width: 100%; height: 100%; margin: 0px; padding: 0px; border: 0px; opacity: 0; background: rgb(255, 255, 255);"></ins>
-	            					</div>
-	            				</th>
 	            				<th><?=$data["language_data"]["val22"]?></th>
 	            				<th><?=$data["language_data"]["val23"]?></th>
 	            				<th><?=$data["language_data"]["val21"]?></th>	            				
@@ -49,20 +38,22 @@
 	            			</tr>
 	            			<?php
 	            			$select_sub_catalog = new select_sub_catalog();
+	            			$x = 1;
+	            			$count = count($data['cataloglist']);
 	            			foreach ($data['cataloglist'] as $value) {
 	            				?>
 	            				<tr>
-		            				<td>
-		            					<div class="icheckbox_flat-blue checked" aria-checked="true" aria-disabled="false">
-	            							<input type="checkbox" style="position: absolute; opacity: 0;">
-	            							<ins class="iCheck-helper" style="position: absolute; top: 0%; left: 0%; display: block; width: 100%; height: 100%; margin: 0px; padding: 0px; border: 0px; opacity: 0; background: rgb(255, 255, 255);"></ins>
-	            						</div>
-		            				</td>
 		            				<td><?=$value['idx']?></td>
 		            				<td><?=$value['cid']?></td>
 		            				<td>
-		            					<a href=""><i class="glyphicon glyphicon-arrow-up"></i></a>
-		            					<a href=""><i class="glyphicon glyphicon-arrow-down"></i></a>
+		            					<?php
+		            					if($x!=1):
+		            					?>
+		            						<a href=""><i class="glyphicon glyphicon-arrow-up"></i></a>
+		            					<?php endif; ?>
+		            					<?php if($count>$x) : ?>
+		            						<a href=""><i class="glyphicon glyphicon-arrow-down"></i></a>
+		            					<?php endif;?>
 		            				</td>
 		            				<td><?=$value['title']?></td>
 		            				<td><a href="<?=WEBSITE.LANG."/".$value['slug']?>"><?=WEBSITE.LANG."/".$value['slug']?></a></td>
@@ -74,39 +65,44 @@
 		            			</tr>
 	            				<?php
 	            				$fetchAll = $select_sub_catalog->select($c,$value['idx']);
-	            				if(count($fetchAll)){
+	            				$count2 = count($fetchAll);
+	            				if($count2){
+	            					$y = 1; 
 	            					foreach ($fetchAll as $value2) {
 	            						?>
 	            						<tr style="background-color: #f9f9f9;">
-				            				<td>
-				            					<div class="icheckbox_flat-blue checked" aria-checked="true" aria-disabled="false">
-			            							<input type="checkbox" style="position: absolute; opacity: 0;">
-			            							<ins class="iCheck-helper" style="position: absolute; top: 0%; left: 0%; display: block; width: 100%; height: 100%; margin: 0px; padding: 0px; border: 0px; opacity: 0; background: rgb(255, 255, 255);"></ins>
-			            						</div>
-				            				</td>
 				            				<td><?=$value2['idx']?></td>
 				            				<td><?=$value2['cid']?></td>
 				            				<td>
+				            					<?php if($y!=1): ?>
 				            					<a href=""><i class="glyphicon glyphicon-arrow-up"></i></a>
+				            					<?php endif; ?>
+		            							<?php if($count2 > $y): ?>
 		            							<a href=""><i class="glyphicon glyphicon-arrow-down"></i></a>
+		            							<?php endif; ?>
 				            				</td>
 				            				<td><?=$value2['title']?></td>
 				            				<td><a href="<?=WEBSITE.LANG."/".$value2['slug']?>"><?=WEBSITE.LANG."/".$value2['slug']?></a></td>
 				            				<td>
 				            					<a href="" style="padding:0 0 0 5px"><i class="glyphicon glyphicon-edit"></i></a>
-		            							<a href="" style="padding:0 0 0 5px"><i class="glyphicon glyphicon-plus-sign"></i></a>
+		            							<!-- <a href="" style="padding:0 0 0 5px"><i class="glyphicon glyphicon-plus-sign"></i></a> -->
 		            							<a href="" style="padding:0 0 0 5px"><i class="glyphicon glyphicon-remove"></i></a>	
 				            				</td>
 				            			</tr>
-	            						<?php	
+	            						<?php
+	            						$y++;	
 	            					}
 	            				}
+	            				$x++;
 	            			}
 	            			?>
 	            			
 	            			
 	            		</table>
             		</div>
+
+
+
 		        </div>  
           	</div>
 		</section>

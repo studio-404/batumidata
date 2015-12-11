@@ -10,6 +10,10 @@ var MESSAGE_SENDING = "მოთხოვნა იგზავნება...";
 var MESSAGE_WRONG_CAPTCHA = "დამცავი კოდი არასწორია !";
 var MESSAGE_NO_USER = "მომხმარებლის ელ-ფოსტა ან პაროლი არასწორია !";
 var MESSAGE_SIGN_OUT_PROBLEM = "სისტემიდან გასვლა ვერ მოხერხდა !";
+var MESSAGE_OPERATION_DONE_EN = "Operation done successfully !";
+var MESSAGE_OPERATION_DONE_GE = "ოპერაცია წარმატებით დასრულდა !";
+var MESSAGE_OPERATION_ERROR_EN = "Error !";
+var MESSAGE_OPERATION_ERROR_GE = "მოხდა შეცდომა !";
 
 $(document).on("click","#login-button",function(){
 
@@ -65,43 +69,7 @@ $(document).on("click","#update-profile-close",function(){
 	update_users_profile("home",dlang);
 });
 
-function update_users_profile(type,dlang){
-	var namelname = $("#namelname").val(); 
-	var dob = $("#dob").val(); 
-	var mobile = $("#mobile").val(); 
-	var email = $("#email").val(); 
-	var address = $("#address").val();  
 
-	$(".overlay-loader").fadeIn("slow");
-	$(".help-block").fadeOut("slow");
-	if(namelname==""){
-		$(".overlay-loader").fadeOut("slow");
-		$(".namelname-required").fadeIn("slow");
-		return false;
-	}else if(mobile==""){
-		$(".overlay-loader").fadeOut("slow");
-		$(".mobile-required").fadeIn("slow");
-		return false;
-	}else if(email==""){
-		$(".overlay-loader").fadeOut("slow");
-		$(".email-required").fadeIn("slow");
-		return false;
-	}else{
-		$.post(AJAX_REQUEST_URL,{ updateUserProfile:true, n:namelname, d:dob, m:mobile, e:email, a:address, lang:dlang  },function(result){
-			if($("#profile-image").val() != ""){
-				$("#typo").val(type);
-				$("#profile-picture-form").submit();
-			}else{
-				if(type=="home"){
-					location.href = SYSTEM_WELCOME_PAGE+"/ge/welcome-system";
-				}else{
-					$(".form-message-output").html("<p>"+result+"</p>").fadeIn("slow");
-					$(".overlay-loader").fadeOut("slow");
-				}
-			}
-		});
-	}	
-}
 
 $(document).on("change","#profile-image",function(e){
 	e.stopPropagation();
@@ -140,3 +108,107 @@ $(document).on("change","#profile-image",function(e){
     };
 
 });
+
+
+$(document).on("click","#add-catalogue",function(){
+	var name = $("#titlex").val();
+	var dlang = $(this).data("dlang");
+	$(".overlay-loader").fadeIn("slow");
+	$(".form-message-output").fadeOut("slow");
+	if(name!=""){
+		$.post(AJAX_REQUEST_URL, { addcatalogue:true, n:name }, function(result){
+			if(result=="Done"){
+				$(".overlay-loader").fadeOut("slow");
+				if(dlang=="en"){
+					$(".form-message-output").html(MESSAGE_OPERATION_DONE_EN).fadeIn("slow");
+				}else{
+					$(".form-message-output").html(MESSAGE_OPERATION_DONE_GE).fadeIn("slow");
+				}
+				$("#titlex").val('');
+			}else{
+				$(".overlay-loader").fadeOut("slow");
+				if(dlang=="en"){
+					$(".form-message-output").html(MESSAGE_OPERATION_ERROR_EN).fadeIn("slow");
+				}else{
+					$(".form-message-output").html(MESSAGE_OPERATION_ERROR_GE).fadeIn("slow");
+				}
+				$("#titlex").val('');
+			}
+		});
+	}else{
+		$(".overlay-loader").fadeOut("slow");
+		$(".titlex-required").fadeIn("slow"); 
+	}
+});
+
+$(document).on("click","#add-catalogue-close",function(){
+	var name = $("#titlex").val();
+	var dlang = $(this).data("dlang");
+	$(".overlay-loader").fadeIn("slow");
+	$(".form-message-output").fadeOut("slow");
+	if(name!=""){
+		$.post(AJAX_REQUEST_URL, { addcatalogue:true, n:name }, function(result){
+			if(result=="Done"){
+				location.href = SYSTEM_WELCOME_PAGE+"/"+dlang+"/katalogis-marTva";
+			}else{
+				$(".overlay-loader").fadeOut("slow");
+				if(dlang=="en"){
+					$(".form-message-output").html(MESSAGE_OPERATION_ERROR_EN).fadeIn("slow");
+				}else{
+					$(".form-message-output").html(MESSAGE_OPERATION_ERROR_GE).fadeIn("slow");
+				}
+				$("#titlex").val('');
+			}
+		});
+	}else{
+		$(".overlay-loader").fadeOut("slow");
+		$(".titlex-required").fadeIn("slow"); 
+	}
+});
+
+
+
+
+$(document).on("click",".gotoUrl",function(){
+	var g = $(this).data("goto");
+	location.href = g;
+});
+
+
+function update_users_profile(type,dlang){
+	var namelname = $("#namelname").val(); 
+	var dob = $("#dob").val(); 
+	var mobile = $("#mobile").val(); 
+	var email = $("#email").val(); 
+	var address = $("#address").val();  
+
+	$(".overlay-loader").fadeIn("slow");
+	$(".help-block").fadeOut("slow");
+	if(namelname==""){
+		$(".overlay-loader").fadeOut("slow");
+		$(".namelname-required").fadeIn("slow");
+		return false;
+	}else if(mobile==""){
+		$(".overlay-loader").fadeOut("slow");
+		$(".mobile-required").fadeIn("slow");
+		return false;
+	}else if(email==""){
+		$(".overlay-loader").fadeOut("slow");
+		$(".email-required").fadeIn("slow");
+		return false;
+	}else{
+		$.post(AJAX_REQUEST_URL,{ updateUserProfile:true, n:namelname, d:dob, m:mobile, e:email, a:address, lang:dlang  },function(result){
+			if($("#profile-image").val() != ""){
+				$("#typo").val(type);
+				$("#profile-picture-form").submit();
+			}else{
+				if(type=="home"){
+					location.href = SYSTEM_WELCOME_PAGE+"/ge/welcome-system";
+				}else{
+					$(".form-message-output").html("<p>"+result+"</p>").fadeIn("slow");
+					$(".overlay-loader").fadeOut("slow");
+				}
+			}
+		});
+	}	
+}

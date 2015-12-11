@@ -76,6 +76,50 @@ class ajax extends connection{
 			exit();
 		}
 
+		if(Input::method("POST","addcatalogue")=="true" && Input::method("POST","n")){
+			$maxIdx = 'SELECT MAX(`idx`) as maxidx FROM `studio404_pages`';
+			$prepare = $conn->prepare($maxIdx);
+			$prepare->execute(); 
+			if($prepare->rowCount() > 0){
+				$fetch = $prepare->fetch(PDO::FETCH_ASSOC);
+				$maxidx = $fetch["maxidx"] + 1;
+			}else{ $maxidx = 1; }
+
+			$pos = 'SELECT MAX(`position`) as posmax FROM `studio404_pages` WHERE `cid`=4 AND `status`!=1';
+			$prepare2 = $conn->prepare($pos);
+			$prepare2->execute(); 
+			if($prepare2->rowCount() > 0){
+				$fetch2 = $prepare2->fetch(PDO::FETCH_ASSOC);
+				$posmax = $fetch2["posmax"] + 1;
+			}else{ $posmax = 1; }
+
+			$slug_generation = new slug_generation();
+			$slug = $slug_generation->generate(Input::method("POST","n"));
+
+			for($x=1;$x<=2;$x++){
+				$sql = 'INSERT INTO `studio404_pages` SET `date`=:datex, `page_type`=:page_type, `idx`=:idx, `cid`=4, `subid`=4, `title`=:titlex, `shorttitle`=:titlex, `slug`=:slug, `position`=:position, `visibility`=2, `lang`=:lang';
+				$preparein = $conn->prepare($sql);
+				$preparein->execute(array(
+					":datex"=>time(), 
+					":page_type"=>'catalogpage', 
+					":idx"=>$maxidx, 
+					":position"=>$posmax, 
+					":titlex"=>Input::method("POST","n"),
+					":slug"=>$slug, 
+					":lang"=>$x
+				));
+			}
+
+			$files = glob(DIR.'_cache/*'); // get all file names
+			foreach($files as $file){ // iterate files
+				if(is_file($file))
+				@unlink($file); // delete file
+			}
+
+			echo "Done";
+			exit();
+		}
+
 		if(Input::method("POST","changeusertype")=="true" && Input::method("POST","t") && $_SESSION["tradewithgeorgia_user_id"]) :
 			$userid = $_SESSION["tradewithgeorgia_user_id"]; 
 			$typetochange = Input::method("POST","t"); 

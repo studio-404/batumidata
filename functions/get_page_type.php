@@ -29,7 +29,6 @@ class get_page_type extends connection{
 			$fetch = $prepare->fetch(PDO::FETCH_ASSOC);
 			$out = $fetch['page_type'];
 		}catch(Exception $e){ $out = ""; }
-		
 		if(empty($out)){
 
 			$explode = explode("/", $slug);
