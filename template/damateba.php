@@ -24,6 +24,14 @@
                 	<div class="col-md-12 form-message-output" style="display:none"><p></p></div> 
                     <div class="col-md-12">
 
+					<?php if($data["parent_title"]!="" && Input::method("GET","parent")) : ?>
+						<div class="form-group">
+						<label><?=$data["language_data"]["val32"]?>: <font color="red">*</font></label>
+						<input class="form-control" type="text" placeholder="" value="<?=$data["parent_title"]?>" disabled="disabled" />
+						</div>
+					<?php endif; ?>
+					<input type="hidden" name="parent_idx" id="parent_idx" value="<?=$data["parent_idx"]?>" />
+
                           <div class="form-group">
                             <label><?=$data["language_data"]["val29"]?>: <font color="red">*</font></label> <!-- Fisrname & lastname -->
                             <input class="form-control" type="text" placeholder="" id="titlex" value="">
@@ -39,6 +47,7 @@
 		   	  	<?=$data["language_data"]["val27"]?></button>
 		   	  <button class="btn btn-primary" type="submit" data-dlang="<?=LANG?>" id="add-catalogue-close">
 		   	  	<?=$data["language_data"]["val28"]?></button>
+		   	  <button class="btn btn-primary btn-warning gotoUrl" data-goto="<?=WEBSITE.LANG?>/katalogis-marTva" type="submit"><?=$data["language_data"]["val33"]?></button>
 		  </div>
       </div>
 		</section>

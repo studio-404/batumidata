@@ -102,6 +102,7 @@
             <div class="box-footer">
           	  <button class="btn btn-primary" type="submit" data-dlang="<?=LANG?>" id="update-profile"><?=$data["language_data"]["val9"]?></button>
           	  <button class="btn btn-primary" type="submit" data-dlang="<?=LANG?>" id="update-profile-close"><?=$data["language_data"]["val10"]?></button>
+              <button class="btn btn-primary btn-warning gotoUrl" data-goto="<?=WEBSITE.LANG?>/welcome-system" type="submit"><?=$data["language_data"]["val33"]?></button>
             </div>
           </div><!-- /.box -->
 		</section>

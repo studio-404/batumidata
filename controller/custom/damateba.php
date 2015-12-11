@@ -41,6 +41,22 @@ class damateba extends connection{
 			redirect::url(WEBSITE);
 		}
 
+		if(Input::method("GET","parent")!=""){
+			$parent = 'SELECT `idx`,`title` FROM `studio404_pages` WHERE `idx`=:idx AND `cid`=4 AND `status`!=1 AND `lang`=:lang';
+			$prepareParent = $conn->prepare($parent);
+			$prepareParent->execute(array(
+				":idx"=>Input::method("GET","parent"), 
+				":lang"=>LANG_ID
+			));
+			if($prepareParent->rowCount() > 0){
+				$parent_fetch = $prepareParent->fetch(PDO::FETCH_ASSOC);
+				$data["parent_idx"] = $parent_fetch["idx"];
+				$data["parent_title"] = $parent_fetch["title"];
+			}else{
+				redirect::url(WEBSITE.LANG."/katalogis-marTva/damateba");
+			}
+		}
+
 
 		$include = WEB_DIR."/damateba.php";
 		if(file_exists($include)){

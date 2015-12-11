@@ -23,7 +23,7 @@
             			<div class="mailbox-controls">
 			                <div class="btn-group">
 			                  <button type="button" class="btn btn-default btn-sm gotoUrl" data-goto="<?=WEBSITE.LANG?>/katalogis-marTva/damateba"><i class="glyphicon glyphicon-plus"></i>&nbsp;&nbsp;<?=$data["language_data"]["val24"]?></button>
-			                   <button type="button" class="btn btn-default btn-sm" style="margin-left:5px;"><i class="fa fa-refresh"></i>&nbsp;&nbsp;<?=$data["language_data"]["val25"]?></button>
+			                   <button type="button" class="btn btn-default btn-sm reloadMe" style="margin-left:5px;"><i class="fa fa-refresh"></i>&nbsp;&nbsp;<?=$data["language_data"]["val25"]?></button>
 			                </div>
 			             </div>
 
@@ -59,7 +59,7 @@
 		            				<td><a href="<?=WEBSITE.LANG."/".$value['slug']?>"><?=WEBSITE.LANG."/".$value['slug']?></a></td>
 		            				<td>
 		            					<a href="" style="padding:0 0 0 5px"><i class="glyphicon glyphicon-edit"></i></a>
-		            					<a href="" style="padding:0 0 0 5px"><i class="glyphicon glyphicon-plus-sign"></i></a>
+		            					<a href="<?=WEBSITE.LANG?>/katalogis-marTva/damateba?parent=<?=$value['idx']?>" style="padding:0 0 0 5px"><i class="glyphicon glyphicon-plus-sign"></i></a>
 		            					<a href="" style="padding:0 0 0 5px"><i class="glyphicon glyphicon-remove"></i></a>
 		            				</td>
 		            			</tr>

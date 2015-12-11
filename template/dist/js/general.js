@@ -112,11 +112,12 @@ $(document).on("change","#profile-image",function(e){
 
 $(document).on("click","#add-catalogue",function(){
 	var name = $("#titlex").val();
+	var parent_idx = $("#parent_idx").val();
 	var dlang = $(this).data("dlang");
 	$(".overlay-loader").fadeIn("slow");
 	$(".form-message-output").fadeOut("slow");
 	if(name!=""){
-		$.post(AJAX_REQUEST_URL, { addcatalogue:true, n:name }, function(result){
+		$.post(AJAX_REQUEST_URL, { addcatalogue:true, n:name, p:parent_idx }, function(result){
 			if(result=="Done"){
 				$(".overlay-loader").fadeOut("slow");
 				if(dlang=="en"){
@@ -143,11 +144,12 @@ $(document).on("click","#add-catalogue",function(){
 
 $(document).on("click","#add-catalogue-close",function(){
 	var name = $("#titlex").val();
+	var parent_idx = $("#parent_idx").val();
 	var dlang = $(this).data("dlang");
 	$(".overlay-loader").fadeIn("slow");
 	$(".form-message-output").fadeOut("slow");
 	if(name!=""){
-		$.post(AJAX_REQUEST_URL, { addcatalogue:true, n:name }, function(result){
+		$.post(AJAX_REQUEST_URL, { addcatalogue:true, n:name, p:parent_idx }, function(result){
 			if(result=="Done"){
 				location.href = SYSTEM_WELCOME_PAGE+"/"+dlang+"/katalogis-marTva";
 			}else{
@@ -167,6 +169,9 @@ $(document).on("click","#add-catalogue-close",function(){
 });
 
 
+$(document).on("click",".reloadMe",function(){
+	location.reload();
+});
 
 
 $(document).on("click",".gotoUrl",function(){

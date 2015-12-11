@@ -96,10 +96,17 @@ class ajax extends connection{
 			$slug_generation = new slug_generation();
 			$slug = $slug_generation->generate(Input::method("POST","n"));
 
+			if(Input::method("POST","p")){
+				$cid = Input::method("POST","p");
+			}else{
+				$cid = 4;
+			}
+
 			for($x=1;$x<=2;$x++){
-				$sql = 'INSERT INTO `studio404_pages` SET `date`=:datex, `page_type`=:page_type, `idx`=:idx, `cid`=4, `subid`=4, `title`=:titlex, `shorttitle`=:titlex, `slug`=:slug, `position`=:position, `visibility`=2, `lang`=:lang';
+				$sql = 'INSERT INTO `studio404_pages` SET `date`=:datex, `page_type`=:page_type, `idx`=:idx, `cid`=:cid, `subid`=:cid, `title`=:titlex, `shorttitle`=:titlex, `slug`=:slug, `position`=:position, `visibility`=2, `lang`=:lang';
 				$preparein = $conn->prepare($sql);
 				$preparein->execute(array(
+					":cid"=>$cid, 
 					":datex"=>time(), 
 					":page_type"=>'catalogpage', 
 					":idx"=>$maxidx, 
@@ -115,6 +122,9 @@ class ajax extends connection{
 				if(is_file($file))
 				@unlink($file); // delete file
 			}
+			$name = Input::method("POST","n");
+			$insert_notification = new insert_notification();
+			$insert_notification->insert($c,$_SESSION["batumi_id"],"დაემატა კატალოგის კატეგორია: $name","Catalogue's Category Added: $name");
 
 			echo "Done";
 			exit();
