@@ -31,6 +31,7 @@
 	            			<tr>
 	            				<th><?=$data["language_data"]["val22"]?></th>
 	            				<th><?=$data["language_data"]["val23"]?></th>
+	            				<th><?=$data["language_data"]["val37"]?></th>
 	            				<th><?=$data["language_data"]["val21"]?></th>	            				
 	            				<th><?=$data["language_data"]["val18"]?></th>
 	            				<th><?=$data["language_data"]["val19"]?></th>
@@ -45,6 +46,7 @@
 	            				<tr>
 		            				<td><?=$value['idx']?></td>
 		            				<td><?=$value['cid']?></td>
+		            				<td><?=$value['position']?></td>
 		            				<td>
 		            					<?php
 		            					if($x!=1):
@@ -58,7 +60,7 @@
 		            				<td><?=$value['title']?></td>
 		            				<td><a href="<?=WEBSITE.LANG."/".$value['slug']?>"><?=WEBSITE.LANG."/".$value['slug']?></a></td>
 		            				<td>
-		            					<a href="" style="padding:0 0 0 5px"><i class="glyphicon glyphicon-edit"></i></a>
+		            					<a href="<?=WEBSITE.LANG?>/katalogis-marTva/redaqtireba?id=<?=$value['idx']?>" style="padding:0 0 0 5px"><i class="glyphicon glyphicon-edit"></i></a>
 		            					<a href="<?=WEBSITE.LANG?>/katalogis-marTva/damateba?parent=<?=$value['idx']?>" style="padding:0 0 0 5px"><i class="glyphicon glyphicon-plus-sign"></i></a>
 		            					<a href="" style="padding:0 0 0 5px"><i class="glyphicon glyphicon-remove"></i></a>
 		            				</td>
@@ -73,6 +75,7 @@
 	            						<tr style="background-color: #f9f9f9;">
 				            				<td><?=$value2['idx']?></td>
 				            				<td><?=$value2['cid']?></td>
+				            				<td><?=$value2['position']?></td>
 				            				<td>
 				            					<?php if($y!=1): ?>
 				            					<a href=""><i class="glyphicon glyphicon-arrow-up"></i></a>
@@ -84,7 +87,7 @@
 				            				<td><?=$value2['title']?></td>
 				            				<td><a href="<?=WEBSITE.LANG."/".$value2['slug']?>"><?=WEBSITE.LANG."/".$value2['slug']?></a></td>
 				            				<td>
-				            					<a href="" style="padding:0 0 0 5px"><i class="glyphicon glyphicon-edit"></i></a>
+				            					<a href="<?=WEBSITE.LANG?>/katalogis-marTva/redaqtireba?id=<?=$value2['idx']?>" style="padding:0 0 0 5px"><i class="glyphicon glyphicon-edit"></i></a>
 		            							<!-- <a href="" style="padding:0 0 0 5px"><i class="glyphicon glyphicon-plus-sign"></i></a> -->
 		            							<a href="" style="padding:0 0 0 5px"><i class="glyphicon glyphicon-remove"></i></a>	
 				            				</td>

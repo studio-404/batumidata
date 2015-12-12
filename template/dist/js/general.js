@@ -142,6 +142,7 @@ $(document).on("click","#add-catalogue",function(){
 	}
 });
 
+
 $(document).on("click","#add-catalogue-close",function(){
 	var name = $("#titlex").val();
 	var parent_idx = $("#parent_idx").val();
@@ -168,7 +169,70 @@ $(document).on("click","#add-catalogue-close",function(){
 	}
 });
 
+$(document).on("click","#edit-catalogue",function(){
+	var name = $("#titlex").val();
+	var oldname = $("#titlex").data("oldname");
+	var dlang = $(this).data("dlang");
+	var param = urlParamiters();
+	$(".overlay-loader").fadeIn("slow");
+	$(".form-message-output").fadeOut("slow");
+	if(name!=""){
+		$.post(AJAX_REQUEST_URL, { editcatalogue:true, n:name, i:param["id"], old:oldname, lang:dlang }, function(result){
+			if(result=="Done"){
+				$(".overlay-loader").fadeOut("slow");
+				if(dlang=="2"){
+					$(".form-message-output").html(MESSAGE_OPERATION_DONE_EN).fadeIn("slow");
+				}else{
+					$(".form-message-output").html(MESSAGE_OPERATION_DONE_GE).fadeIn("slow");
+				}
+				$("#titlex").data('oldname',name);
+			}else{
+				$(".overlay-loader").fadeOut("slow");
+				if(dlang=="2"){
+					$(".form-message-output").html(MESSAGE_OPERATION_ERROR_EN).fadeIn("slow");
+				}else{
+					$(".form-message-output").html(MESSAGE_OPERATION_ERROR_GE).fadeIn("slow");
+				}
+				$("#titlex").val('');
+			}
+		});
+	}else{
+		$(".overlay-loader").fadeOut("slow");
+		$(".titlex-required").fadeIn("slow"); 
+	}
+});
 
+$(document).on("click","#edit-catalogue-close",function(){
+	var name = $("#titlex").val();
+	var oldname = $("#titlex").data("oldname");
+	var dlang = $(this).data("dlang");
+	var param = urlParamiters();
+	$(".overlay-loader").fadeIn("slow");
+	$(".form-message-output").fadeOut("slow");
+	if(name!=""){
+		$.post(AJAX_REQUEST_URL, { editcatalogue:true, n:name, i:param["id"], old:oldname, lang:dlang }, function(result){
+			if(result=="Done"){
+				var lanx = (dlang==2) ? "en" : "ge"; 
+				location.href = SYSTEM_WELCOME_PAGE+"/"+lanx+"/katalogis-marTva";
+			}else{
+				$(".overlay-loader").fadeOut("slow");
+				if(dlang=="2"){
+					$(".form-message-output").html(MESSAGE_OPERATION_ERROR_EN).fadeIn("slow");
+				}else{
+					$(".form-message-output").html(MESSAGE_OPERATION_ERROR_GE).fadeIn("slow");
+				}
+				$("#titlex").val('');
+			}
+		});
+	}else{
+		$(".overlay-loader").fadeOut("slow");
+		$(".titlex-required").fadeIn("slow"); 
+	}
+});
+
+
+
+/* Functions START */
 $(document).on("click",".reloadMe",function(){
 	location.reload();
 });
@@ -216,4 +280,27 @@ function update_users_profile(type,dlang){
 			}
 		});
 	}	
+}
+
+function urlParamiters()
+{
+	var query_string = new Array();
+	var query = window.location.search.substring(1);
+	var vars = query.split("&");
+	for (var i=0;i<vars.length;i++) {
+		var pair = vars[i].split("=");
+		if (typeof query_string[pair[0]] === "undefined") {
+		  query_string[pair[0]] = pair[1];
+		} else if (typeof query_string[pair[0]] === "string") {
+		  var arr = [ query_string[pair[0]], pair[1] ];
+		  query_string[pair[0]] = arr;
+		} else {
+			if(query_string.length){
+		  		query_string[pair[0]].push(pair[1]);
+			}else{
+				query_string[pair[0]] = '';
+			}
+		}
+	} 
+	return query_string;		
 }

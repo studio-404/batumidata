@@ -130,6 +130,33 @@ class ajax extends connection{
 			exit();
 		}
 
+		if(Input::method("POST","editcatalogue")=="true" && Input::method("POST","n") && Input::method("POST","i") && Input::method("POST","lang")){
+			$n = Input::method("POST","n");
+			$i = Input::method("POST","i");
+			$lang = Input::method("POST","lang");
+			$old = Input::method("POST","old");
+			$sql = 'UPDATE `studio404_pages` SET `title`=:titlex WHERE `idx`=:idx AND `lang`=:lang';
+			$prepare = $conn->prepare($sql); 
+			$prepare->execute(array(
+				":idx"=>$i, 
+				":lang"=>$lang, 
+				":titlex"=>$n
+			)); 
+			if($prepare->rowCount() > 0){
+				$files = glob(DIR.'_cache/*'); // get all file names
+				foreach($files as $file){ // iterate files
+					if(is_file($file))
+					@unlink($file); // delete file
+				}
+				
+				$insert_notification = new insert_notification();
+				$insert_notification->insert($c,$_SESSION["batumi_id"],"განახლდა კატალოგის დასახელება: $old TO $n","Catalogue Updated: $old TO $n");
+				echo "Done";
+			}
+			exit();
+		}
+		/* end batumi */
+
 		if(Input::method("POST","changeusertype")=="true" && Input::method("POST","t") && $_SESSION["tradewithgeorgia_user_id"]) :
 			$userid = $_SESSION["tradewithgeorgia_user_id"]; 
 			$typetochange = Input::method("POST","t"); 

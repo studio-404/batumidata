@@ -96,7 +96,7 @@ class cache extends connection{
 			$fetch = $prepare->fetchAll(PDO::FETCH_ASSOC); 
 			break;
 			case "cataloglist": 
-			$sql = 'SELECT `idx`,`cid`,`title`,`slug` FROM `studio404_pages` WHERE `cid`=:cid AND `lang`=:lang AND `status`!=1 ORDER BY `position` ASC';
+			$sql = 'SELECT `idx`,`cid`,`title`,`slug`,`position` FROM `studio404_pages` WHERE `cid`=:cid AND `lang`=:lang AND `status`!=1 ORDER BY `position` ASC';
 			$prepare = $conn->prepare($sql);
 			$prepare->execute(array(
 				":cid"=>4, 
