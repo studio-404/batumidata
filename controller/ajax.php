@@ -93,6 +93,14 @@ class ajax extends connection{
 				$posmax = $fetch2["posmax"] + 1;
 			}else{ $posmax = 1; }
 
+			$model = 'SELECT MAX(`idx`) as model_idx FROM `studio404_module_attachment`';
+			$modelp = $conn->prepare($model);
+			$modelp->execute(); 
+			if($modelp->rowCount() > 0){
+				$modelf = $modelp->fetch(PDO::FETCH_ASSOC);
+				$modelx = $modelf["model_idx"] + 1;
+			}else{ $posmax = 1; }
+
 			$slug_generation = new slug_generation();
 			$slug = $slug_generation->generate(Input::method("POST","n"));
 
@@ -103,18 +111,39 @@ class ajax extends connection{
 			}
 
 			for($x=1;$x<=2;$x++){
-				$sql = 'INSERT INTO `studio404_pages` SET `date`=:datex, `page_type`=:page_type, `idx`=:idx, `cid`=:cid, `subid`=:cid, `title`=:titlex, `shorttitle`=:titlex, `slug`=:slug, `position`=:position, `visibility`=2, `lang`=:lang';
+				$sql = 'INSERT INTO `studio404_pages` SET `date`=:datex, `menu_type`=:menu_type, `page_type`=:page_type, `idx`=:idx, `cid`=:cid, `subid`=:cid, `title`=:titlex, `shorttitle`=:titlex, `slug`=:slug, `position`=:position, `visibility`=2, `lang`=:lang, `insert_admin`=:insert_admin';
 				$preparein = $conn->prepare($sql);
 				$preparein->execute(array(
 					":cid"=>$cid, 
 					":datex"=>time(), 
 					":page_type"=>'catalogpage', 
+					":menu_type"=>'sub', 
 					":idx"=>$maxidx, 
 					":position"=>$posmax, 
 					":titlex"=>Input::method("POST","n"),
 					":slug"=>$slug, 
+					":lang"=>$x,
+					":insert_admin"=>$_SESSION["batumi_id"] 
+				));
+
+				$insertCat = 'INSERT INTO `studio404_module_attachment` SET `idx`=:idx, `connect_idx`=:connect_idx, `page_type`=:page_type, `lang`=:lang';
+				$prepatta = $conn->prepare($insertCat); 
+				$prepatta->execute(array(
+					":idx"=>$modelx, 
+					":connect_idx"=>$maxidx, 
+					":page_type"=>"catalogpage", 
 					":lang"=>$x
 				));
+
+				$insertCat2 = 'INSERT INTO `studio404_module` SET `idx`=:idx, `date`=:datex, `title`=:titlex, `lang`=:lang';
+				$prepatta2 = $conn->prepare($insertCat2); 
+				$prepatta2->execute(array(
+					":idx"=>$modelx, 
+					":datex"=>time(), 
+					":titlex"=>Input::method("POST","n"), 
+					":lang"=>$x
+				));
+				
 			}
 
 			$files = glob(DIR.'_cache/*'); // get all file names
@@ -155,6 +184,82 @@ class ajax extends connection{
 			}
 			exit();
 		}
+
+
+		if(Input::method("POST","checkmodelitem") && Input::method("POST","ci") && Input::method("POST","lang")){
+			$sql = 'SELECT 
+			`studio404_module_item`.`id` 
+			FROM 
+			`studio404_module_attachment`,`studio404_module_item`
+			WHERE 
+			`studio404_module_attachment`.`connect_idx`=:connect_idx AND 
+			`studio404_module_attachment`.`page_type`=:page_type AND 
+			`studio404_module_attachment`.`lang`=:lang AND 
+			`studio404_module_attachment`.`status`!=:one AND 
+			`studio404_module_attachment`.`idx`=`studio404_module_item`.`module_idx` AND 
+			`studio404_module_item`.`lang`=:lang AND 
+			`studio404_module_item`.`status`!=:one 
+			';
+			$prepare = $conn->prepare($sql); 
+			$prepare->execute(array(
+				":connect_idx"=>Input::method("POST","ci"), 
+				":page_type"=>'catalogpage', 
+				":lang"=>Input::method("POST","lang"), 
+				":one"=>1 
+			));
+			if($prepare->rowCount() > 0){
+				echo "Exists";
+			}else{
+				echo "Free to delete"; 
+			}
+			exit();
+		}
+
+		if(Input::method("POST","removeCatalogue")=="true" && Input::method("POST","cidx")){
+			$selPos = 'SELECT `title`,`cid`,`position` FROM `studio404_pages` WHERE `idx`=:idx';
+			$prepare1 = $conn->prepare($selPos);
+			$prepare1->execute(array(
+				":idx"=>Input::method("POST","cidx")
+			));
+			if($prepare1->rowCount() > 0){
+				$fetch1 = $prepare1->fetch(PDO::FETCH_ASSOC); 
+				$title = $fetch1['title'];
+				$cid = $fetch1['cid'];
+				$posfrom = $fetch1['position'];
+				
+
+				$uppos = 'UPDATE `studio404_pages` SET `position`=`position`-1 WHERE `cid`=:cid AND `position`>:posfrom AND `status`!=1';
+				$prepare2 = $conn->prepare($uppos);
+				$prepare2->execute(array(
+					":cid"=>$cid,
+					":posfrom"=>$posfrom
+				));					
+				
+				if($prepare2->rowCount() > 0){	
+					$sql = 'UPDATE `studio404_pages` SET `status`=1 WHERE `idx`=:idx';
+					$prepare = $conn->prepare($sql); 
+					$prepare->execute(array(
+						":idx"=>Input::method("POST","cidx")
+					));	
+
+					$files = glob(DIR.'_cache/*'); // get all file names
+					foreach($files as $file){ // iterate files
+						if(is_file($file))
+						@unlink($file); // delete file
+					}
+					
+					$insert_notification = new insert_notification();
+					$insert_notification->insert($c,$_SESSION["batumi_id"],"წაშალა კატალოგი: $title","Catalogue Deleted: $title");
+
+					echo "Done";
+				}else{
+					echo "Error N1";
+				}
+			}
+			exit();
+		}
+
+
 		/* end batumi */
 
 		if(Input::method("POST","changeusertype")=="true" && Input::method("POST","t") && $_SESSION["tradewithgeorgia_user_id"]) :

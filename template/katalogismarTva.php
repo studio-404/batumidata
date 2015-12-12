@@ -15,7 +15,6 @@
 		</section>
 
 		<section class="content">
-		
 			<div class="row">
             	<div class="col-md-12">
             		
@@ -62,7 +61,7 @@
 		            				<td>
 		            					<a href="<?=WEBSITE.LANG?>/katalogis-marTva/redaqtireba?id=<?=$value['idx']?>" style="padding:0 0 0 5px"><i class="glyphicon glyphicon-edit"></i></a>
 		            					<a href="<?=WEBSITE.LANG?>/katalogis-marTva/damateba?parent=<?=$value['idx']?>" style="padding:0 0 0 5px"><i class="glyphicon glyphicon-plus-sign"></i></a>
-		            					<a href="" style="padding:0 0 0 5px"><i class="glyphicon glyphicon-remove"></i></a>
+		            					<a href="javascript:void(0)" style="padding:0 0 0 5px" class="remove-catalogue" data-dlang="<?=LANG?>" data-catid="<?=$value["idx"]?>"><i class="glyphicon glyphicon-remove"></i></a>
 		            				</td>
 		            			</tr>
 	            				<?php
@@ -89,7 +88,7 @@
 				            				<td>
 				            					<a href="<?=WEBSITE.LANG?>/katalogis-marTva/redaqtireba?id=<?=$value2['idx']?>" style="padding:0 0 0 5px"><i class="glyphicon glyphicon-edit"></i></a>
 		            							<!-- <a href="" style="padding:0 0 0 5px"><i class="glyphicon glyphicon-plus-sign"></i></a> -->
-		            							<a href="" style="padding:0 0 0 5px"><i class="glyphicon glyphicon-remove"></i></a>	
+		            							<a href="javascript:void(0)" style="padding:0 0 0 5px" class="remove-catalogue" data-dlang="<?=LANG?>" data-catid="<?=$value2["idx"]?>"><i class="glyphicon glyphicon-remove"></i></a>	
 				            				</td>
 				            			</tr>
 	            						<?php

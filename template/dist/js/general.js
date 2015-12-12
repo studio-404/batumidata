@@ -230,7 +230,59 @@ $(document).on("click","#edit-catalogue-close",function(){
 	}
 });
 
+$(document).on("click",".remove-catalogue",function(){
+	var dlang = $(this).data("dlang"); 
+	var catid = $(this).data("catid"); 
+	var lg = "";
+	if(dlang=="en"){
+		$(".modal-body").html("<p>Please wait...</p>"); 
+		$(".dojobbutton").hide();
+		lg = 2;
+	}else{
+		$(".modal-body").html("<p>მოთხოვნა იგზავნება...</p>"); 
+		$(".dojobbutton").hide();
+		lg = 1;
+	}
+	$('.bs-example-modal-sm').modal("show");
 
+	$.post(AJAX_REQUEST_URL, { checkmodelitem:true, ci:catid, lang:lg }, function(result){
+		if(result=="Exists"){
+			if(dlang=="en"){
+				$(".modal-body").html("<p>You cant remove item !</p>");
+			}else{
+				$(".modal-body").html("<p>თქვენ არ გაქვთ მონაცემის წაშლის უფლება !</p>"); 
+			}
+		}else{
+			if(dlang=="en"){
+				$(".modal-body").html("<p>Would you like to delete item ?</p>"); 	
+				$(".dojobbutton").text("Yes").fadeIn("slow");			
+			}else{
+				$(".modal-body").html("<p>გნებავთ წაშალოთ მონაცემი ?</p>"); 
+				$(".dojobbutton").text("დიახ").fadeIn("slow");
+			}
+			$(".dojobbutton").data("removecatalogue",catid);
+			
+		}
+	});
+
+	 
+});
+
+$(document).on("click",".dojobbutton",function(){
+	var removecatalogue = $(this).data("removecatalogue");
+	if(removecatalogue!=""){
+		$('.bs-example-modal-sm').modal("hide");
+		$(".overlay-loader").fadeIn("slow");
+		$.post(AJAX_REQUEST_URL, { removeCatalogue:true, cidx:removecatalogue }, function(result){
+			if(result=="Done"){
+				location.reload();
+			}else{
+				$(".overlay-loader").fadeIn("hide");
+				alert("Critical Error ! N1");				
+			}
+		});
+	}
+});
 
 /* Functions START */
 $(document).on("click",".reloadMe",function(){

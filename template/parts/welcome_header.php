@@ -35,6 +35,27 @@
 <![endif]-->
 </head>
 <body class="hold-transition skin-blue sidebar-mini">
+  <!-- START REGISTER POPUP -->
+<div class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel">
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title"><?=$data["language_data"]["val38"]?></h4>
+        </div>
+        <div class="modal-body">
+          <p>&nbsp;</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default pull-left" data-dismiss="modal"><?=$data["language_data"]["val33"]?></button>
+          <button type="button" class="btn btn-primary dojobbutton">&nbsp;</button>
+        </div>
+    </div>
+  </div>
+</div>
+<!-- END REGISTER POPUP -->
+  
   <div class="overlay overlay-loader">
     <i class="fa fa-refresh fa-spin overley-loader-icon"></i>
   </div>
