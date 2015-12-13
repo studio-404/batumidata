@@ -50,10 +50,10 @@
 		            					<?php
 		            					if($x!=1):
 		            					?>
-		            						<a href=""><i class="glyphicon glyphicon-arrow-up"></i></a>
+		            						<a href="javascript:void(0)" class="up-catalog" data-idx="<?=$value["idx"]?>" data-cid="<?=$value["cid"]?>" data-position="<?=$value["position"]?>"><i class="glyphicon glyphicon-arrow-up"></i></a>
 		            					<?php endif; ?>
 		            					<?php if($count>$x) : ?>
-		            						<a href=""><i class="glyphicon glyphicon-arrow-down"></i></a>
+		            						<a href="javascript:void(0)" class="down-catalog" data-idx="<?=$value["idx"]?>" data-cid="<?=$value["cid"]?>" data-position="<?=$value["position"]?>"><i class="glyphicon glyphicon-arrow-down"></i></a>
 		            					<?php endif;?>
 		            				</td>
 		            				<td><?=$value['title']?></td>
@@ -77,10 +77,10 @@
 				            				<td><?=$value2['position']?></td>
 				            				<td>
 				            					<?php if($y!=1): ?>
-				            					<a href=""><i class="glyphicon glyphicon-arrow-up"></i></a>
+				            					<a href="javascript:void(0)" class="up-catalog" data-idx="<?=$value2["idx"]?>" data-cid="<?=$value2["cid"]?>" data-position="<?=$value2["position"]?>"><i class="glyphicon glyphicon-arrow-up"></i></a>
 				            					<?php endif; ?>
 		            							<?php if($count2 > $y): ?>
-		            							<a href=""><i class="glyphicon glyphicon-arrow-down"></i></a>
+		            							<a href="javascript:void(0)" class="down-catalog" data-idx="<?=$value2["idx"]?>" data-cid="<?=$value2["cid"]?>" data-position="<?=$value2["position"]?>"><i class="glyphicon glyphicon-arrow-down"></i></a>
 		            							<?php endif; ?>
 				            				</td>
 				            				<td><?=$value2['title']?></td>

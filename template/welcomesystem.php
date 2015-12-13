@@ -8,7 +8,6 @@
 		<section class="content-header">
 			<h1>
 				მთავარი
-				<!-- <small>ჰოსტელის გვერდის მოკლე აღწერა</small> -->
 			</h1>
 			<ol class="breadcrumb">
 				<li><a href="#"><i class="fa fa-dashboard"></i> მთავარი</a></li>
@@ -16,52 +15,40 @@
 		</section>
 
 		<section class="content">
-			<?php
-				// echo "<pre>";
-				// print_r($data["welcomepage_categories"]); 
-				// echo "</pre>";
-			?>
-			<div class="col-md-3 col-sm-6 col-xs-12">
-				<div class="info-box">
-					<span class="info-box-icon bg-aqua"><i class="ion ion-ios-gear-outline"></i></span>
+			<div class="row">
+				<div class="col-md-12">
+					<ul class="timeline">
+					    <!-- timeline time label -->
+					    <li class="time-label">
+					        <span class="bg-red">
+					            10 Feb. 2014 13:35:22
+					        </span>
+					    </li>
+					    <!-- /.timeline-label -->
 
-					<div class="info-box-content">
-						<span class="info-box-text">CPU Traffic</span>
-						<span class="info-box-number">90<small>%</small></span>
-					</div>
-				</div>
-			</div>
+					    <!-- timeline item -->
+					    <li>
+					        <!-- timeline icon -->
+					        <i class="fa fa-bell-o bg-blue"></i>
+					        <div class="timeline-item">
+					            <span class="time"><i class="fa fa-clock-o"></i> 12:05</span>
 
-			<div class="col-md-3 col-sm-6 col-xs-12">
-				<div class="info-box">
-					<span class="info-box-icon bg-aqua"><i class="ion ion-ios-gear-outline"></i></span>
+					            <h3 class="timeline-header"><a href="#">Support Team</a> ...</h3>
 
-					<div class="info-box-content">
-						<span class="info-box-text">CPU Traffic</span>
-						<span class="info-box-number">90<small>%</small></span>
-					</div>
-				</div>
-			</div>
+					            <div class="timeline-body">
+					                Content goes here
+					            </div>
 
-			<div class="col-md-3 col-sm-6 col-xs-12">
-				<div class="info-box">
-					<span class="info-box-icon bg-aqua"><i class="ion ion-ios-gear-outline"></i></span>
+					            <div class="timeline-footer">
+					                <a class="btn btn-primary btn-xs">Button</a>
+					            </div>
+					            
+					        </div>
+					    </li>
+					    <!-- END timeline item -->
 
-					<div class="info-box-content">
-						<span class="info-box-text">CPU Traffic</span>
-						<span class="info-box-number">90<small>%</small></span>
-					</div>
-				</div>
-			</div>
-
-			<div class="col-md-3 col-sm-6 col-xs-12">
-				<div class="info-box">
-					<span class="info-box-icon bg-aqua"><i class="ion ion-ios-gear-outline"></i></span>
-
-					<div class="info-box-content">
-						<span class="info-box-text">CPU Traffic</span>
-						<span class="info-box-number">90<small>%</small></span>
-					</div>
+					</ul>
+					                  
 				</div>
 			</div>
 		</section>

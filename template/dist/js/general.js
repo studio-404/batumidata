@@ -284,6 +284,30 @@ $(document).on("click",".dojobbutton",function(){
 	}
 });
 
+$(document).on("click",".up-catalog",function(){
+	var idx = $(this).data("idx");
+	var cid = $(this).data("cid");
+	var position = $(this).data("position");
+	$(".overlay-loader").fadeIn("slow");
+	$.post(AJAX_REQUEST_URL, { changeposition:true, t:"up", i:idx, c:cid, p:position }, function(result){
+		if(result=="Done"){
+			location.reload();
+		}
+	});
+});
+
+$(document).on("click",".down-catalog",function(){
+	var idx = $(this).data("idx");
+	var cid = $(this).data("cid");
+	var position = $(this).data("position");
+	$(".overlay-loader").fadeIn("slow");
+	$.post(AJAX_REQUEST_URL, { changeposition:true, t:"down", i:idx, c:cid, p:position }, function(result){
+		if(result=="Done"){
+			location.reload();
+		}
+	});
+});
+
 /* Functions START */
 $(document).on("click",".reloadMe",function(){
 	location.reload();

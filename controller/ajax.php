@@ -85,9 +85,17 @@ class ajax extends connection{
 				$maxidx = $fetch["maxidx"] + 1;
 			}else{ $maxidx = 1; }
 
-			$pos = 'SELECT MAX(`position`) as posmax FROM `studio404_pages` WHERE `cid`=4 AND `status`!=1';
+			if(Input::method("POST","p")){
+				$cid = Input::method("POST","p");
+			}else{
+				$cid = 4;
+			}
+
+			$pos = 'SELECT MAX(`position`) as posmax FROM `studio404_pages` WHERE `cid`=:cid AND `status`!=1';
 			$prepare2 = $conn->prepare($pos);
-			$prepare2->execute(); 
+			$prepare2->execute(array(
+				":cid"=>$cid
+			)); 
 			if($prepare2->rowCount() > 0){
 				$fetch2 = $prepare2->fetch(PDO::FETCH_ASSOC);
 				$posmax = $fetch2["posmax"] + 1;
@@ -104,11 +112,7 @@ class ajax extends connection{
 			$slug_generation = new slug_generation();
 			$slug = $slug_generation->generate(Input::method("POST","n"));
 
-			if(Input::method("POST","p")){
-				$cid = Input::method("POST","p");
-			}else{
-				$cid = 4;
-			}
+			
 
 			for($x=1;$x<=2;$x++){
 				$sql = 'INSERT INTO `studio404_pages` SET `date`=:datex, `menu_type`=:menu_type, `page_type`=:page_type, `idx`=:idx, `cid`=:cid, `subid`=:cid, `title`=:titlex, `shorttitle`=:titlex, `slug`=:slug, `position`=:position, `visibility`=2, `lang`=:lang, `insert_admin`=:insert_admin';
@@ -234,29 +238,108 @@ class ajax extends connection{
 					":cid"=>$cid,
 					":posfrom"=>$posfrom
 				));					
-				
-				if($prepare2->rowCount() > 0){	
-					$sql = 'UPDATE `studio404_pages` SET `status`=1 WHERE `idx`=:idx';
-					$prepare = $conn->prepare($sql); 
-					$prepare->execute(array(
-						":idx"=>Input::method("POST","cidx")
-					));	
-
-					$files = glob(DIR.'_cache/*'); // get all file names
-					foreach($files as $file){ // iterate files
-						if(is_file($file))
-						@unlink($file); // delete file
-					}
 					
-					$insert_notification = new insert_notification();
-					$insert_notification->insert($c,$_SESSION["batumi_id"],"წაშალა კატალოგი: $title","Catalogue Deleted: $title");
+				$sql = 'UPDATE `studio404_pages` SET `status`=1 WHERE `idx`=:idx';
+				$prepare = $conn->prepare($sql); 
+				$prepare->execute(array(
+					":idx"=>Input::method("POST","cidx")
+				));	
 
-					echo "Done";
-				}else{
-					echo "Error N1";
+				$files = glob(DIR.'_cache/*'); // get all file names
+				foreach($files as $file){ // iterate files
+					if(is_file($file))
+					@unlink($file); // delete file
 				}
+				
+				$insert_notification = new insert_notification();
+				$insert_notification->insert($c,$_SESSION["batumi_id"],"წაშალა კატალოგი: $title","Catalogue Deleted: $title");
+
+				echo "Done";				
 			}
 			exit();
+		}
+
+		if(Input::method("POST","changeposition")=="true" && Input::method("POST","t") && Input::method("POST","i") && Input::method("POST","c") && Input::method("POST","p")){
+			if(Input::method("POST","t")=="up"){
+				$sql = 'UPDATE `studio404_pages` SET `position`=0 WHERE `idx`=:idx';
+				$prepare = $conn->prepare($sql); 
+				$prepare->execute(array(
+					":idx"=>Input::method("POST","i")
+				));
+
+				if($prepare->rowCount() > 0){
+					$minpos = Input::method("POST","p") - 1;
+					$sql2 = 'UPDATE `studio404_pages` SET `position`=`position`+1 WHERE `position`=:minpos AND `cid`=:cid';
+					$prepare2 = $conn->prepare($sql2); 
+					$prepare2->execute(array(
+						":minpos"=>$minpos, 
+						":cid"=>Input::method("POST","c")
+					));
+
+					if($prepare2->rowCount() > 0){
+						$sql3 = 'UPDATE `studio404_pages` SET `position`=:minpos WHERE `position`=0 AND `cid`=:cid';
+						$prepare3 = $conn->prepare($sql3); 
+						$prepare3->execute(array(
+							":minpos"=>$minpos, 
+							":cid"=>Input::method("POST","c")
+						));
+						if($prepare3->rowCount() > 0){
+
+							$files = glob(DIR.'_cache/*'); // get all file names
+							foreach($files as $file){ // iterate files
+								if(is_file($file))
+								@unlink($file); // delete file
+							}
+							
+							$insert_notification = new insert_notification();
+							$insert_notification->insert($c,$_SESSION["batumi_id"],"კატალოგის პოზიციის შეცვლა","Change Catalogue Position");
+
+							echo "Done";
+						}
+					}
+				}
+			}else{
+				$sql = 'UPDATE `studio404_pages` SET `position`=0 WHERE `idx`=:idx';
+				$prepare = $conn->prepare($sql); 
+				$prepare->execute(array(
+					":idx"=>Input::method("POST","i")
+				));
+
+				if($prepare->rowCount() > 0){
+					$pluspos = Input::method("POST","p") + 1;
+					$sql2 = 'UPDATE `studio404_pages` SET `position`=`position`-1 WHERE `position`=:pluspos AND `cid`=:cid';
+					$prepare2 = $conn->prepare($sql2); 
+					$prepare2->execute(array(
+						":pluspos"=>$pluspos, 
+						":cid"=>Input::method("POST","c")
+					));
+
+					if($prepare2->rowCount() > 0){
+						$sql3 = 'UPDATE `studio404_pages` SET `position`=:pluspos WHERE `position`=0 AND `cid`=:cid';
+						$prepare3 = $conn->prepare($sql3); 
+						$prepare3->execute(array(
+							":pluspos"=>$pluspos, 
+							":cid"=>Input::method("POST","c")
+						));
+
+						if($prepare3->rowCount() > 0){
+
+							$files = glob(DIR.'_cache/*'); // get all file names
+							foreach($files as $file){ // iterate files
+								if(is_file($file))
+								@unlink($file); // delete file
+							}
+							
+							$insert_notification = new insert_notification();
+							$insert_notification->insert($c,$_SESSION["batumi_id"],"კატალოგის პოზიციის შეცვლა","Change Catalogue Position");
+
+							echo "Done";
+						}
+					}
+
+				}
+
+			}
 		}
 
 
