@@ -7,7 +7,7 @@
 	<!-- Content Header (Page header) -->
 		<section class="content-header">
 			<h1>
-				<?=$data["text_general"][0]["title"]?> ( <?=$data["language_data"]["val22"]?>: #<?=$_SESSION["batumi_id"]?> )
+				<?=$data["text_general"][0]["title"]?>
 				<!-- <small>ჰოსტელის გვერდის მოკლე აღწერა</small> -->
 			</h1>
 			<ol class="breadcrumb">
@@ -18,7 +18,7 @@
 		<section class="content">
 			<div class="box box-default">
             <div class="box-header with-border">
-              <h3 class="box-title"><?=$data["language_data"]["val1"]?></h3>
+              <h3 class="box-title"><?=$data["language_data"]["val45"]?></h3>
               <div class="box-tools pull-right">
                 <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
               </div>
@@ -31,26 +31,37 @@
                 
                   <div class="form-group">
                     <label><?=$data["language_data"]["val2"]?>: <font color="red">*</font></label> <!-- Username OR Email -->
-                    <input class="form-control" type="text" value="<?=$data["userdata"]["username"]?>" disabled="disabled" />
+                    <input class="form-control" type="text" id="username" value=""  />
+                    <p class="help-block username-required" style="display:none"><font color="red"><?=$data["language_data"]["val50"]?></font></p>
                   </div>
 
                   <div class="form-group">
                     <label><?=$data["language_data"]["val4"]?>: <font color="red">*</font></label> <!-- Fisrname & lastname -->
-                    <input class="form-control" type="text" placeholder="" id="namelname" value="<?=$data["userdata"]["namelname"]?>" />
+                    <input class="form-control" type="text" placeholder="" id="namelname" value="" />
                     <p class="help-block namelname-required" style="display:none"><font color="red"><?=$data["language_data"]["val13"]?></font></p>
                   </div>
                   
 
                   <div class="form-group">
                     <label><?=$data["language_data"]["val6"]?>: <font color="red">*</font></label> <!-- Contact Mobile -->
-                    <input class="form-control" type="text" placeholder="" id="mobile" value="<?=$data["userdata"]["mobile"]?>" />
+                    <input class="form-control" type="text" placeholder="" id="mobile" value="" />
                     <p class="help-block mobile-required" style="display:none"><font color="red"><?=$data["language_data"]["val14"]?></font></p>
                   </div>
 
                                  
                   <div class="form-group">
                     <label><?=$data["language_data"]["val7"]?>:</label> <!-- Address -->
-                    <input class="form-control" type="text" placeholder="" id="address" value="<?=$data["userdata"]["address"]?>" />
+                    <input class="form-control" type="text" placeholder="" id="address" value="" />
+                  </div>
+
+                  <div class="form-group">
+                    <form action="" method="post" id="profile-picture-form" enctype="multipart/form-data">
+                      <input type="hidden" name="typo" id="typo" value="self" />
+                      <input type="hidden" name="companyId" id="companyId" value="" />
+                      <label for="profile-image"><?=$data["language_data"]["val11"]?> </label><!-- User Picture -->
+                      <input type="file" id="profile-image" name="profileimage2" value="" />
+                      <p class="help-block file-size" style="display:none"><font color="red"><?=$data["language_data"]["val16"]?></font></p>
+                    </form>
                   </div>
                   
 
@@ -59,19 +70,19 @@
                 <div class="col-md-6">
                 
                   <div class="form-group">
-                    <label><?=$data["language_data"]["val12"]?>: <font color="red">*</font></label> <!-- User Type -->
-                    <?php
-                    if($data["userdata"]["user_type"]=="website_manager"){
-                      $utype = $data["language_data"]["val48"];
-                    }else if($data["userdata"]["user_type"]=="just_user"){
-                      $utype = $data["language_data"]["val47"];
-                    }else{
-                      $utype = $data["language_data"]["val46"];
-                    }
-                    ?>
-                    <input class="form-control" type="text" value="<?=$utype?>" disabled="disabled" />
+                    <label><?=$data["language_data"]["val49"]?>: <font color="red">*</font></label> <!-- User Type -->
+                    <input type="password" class="form-control" id="password" value="" />
+                    <p class="help-block password-required" style="display:none"><font color="red"><?=$data["language_data"]["val51"]?></font></p>
                   </div>
 
+
+                  <div class="form-group">
+                    <label><?=$data["language_data"]["val12"]?>: <font color="red">*</font></label> <!-- User Type -->
+                    <select class="form-control" id="user_type">
+                      <option value="editor"><?=$data["language_data"]["val46"]?></option>
+                      <option value="just_user"><?=$data["language_data"]["val47"]?></option>
+                    </select>
+                  </div>
                   
 
                   <div class="form-group">
@@ -80,27 +91,17 @@
                       <div class="input-group-addon">
                         <i class="fa fa-calendar"></i>
                       </div>
-                      <?php
-                      $dob = ($data["userdata"]["dob"]) ? date("d/m/Y",$data["userdata"]["dob"]) : "";
-                      ?>
-                      <input type="text" class="form-control" id="dob" value="<?=$dob?>" data-inputmask="'alias': 'dd/mm/yyyy'" data-mask />
+                      <input type="text" class="form-control" id="dob" value="" data-inputmask="'alias': 'dd/mm/yyyy'" data-mask />
                     </div>
                   </div>
 
                    <div class="form-group">
                     <label><?=$data["language_data"]["val5"]?>: <font color="red">*</font></label> <!-- Contact Email -->
-                    <input class="form-control" type="text" id="email" placeholder="" value="<?=$data["userdata"]["email"]?>" />
+                    <input class="form-control" type="text" id="email" placeholder="" value="" />
                     <p class="help-block email-required" style="display:none"><font color="red"><?=$data["language_data"]["val15"]?></font></p>
                   </div>
                   
-                  <div class="form-group">
-                    <form action="" method="post" id="profile-picture-form" enctype="multipart/form-data">
-                      <input type="hidden" name="typo" id="typo" value="self" />
-                      <label for="profile-image"><?=$data["language_data"]["val11"]?> </label><!-- User Picture -->
-                      <input type="file" id="profile-image" name="profileimage" value="" />
-                      <p class="help-block file-size" style="display:none"><font color="red"><?=$data["language_data"]["val16"]?></font></p>
-                    </form>
-                  </div>
+                  
 
                 </div>
                 
@@ -109,9 +110,9 @@
               </div><!-- /.row -->
             </div><!-- /.box-body -->
             <div class="box-footer">
-          	  <button class="btn btn-primary" type="submit" data-dlang="<?=LANG?>" id="update-profile"><?=$data["language_data"]["val9"]?></button>
-          	  <button class="btn btn-primary" type="submit" data-dlang="<?=LANG?>" id="update-profile-close"><?=$data["language_data"]["val10"]?></button>
-              <button class="btn btn-primary btn-warning gotoUrl" data-goto="<?=WEBSITE.LANG?>/welcome-system" type="submit"><?=$data["language_data"]["val33"]?></button>
+          	  <button class="btn btn-primary" type="submit" data-dlang="<?=LANG?>" id="add-user"><?=$data["language_data"]["val27"]?></button>
+          	  <button class="btn btn-primary" type="submit" data-dlang="<?=LANG?>" id="add-user-close"><?=$data["language_data"]["val28"]?></button>
+              <button class="btn btn-primary btn-warning gotoUrl" data-goto="<?=WEBSITE.LANG?>/momxmareblis-marTva" type="submit"><?=$data["language_data"]["val33"]?></button>
             </div>
           </div><!-- /.box -->
 		</section>

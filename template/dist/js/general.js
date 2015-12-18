@@ -268,9 +268,28 @@ $(document).on("click",".remove-catalogue",function(){
 	 
 });
 
+$(document).on("click",".remove-user",function(){
+	var userid = $(this).data("userid"); 
+	var dlang = $(this).data("dlang"); 
+	var lg = "";
+	if(userid && dlang){
+		if(dlang=="en"){
+			$(".modal-body").html("<p>Would you like to delete item ?</p>"); 	
+			$(".dojobbutton").text("Yes").fadeIn("slow");			
+		}else{
+			$(".modal-body").html("<p>გნებავთ წაშალოთ მონაცემი ?</p>"); 
+			$(".dojobbutton").text("დიახ").fadeIn("slow");
+		}
+		$('.bs-example-modal-sm').modal("show");
+		$(".dojobbutton").data("removeuser",userid);
+	}
+});
+
+
 $(document).on("click",".dojobbutton",function(){
 	var removecatalogue = $(this).data("removecatalogue");
-	if(removecatalogue!=""){
+	var removeuser = $(this).data("removeuser");
+	if(removecatalogue){
 		$('.bs-example-modal-sm').modal("hide");
 		$(".overlay-loader").fadeIn("slow");
 		$.post(AJAX_REQUEST_URL, { removeCatalogue:true, cidx:removecatalogue }, function(result){
@@ -279,6 +298,18 @@ $(document).on("click",".dojobbutton",function(){
 			}else{
 				$(".overlay-loader").fadeIn("hide");
 				alert("Critical Error ! N1");				
+			}
+		});
+	}else if(removeuser){
+		$('.bs-example-modal-sm').modal("hide");
+		$(".overlay-loader").fadeIn("slow");
+		$.post(AJAX_REQUEST_URL, { removeuserx:true, uid:removeuser }, function(result){
+			if(result=="Done"){
+				location.reload();
+			}else{
+				$(".overlay-loader").fadeIn("hide");
+				//alert("Critical Error ! N1");
+				console.log("test");
 			}
 		});
 	}
@@ -307,6 +338,124 @@ $(document).on("click",".down-catalog",function(){
 		}
 	});
 });
+
+
+$(document).on("click","#add-user",function(){
+	var username = $("#username").val();
+	var password = $("#password").val();
+	var user_type = $("#user_type").val();
+	var namelname = $("#namelname").val();
+	var dob = $("#dob").val();
+	var mobile = $("#mobile").val();
+	var email = $("#email").val();
+	var address = $("#address").val();
+	var dlang = $(this).data("dlang");
+	var image = ($("#profile-image").val()) ? "true" : "false";
+	$(".help-block").fadeOut("slow");
+	if(username==""){
+		$(".username-required").fadeIn("slow"); 
+	}else if(password==""){
+		$(".password-required").fadeIn("slow"); 
+	}else if(namelname==""){
+		$(".namelname-required").fadeIn("slow"); 
+	}else if(mobile==""){
+		$(".mobile-required").fadeIn("slow"); 
+	}else if(email==""){
+		$(".email-required").fadeIn("slow"); 
+	}else{
+		$(".overlay-loader").fadeIn("slow");
+		$.post(AJAX_REQUEST_URL,{
+			adduser:true,
+			u:username, 
+			p:password, 
+			us:user_type, 
+			n:namelname, 
+			d:dob, 
+			m:mobile, 
+			e:email, 
+			a:address, 
+			i:image 
+		},function(result){
+			$(".overlay-loader").hide(); 
+			if(image=="true"){
+				$("#companyId").val(result);
+				$("#profile-picture-form").submit();
+			}else{
+				if(result=="Done"){ 
+					if(dlang=="ge"){
+						$(".form-message-output").text(MESSAGE_OPERATION_DONE_GE).fadeIn("slow");
+					}else{
+						$(".form-message-output").text(MESSAGE_OPERATION_DONE_EN).fadeIn("slow");
+					}
+				}else{
+					if(dlang=="ge"){
+						$(".form-message-output").text(MESSAGE_OPERATION_ERROR_GE).fadeIn("slow");
+					}else{
+						$(".form-message-output").text(MESSAGE_OPERATION_ERROR_EN).fadeIn("slow");
+					}
+				}
+			}
+		});
+	}
+});
+
+
+$(document).on("click","#add-user-close",function(){
+	var username = $("#username").val();
+	var password = $("#password").val();
+	var user_type = $("#user_type").val();
+	var namelname = $("#namelname").val();
+	var dob = $("#dob").val();
+	var mobile = $("#mobile").val();
+	var email = $("#email").val();
+	var address = $("#address").val();
+	var dlang = $(this).data("dlang");
+	var image = ($("#profile-image").val()) ? "true" : "false";
+	$(".help-block").fadeOut("slow");
+	if(username==""){
+		$(".username-required").fadeIn("slow"); 
+	}else if(password==""){
+		$(".password-required").fadeIn("slow"); 
+	}else if(namelname==""){
+		$(".namelname-required").fadeIn("slow"); 
+	}else if(mobile==""){
+		$(".mobile-required").fadeIn("slow"); 
+	}else if(email==""){
+		$(".email-required").fadeIn("slow"); 
+	}else{
+		$(".overlay-loader").fadeIn("slow");
+		$.post(AJAX_REQUEST_URL,{
+			adduser:true,
+			u:username, 
+			p:password, 
+			us:user_type, 
+			n:namelname, 
+			d:dob, 
+			m:mobile, 
+			e:email, 
+			a:address, 
+			i:image 
+		},function(result){
+			$(".overlay-loader").hide(); 
+			if(image=="true"){
+				$("#typo").val("blank");
+				$("#companyId").val(result);
+				$("#profile-picture-form").submit();
+			}else{
+				if(result=="Done"){ 
+					location.href = SYSTEM_WELCOME_PAGE+"/"+dlang+"/momxmareblis-marTva";
+				}else{
+					if(dlang=="ge"){
+						$(".form-message-output").text(MESSAGE_OPERATION_ERROR_GE).fadeIn("slow");
+					}else{
+						$(".form-message-output").text(MESSAGE_OPERATION_ERROR_EN).fadeIn("slow");
+					}
+				}
+			}
+		});
+	}
+});
+
 
 /* Functions START */
 $(document).on("click",".reloadMe",function(){

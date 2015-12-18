@@ -83,6 +83,22 @@ $obj  = new url_controll(); // url controlls
 ** important variables if more language edit this line 
 */
 $LANG = $obj->url("segment",$c['site.language.slash.position']);
+// if($LANG==$c['admin.slug']){
+// 	redirect::url(WEBSITE.$c['main.language']."/".$c['admin.slug']);
+// }
+
+if(empty($LANG)){ // just domain name
+	$redirect = new redirect();
+	$redirect->go(WEBSITE.$c['main.language']."/".$c["welcome.page.slug"]); 
+}else if(!in_array($LANG, $c['languages.array']) && $LANG != "image" && $LANG!=$c['admin.slug']){
+	$welcome_class = $c["welcome.page.slug"];
+	$main_language = $c['main.language'];
+	$redirect = new redirect();
+	$redirect->go(WEBSITE.$main_language."/".$welcome_class);
+}else if($LANG==$c['admin.slug']){
+	redirect::url(WEBSITE.$c['main.language']."/".$c['admin.slug']);
+}
+
 $get_ip = new get_ip();
 $ip = $get_ip->ip;
 

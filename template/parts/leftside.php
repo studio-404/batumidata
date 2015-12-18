@@ -64,19 +64,11 @@
             ?>
             <li class="<?=($slug_second=="katalogis-marTva") ? 'active' : ''?>">
               <a href="<?=WEBSITE.LANG?>/katalogis-marTva"><i class="fa fa-wrench"></i> <span><?=(LANG=="ge") ? "კატალოგის მართვა" : "Manage catalog"?></span></a>
-              <!-- <ul class="treeview-menu">
-                 <li class="<?=($slug_second=="katalogis-damateba") ? 'active' : ''?>">
-                  <a href="<?=WEBSITE.LANG?>/katalogis-damateba"><span><?=(LANG=="ge") ? "დამატება" : "add"?></span></a>
-                 </li>
-                 <li class="<?=($slug_second=="katalogis-marTva") ? 'active' : ''?>">
-                    <a href="<?=WEBSITE.LANG?>/katalogis-marTva"><span><?=(LANG=="ge") ? "კატალოგი" : "Catalog"?></span></a>
-                 </li>
-              </ul> -->
             </li>
-            <li class="<?=($slug_second=="profilis-redaqtireba") ? 'active' : ''?>"><a href="<?=WEBSITE.LANG?>/profilis-redaqtireba"><i class="fa fa-user-secret"></i> <span><?=(LANG=="ge") ? "პროფილი" : "Profile"?></span></a></li>
+            <li class="<?=($slug_second=="momxmareblis-marTva") ? 'active' : ''?>"><a href="<?=WEBSITE.LANG?>/momxmareblis-marTva"><i class="fa fa-users"></i> <span><?=$data['language_data']["val40"]?></span></a></li>
+            <li class="<?=($slug_second=="profilis-redaqtireba") ? 'active' : ''?>"><a href="<?=WEBSITE.LANG?>/profilis-redaqtireba"><i class="fa fa-user-secret"></i> <span><?=$data['language_data']["val39"]?></span></a></li>
            
-            
-          </ul><!-- /.sidebar-menu -->
+         </ul><!-- /.sidebar-menu -->
         </section>
         <!-- /.sidebar -->
       </aside>

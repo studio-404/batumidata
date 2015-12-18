@@ -45,6 +45,25 @@ class ajax extends connection{
 			exit();
 		}
 
+		if(Input::method("POST","removeuserx")=="true" && Input::method("POST","uid")){
+			$sql = 'UPDATE `studio404_users` SET `status`=1 WHERE `id`=:uid';
+			$prepare = $conn->prepare($sql);
+			$prepare->execute(array(
+				":uid"=>Input::method("POST","uid")
+			));
+
+			$files = glob(DIR.'_cache/*'); // get all file names
+			foreach($files as $file){ // iterate files
+				if(is_file($file))
+				@unlink($file); // delete file
+			}
+			$insert_notification = new insert_notification();
+			$insert_notification->insert($c,$_SESSION["batumi_id"],"წაიშალა მომხმარებელი: ID ".Input::method("POST","uid"),"User Deleted: ID ".Input::method("POST","uid"));
+
+			echo "Done"; 
+			exit();
+		}
+
 		if(Input::method("POST","logout")=="true"){
 			session_destroy();
 			echo "Out";
@@ -191,30 +210,40 @@ class ajax extends connection{
 
 
 		if(Input::method("POST","checkmodelitem") && Input::method("POST","ci") && Input::method("POST","lang")){
-			$sql = 'SELECT 
-			`studio404_module_item`.`id` 
-			FROM 
-			`studio404_module_attachment`,`studio404_module_item`
-			WHERE 
-			`studio404_module_attachment`.`connect_idx`=:connect_idx AND 
-			`studio404_module_attachment`.`page_type`=:page_type AND 
-			`studio404_module_attachment`.`lang`=:lang AND 
-			`studio404_module_attachment`.`status`!=:one AND 
-			`studio404_module_attachment`.`idx`=`studio404_module_item`.`module_idx` AND 
-			`studio404_module_item`.`lang`=:lang AND 
-			`studio404_module_item`.`status`!=:one 
-			';
-			$prepare = $conn->prepare($sql); 
-			$prepare->execute(array(
-				":connect_idx"=>Input::method("POST","ci"), 
-				":page_type"=>'catalogpage', 
-				":lang"=>Input::method("POST","lang"), 
-				":one"=>1 
+			// echo "a";
+			$sql0 = 'SELECT `id` FROM `studio404_pages` WHERE `cid`=:cid AND `status`!=1';
+			$preparex = $conn->prepare($sql0); 
+			$preparex->execute(array(
+				":cid"=>Input::method("POST","ci")
 			));
-			if($prepare->rowCount() > 0){
+			if($preparex->rowCount()>0){
 				echo "Exists";
 			}else{
-				echo "Free to delete"; 
+				$sql = 'SELECT 
+				`studio404_module_item`.`id` 
+				FROM 
+				`studio404_module_attachment`,`studio404_module_item`
+				WHERE 
+				`studio404_module_attachment`.`connect_idx`=:connect_idx AND 
+				`studio404_module_attachment`.`page_type`=:page_type AND 
+				`studio404_module_attachment`.`lang`=:lang AND 
+				`studio404_module_attachment`.`status`!=:one AND 
+				`studio404_module_attachment`.`idx`=`studio404_module_item`.`module_idx` AND 
+				`studio404_module_item`.`lang`=:lang AND 
+				`studio404_module_item`.`status`!=:one 
+				';
+				$prepare = $conn->prepare($sql); 
+				$prepare->execute(array(
+					":connect_idx"=>Input::method("POST","ci"), 
+					":page_type"=>'catalogpage', 
+					":lang"=>Input::method("POST","lang"), 
+					":one"=>1 
+				));
+				if($prepare->rowCount() > 0){
+					echo "Exists";
+				}else{
+					echo "Free to delete"; 
+				}
 			}
 			exit();
 		}
@@ -340,6 +369,52 @@ class ajax extends connection{
 				}
 
 			}
+		}
+
+		if(Input::method("POST","adduser")=="true" && Input::method("POST","u") && Input::method("POST","us") && Input::method("POST","n") && Input::method("POST","m")){
+			$sql = 'INSERT INTO `studio404_users` SET `username`=:username, `password`=:password, `user_type`=:user_type, `namelname`=:namelname, `dob`=:dob, `mobile`=:mobile, `email`=:email, `address`=:address';
+			$prepare = $conn->prepare($sql); 
+			$dob = str_replace("/", "-", Input::method("POST","d")); 
+			$dob = strtotime($dob); 
+
+			$username = Input::method("POST","u"); 
+			$password = md5(Input::method("POST","p")); 
+			$user_type = Input::method("POST","us"); 
+			$namelname = Input::method("POST","n"); 
+			$mobile = Input::method("POST","m"); 
+			$email = Input::method("POST","e"); 
+			$address = Input::method("POST","a"); 
+			$image = Input::method("POST","i"); 
+
+			$prepare->execute(array(
+				":username"=>$username, 
+				":password"=>$password, 
+				":user_type"=>$user_type, 
+				":namelname"=>$namelname, 
+				":dob"=>$dob, 
+				":mobile"=>$mobile, 
+				":email"=>$email, 
+				":address"=>$address 
+			));
+
+			if($prepare->rowCount() > 0){ 
+				$files = glob(DIR.'_cache/*'); // get all file names
+				foreach($files as $file){ // iterate files
+					if(is_file($file))
+					@unlink($file); // delete file
+				}
+				
+				$insert_notification = new insert_notification();
+				$insert_notification->insert($c,$_SESSION["batumi_id"],"მომხმარებლის დამატება","Add User");
+				if($image=="true"){
+					echo $conn->lastInsertId();
+				}else{
+					echo "Done"; 
+				}				
+			}else{
+				echo "Error"; 
+			}
+			exit();
 		}
 
 
