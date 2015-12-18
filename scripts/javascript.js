@@ -1,5 +1,5 @@
 /////////////////////////// JS config START
-var root = "http://"+document.domain+"/batumi";
+var root = "http://"+document.domain;
 /////////////////////////// JS config END
 
 $(document).ready(function(){

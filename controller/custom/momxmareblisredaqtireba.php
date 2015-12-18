@@ -38,7 +38,21 @@ class momxmareblisredaqtireba extends connection{
 		}else{
 			redirect::url(WEBSITE);
 		}
-		
+
+		$osql = 'SELECT `dob`,`username`,`password`,`picture`,`namelname`,`email`,`mobile`,`address`,`user_type` FROM `studio404_users` WHERE `id`=:id';
+		$oprepare = $conn->prepare($osql);
+		$oprepare->execute(array(
+			":id"=>Input::method("GET","id")
+		));
+		if($oprepare->rowCount() > 0){
+			$ofetch = $oprepare->fetch(PDO::FETCH_ASSOC);
+			$data["ouserdata"] = $ofetch;
+		}else{
+			redirect::url(WEBSITE);
+		}
+
+
+
 		$include = WEB_DIR."/momxmareblisredaqtireba.php";
 		if(file_exists($include)){
 			@include($include);

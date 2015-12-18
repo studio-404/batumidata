@@ -110,9 +110,9 @@
               </div><!-- /.row -->
             </div><!-- /.box-body -->
             <div class="box-footer">
-          	  <button class="btn btn-primary" type="submit" data-dlang="<?=LANG?>" id="add-user"><?=$data["language_data"]["val27"]?></button>
-          	  <button class="btn btn-primary" type="submit" data-dlang="<?=LANG?>" id="add-user-close"><?=$data["language_data"]["val28"]?></button>
-              <button class="btn btn-primary btn-warning gotoUrl" data-goto="<?=WEBSITE.LANG?>/momxmareblis-marTva" type="submit"><?=$data["language_data"]["val33"]?></button>
+          	  <button class="btn btn-primary" type="button" data-dlang="<?=LANG?>" id="add-user"><?=$data["language_data"]["val27"]?></button>
+          	  <button class="btn btn-primary" type="button" data-dlang="<?=LANG?>" id="add-user-close"><?=$data["language_data"]["val28"]?></button>
+              <button class="btn btn-primary btn-warning gotoUrl" data-goto="<?=WEBSITE.LANG?>/momxmareblis-marTva" type="button"><?=$data["language_data"]["val33"]?></button>
             </div>
           </div><!-- /.box -->
 		</section>

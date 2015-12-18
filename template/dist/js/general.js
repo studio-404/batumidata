@@ -75,7 +75,7 @@ $(document).on("change","#profile-image",function(e){
 	e.stopPropagation();
 	e.preventDefault();
 	var files = e.target.files;
-
+	$(".file-size").fadeOut("slow"); 
 	var noerror = false;
 	var ex = files[0].name.split(".");
 	var extLast = ex[ex.length - 1].toLowerCase();
@@ -440,6 +440,109 @@ $(document).on("click","#add-user-close",function(){
 			if(image=="true"){
 				$("#typo").val("blank");
 				$("#companyId").val(result);
+				$("#profile-picture-form").submit();
+			}else{
+				if(result=="Done"){ 
+					location.href = SYSTEM_WELCOME_PAGE+"/"+dlang+"/momxmareblis-marTva";
+				}else{
+					if(dlang=="ge"){
+						$(".form-message-output").text(MESSAGE_OPERATION_ERROR_GE).fadeIn("slow");
+					}else{
+						$(".form-message-output").text(MESSAGE_OPERATION_ERROR_EN).fadeIn("slow");
+					}
+				}
+			}
+		});
+	}
+});
+
+
+$(document).on("click","#edit-user",function(){
+	var uidx = $(this).data("userid");
+	var password = $("#password").val();
+	var namelname = $("#namelname").val();
+	var dob = $("#dob").val();
+	var mobile = $("#mobile").val();
+	var email = $("#email").val();
+	var address = $("#address").val();
+	var dlang = $(this).data("dlang");
+	var image = ($("#profile-image").val()) ? "true" : "false";
+	$(".help-block").fadeOut("slow");
+	if(namelname==""){
+		$(".namelname-required").fadeIn("slow"); 
+	}else if(mobile==""){
+		$(".mobile-required").fadeIn("slow"); 
+	}else if(email==""){
+		$(".email-required").fadeIn("slow"); 
+	}else{
+		$(".overlay-loader").fadeIn("slow");
+		$.post(AJAX_REQUEST_URL,{
+			edituser:true,
+			userid:uidx, 
+			p:password, 
+			n:namelname, 
+			d:dob, 
+			m:mobile, 
+			e:email, 
+			a:address, 
+			i:image 
+		},function(result){
+			$(".overlay-loader").hide(); 
+			if(image=="true"){
+				$("#profile-picture-form").submit();
+			}else{
+				if(result=="Done"){ 
+					if(dlang=="ge"){
+						$(".form-message-output").text(MESSAGE_OPERATION_DONE_GE).fadeIn("slow");
+					}else{
+						$(".form-message-output").text(MESSAGE_OPERATION_DONE_EN).fadeIn("slow");
+					}
+				}else{
+					if(dlang=="ge"){
+						$(".form-message-output").text(MESSAGE_OPERATION_ERROR_GE).fadeIn("slow");
+					}else{
+						$(".form-message-output").text(MESSAGE_OPERATION_ERROR_EN).fadeIn("slow");
+					}
+				}
+			}
+		});
+	}
+});
+
+
+$(document).on("click","#edit-user-close",function(){
+	var uidx = $(this).data("userid");
+	var password = $("#password").val();
+	var namelname = $("#namelname").val();
+	var dob = $("#dob").val();
+	var mobile = $("#mobile").val();
+	var email = $("#email").val();
+	var address = $("#address").val();
+	var dlang = $(this).data("dlang");
+	var image = ($("#profile-image").val()) ? "true" : "false";
+	$(".help-block").fadeOut("slow");
+	if(namelname==""){
+		$(".namelname-required").fadeIn("slow"); 
+	}else if(mobile==""){
+		$(".mobile-required").fadeIn("slow"); 
+	}else if(email==""){
+		$(".email-required").fadeIn("slow"); 
+	}else{
+		$(".overlay-loader").fadeIn("slow");
+		$.post(AJAX_REQUEST_URL,{
+			edituser:true,
+			userid:uidx, 
+			p:password, 
+			n:namelname, 
+			d:dob, 
+			m:mobile, 
+			e:email, 
+			a:address, 
+			i:image 
+		},function(result){
+			$(".overlay-loader").hide(); 
+			if(image=="true"){
+				$("#typo").val("blank");
 				$("#profile-picture-form").submit();
 			}else{
 				if(result=="Done"){ 

@@ -418,6 +418,70 @@ class ajax extends connection{
 		}
 
 
+		if(Input::method("POST","edituser")=="true" && Input::method("POST","n") && Input::method("POST","m") && Input::method("POST","userid")){
+			if(Input::method("POST","p")!=""){
+				$password = md5(Input::method("POST","p")); 
+				$sql_p = '`password`=:password, ';
+			}else{
+				$sql_p = '';
+			}
+			$sql = 'UPDATE `studio404_users` SET '.$sql_p.'`namelname`=:namelname, `dob`=:dob, `mobile`=:mobile, `email`=:email, `address`=:address WHERE `id`=:userid';
+			$prepare = $conn->prepare($sql); 
+			$dob = str_replace("/", "-", Input::method("POST","d")); 
+			$dob = strtotime($dob); 
+
+			$userid = Input::method("POST","userid"); 
+			
+			$namelname = Input::method("POST","n"); 
+			$mobile = Input::method("POST","m"); 
+			$email = Input::method("POST","e"); 
+			$address = Input::method("POST","a"); 
+			$image = Input::method("POST","i"); 
+
+			if(Input::method("POST","p")!=""){
+				$prepare->execute(array(
+				":userid"=>$userid, 
+				":password"=>$password, 
+				":namelname"=>$namelname, 
+				":dob"=>$dob, 
+				":mobile"=>$mobile, 
+				":email"=>$email, 
+				":address"=>$address 
+				));
+			}else{
+				$prepare->execute(array(
+				":userid"=>$userid, 
+				":namelname"=>$namelname, 
+				":dob"=>$dob, 
+				":mobile"=>$mobile, 
+				":email"=>$email, 
+				":address"=>$address 
+				));
+			}
+
+			
+
+			if($prepare->rowCount() > 0){ 
+				$files = glob(DIR.'_cache/*'); // get all file names
+				foreach($files as $file){ // iterate files
+					if(is_file($file))
+					@unlink($file); // delete file
+				}
+				
+				$insert_notification = new insert_notification();
+				$insert_notification->insert($c,$_SESSION["batumi_id"],"მომხმარებლის რედაქტირება","Edit User");
+				if($image=="true"){
+					echo $conn->lastInsertId();
+				}else{
+					echo "Done"; 
+				}				
+			}else{
+				echo "Error"; 
+			}
+			exit();
+		}
+
+
 		/* end batumi */
 
 		if(Input::method("POST","changeusertype")=="true" && Input::method("POST","t") && $_SESSION["tradewithgeorgia_user_id"]) :
