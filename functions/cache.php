@@ -34,6 +34,12 @@ class cache extends connection{
 			)); 
 			$fetch = $prepare->fetchAll(PDO::FETCH_ASSOC); 
 			break;
+			case "catalog_table_columns":
+			$sql = 'SELECT * FROM `information_schema`.`columns` WHERE `table_schema` = "geoweb_batumi" AND `table_name`="studio404_media_item"';
+			$prepare = $conn->prepare($sql);
+			$prepare->execute();
+			$fetch = $prepare->fetchAll(PDO::FETCH_ASSOC);
+			break;
 			case "welcomepage_categories": 
 			$sql = 'SELECT `idx`,`title`,`slug` FROM `studio404_pages` WHERE `cid`=:cid AND `lang`=:lang AND `visibility`!=:visibility AND `status`!=:status ORDER BY `position` ASC';	
 			$prepare = $conn->prepare($sql); 

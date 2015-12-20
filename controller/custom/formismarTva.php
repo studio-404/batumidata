@@ -10,8 +10,13 @@ class formismarTva extends connection{
 		$text_general = $cache->index($c,"text_general");
 		$data["text_general"] = json_decode($text_general,true);
 		
+		/* categories list */
 		$welcomepage_categories = $cache->index($c,"welcomepage_categories");
 		$data["welcomepage_categories"] = json_decode($welcomepage_categories,true);
+
+		/* all columns catalog table */
+		$catalog_table_columns = $cache->index($c,"catalog_table_columns");
+		$data["catalog_table_columns"] = json_decode($catalog_table_columns,true);
 
 		/* language variables */
 		$language_data = $cache->index($c,"language_data");

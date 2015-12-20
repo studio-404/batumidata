@@ -289,6 +289,7 @@ $(document).on("click",".remove-user",function(){
 $(document).on("click",".dojobbutton",function(){
 	var removecatalogue = $(this).data("removecatalogue");
 	var removeuser = $(this).data("removeuser");
+	var removeformelement = $(this).data("removeformelement");
 	if(removecatalogue){
 		$('.bs-example-modal-sm').modal("hide");
 		$(".overlay-loader").fadeIn("slow");
@@ -570,7 +571,6 @@ $(document).on("click",".gotoUrl",function(){
 	var g = $(this).data("goto");
 	location.href = g;
 });
-
 
 function update_users_profile(type,dlang){
 	var namelname = $("#namelname").val(); 
