@@ -1,16 +1,15 @@
 <?php if(!defined("DIR")){ exit(); }
-class welcomesystem extends connection{
+class formismarTva extends connection{
 	function __construct($c){
-		if(!$_SESSION["batumi_username"]){
-			redirect::url(WEBSITE);
-		}
-		$this->template($c,"welcomesystem");
+		$this->template($c,"formismarTva");
 	}
 	
 	public function template($c,$page){
-		$conn = $this->conn($c); 
-		
+		$conn = $this->conn($c);
 		$cache = new cache();
+		$text_general = $cache->index($c,"text_general");
+		$data["text_general"] = json_decode($text_general,true);
+		
 		$welcomepage_categories = $cache->index($c,"welcomepage_categories");
 		$data["welcomepage_categories"] = json_decode($welcomepage_categories,true);
 
@@ -19,11 +18,6 @@ class welcomesystem extends connection{
 		$language_data = json_decode($language_data);
 		$model_template_makevars = new  model_template_makevars();
 		$data["language_data"] = $model_template_makevars->vars($language_data); 
-
-		/* fetch last 10 user */
-		$userlist = $cache->index($c,"userlist");
-		$data["userlist"] = json_decode($userlist,true);
-
 
 		$sql = 'SELECT `namelname`,`picture` FROM `studio404_users` WHERE `id`=:id';
 		$prepare = $conn->prepare($sql);
@@ -37,9 +31,26 @@ class welcomesystem extends connection{
 			redirect::url(WEBSITE);
 		}
 
-		$include = WEB_DIR."/welcomesystem.php";
-		if(file_exists($include))
-		{
+		if(Input::method("GET","parent")!=""){
+			$parent = 'SELECT `idx`,`title` FROM `studio404_pages` WHERE `idx`=:idx AND `cid`=4 AND `status`!=1 AND `lang`=:lang';
+			$prepareParent = $conn->prepare($parent);
+			$prepareParent->execute(array(
+				":idx"=>Input::method("GET","parent"), 
+				":lang"=>LANG_ID
+			));
+			if($prepareParent->rowCount() > 0){
+				$parent_fetch = $prepareParent->fetch(PDO::FETCH_ASSOC);
+				$data["parent_idx"] = $parent_fetch["idx"];
+				$data["parent_title"] = $parent_fetch["title"];
+			}else{
+				redirect::url(WEBSITE.LANG."/katalogis-marTva");
+			}
+		}else{
+			redirect::url(WEBSITE.LANG."/katalogis-marTva");
+		}
+
+		$include = WEB_DIR."/formismarTva.php";
+		if(file_exists($include)){
 			@include($include);
 		}else{
 			$controller = new error_page(); 

@@ -36,11 +36,11 @@
                 </div>
           </div>
           <div class="box-footer">
-		   	  <button class="btn btn-primary" type="submit" data-dlang="<?=LANG_ID?>" id="edit-catalogue">
+		   	  <button class="btn btn-primary" type="button" data-dlang="<?=LANG_ID?>" id="edit-catalogue">
 		   	  	<?=$data["language_data"]["val35"]?></button>
-		   	  <button class="btn btn-primary" type="submit" data-dlang="<?=LANG_ID?>" id="edit-catalogue-close">
+		   	  <button class="btn btn-primary" type="button" data-dlang="<?=LANG_ID?>" id="edit-catalogue-close">
 		   	  	<?=$data["language_data"]["val36"]?></button>
-		   	  <button class="btn btn-primary btn-warning gotoUrl" data-goto="<?=WEBSITE.LANG?>/katalogis-marTva" type="submit"><?=$data["language_data"]["val33"]?></button>
+		   	  <button class="btn btn-primary btn-warning gotoUrl" data-goto="<?=WEBSITE.LANG?>/katalogis-marTva" type="button"><?=$data["language_data"]["val33"]?></button>
 		  </div>
       </div>
 		</section>

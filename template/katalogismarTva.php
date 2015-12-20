@@ -61,6 +61,7 @@
 		            				<td>
 		            					<a href="<?=WEBSITE.LANG?>/katalogis-marTva/redaqtireba?id=<?=$value['idx']?>" style="padding:0 0 0 5px"><i class="glyphicon glyphicon-edit"></i></a>
 		            					<a href="<?=WEBSITE.LANG?>/katalogis-marTva/damateba?parent=<?=$value['idx']?>" style="padding:0 0 0 5px"><i class="glyphicon glyphicon-plus-sign"></i></a>
+		            					<a href="<?=WEBSITE.LANG?>/katalogis-marTva/formis-marTva?parent=<?=$value['idx']?>" style="padding:0 0 0 5px"><i class="glyphicon glyphicon-wrench"></i></a>
 		            					<a href="javascript:void(0)" style="padding:0 0 0 5px" class="remove-catalogue" data-dlang="<?=LANG?>" data-catid="<?=$value["idx"]?>"><i class="glyphicon glyphicon-remove"></i></a>
 		            				</td>
 		            			</tr>

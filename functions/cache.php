@@ -83,7 +83,7 @@ class cache extends connection{
 			$fetch = $prepare->fetchAll(PDO::FETCH_ASSOC); 
 			break;
 			case "userlist":
-			$sql = 'SELECT `id`,`username`,`namelname`,`email`,`user_type` FROM `studio404_users` WHERE `user_type`!="administrator" AND `status`!=1 ORDER BY `id` DESC';	
+			$sql = 'SELECT `id`,`username`,`namelname`,`email`,`user_type`,`picture` FROM `studio404_users` WHERE `user_type`!="administrator" AND `status`!=1 ORDER BY `id` DESC';	
 			$prepare = $conn->prepare($sql); 
 			$prepare->execute(); 
 			$fetch = $prepare->fetchAll(PDO::FETCH_ASSOC); 
