@@ -2,3 +2,4 @@
 .overlay-loader{ width:100%; height:100%; position:fixed; top:0; left:0; z-index:9999; background-color:#ffffff; opacity:0.8; display: none; }
 .overley-loader-icon{ font-size:55px; position:absolute; left:50%; top:45%; z-index:10000 }
 .form-message-output{ font-size: 18px; color:#f39c12 ; font-weight: bold; }
+.checkbox-inside{ margin: 0; padding: 0 20px; }

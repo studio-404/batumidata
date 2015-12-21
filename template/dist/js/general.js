@@ -561,6 +561,42 @@ $(document).on("click","#edit-user-close",function(){
 });
 
 
+/* Save Form Function START */
+$(document).on("click","#save-form",function(){
+	$(".interface .element-box").each(function(index, value){
+		var type = $(this).attr("data-elemtype");
+		var dlang = $(this).attr("data-dlang");
+		var label = $(this).attr("data-elemlabel");
+		var name = $(this).attr("data-elemname");
+		var database = $(this).attr("data-database");
+		var important = $(this).attr("data-important");
+		var list = $(this).attr("data-list");
+		var filter = $(this).attr("data-filter");
+		//console.log(type+" ");
+		if(type=="text"){
+			var val = $(this).attr("data-elemvalue");
+		}else if(type=="select"){
+			var selectOptions = new Array();
+			$("select option",this).each(function(subindex, subvalue){
+				var v = subvalue.value;
+				selectOptions.push(v);
+			});
+		}else if(type=="checkbox"){
+			var selectCheckbox = new Array();
+			$(".checkbox input[type='checkbox']",this).each(function(subindex, subvalue){
+				var v = subvalue.value;
+				selectCheckbox.push(v);
+			});
+		}
+
+		$.post(SYSTEM_WELCOME_PAGE, {  }, function(result){
+			
+		});
+	});
+});
+/* Save Form Function END */
+
+
 /* Functions START */
 $(document).on("click",".reloadMe",function(){
 	location.reload();
