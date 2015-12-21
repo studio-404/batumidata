@@ -44,7 +44,7 @@
             <span aria-hidden="true">&times;</span></button>
           <h4 class="modal-title"><?=$data["language_data"]["val38"]?></h4>
         </div>
-        <div class="modal-body">
+        <div class="modal-body this-ismessage">
           <p>&nbsp;</p>
         </div>
         <div class="modal-footer">
