@@ -18,6 +18,94 @@ class ajax extends connection{
 	public function requests($c){
 		$conn = $this->conn($c); 
 
+		if(Input::method("POST","createform")=="true" && Input::method("POST","t") && Input::method("POST","lang") && Input::method("POST","l") && Input::method("POST","n") && Input::method("POST","d")){
+			$catId = (int)Input::method("POST","catId");
+			$type = json_decode(Input::method("POST","t"),true); 
+			$lang = json_decode(Input::method("POST","lang"),true); 
+			$label = json_decode(Input::method("POST","l"),true); 
+			$name = json_decode(Input::method("POST","n"),true); 
+			$value = json_decode(Input::method("POST","v"),true); 
+			$database = json_decode(Input::method("POST","d"),true); 
+			$important = json_decode(Input::method("POST","i"),true); 
+			$list = json_decode(Input::method("POST","li"),true); 
+			$filter = json_decode(Input::method("POST","f"),true); 
+			$dataOptions = json_decode(Input::method("POST","dop"),true); 
+			$dataCheckbox = json_decode(Input::method("POST","dch"),true); 
+
+			// delete old catalog form
+			$sql = 'DELETE FROM `studio404_forms` WHERE `cid`=:cid AND `lang`=:lang';
+			$prepare = $conn->prepare($sql); 
+			$prepare->execute(array(
+				":cid"=>$catId, 
+				":lang"=>$lang[0]
+			));
+			if($prepare->rowCount() > 0){
+				$sql2 = 'DELETE FROM `studio404_forms_lists` WHERE `cid`=:cid AND `lang`=:lang';
+				$prepare2 = $conn->prepare($sql2); 
+				$prepare2->execute(array(
+					":cid"=>$catId, 
+					":lang"=>$lang[0]
+				));
+			}
+
+			for($x = 0; $x<count($type);$x++){
+				if($type[$x]=="text" || $type[$x]=="date" || $type[$x]=="textarea" || $type[$x]=="file"){
+					$vdb = ($value[$x]) ? $value[$x] : "";
+					$insert = 'INSERT INTO `studio404_forms` SET `cid`=:cid, `label`=:label, `type`=:type, `name`=:name, `placeholder`=:placeholder, `attach_column`=:attach_column, `important`=:important, `list`=:list, `filter`=:filter, `lang`=:lang';
+					$prepare_insert = $conn->prepare($insert); 
+					$prepare_insert->execute(array(
+						":cid"=>$catId, 
+						":label"=>$label[$x], 
+						":type"=>$type[$x], 
+						":name"=>$name[$x], 
+						":placeholder"=>$vdb, 
+						":attach_column"=>$database[$x], 
+						":important"=>$important[$x], 
+						":list"=>$list[$x], 
+						":filter"=>$filter[$x], 
+						":lang"=>$lang[$x], 
+					));
+				}else if($type[$x]=="select" || $type[$x]=="checkbox"){
+					$vdb = ($value[$x]) ? $value[$x] : "";
+					$insert = 'INSERT INTO `studio404_forms` SET `cid`=:cid, `label`=:label, `type`=:type, `name`=:name, `placeholder`=:placeholder, `attach_column`=:attach_column, `important`=:important, `list`=:list, `filter`=:filter, `lang`=:lang';
+					$prepare_insert = $conn->prepare($insert); 
+					$prepare_insert->execute(array(
+						":cid"=>$catId, 
+						":label"=>$label[$x], 
+						":type"=>$type[$x], 
+						":name"=>$name[$x], 
+						":placeholder"=>$vdb, 
+						":attach_column"=>$database[$x], 
+						":important"=>$important[$x], 
+						":list"=>$list[$x], 
+						":filter"=>$filter[$x], 
+						":lang"=>$lang[$x], 
+					));
+					$lastId = $conn->lastInsertId();
+					$foreachelement = ($type[$x]=="select") ? $dataOptions[$x] : $dataCheckbox[$x];
+					foreach($foreachelement as $option){
+						$optioninsert = 'INSERT INTO `studio404_forms_lists` SET `cid`=:cid, `cf_id`=:cf_id, `text`=:textx, `lang`=:lang';
+						$prepare_option_insert = $conn->prepare($optioninsert); 
+						$prepare_option_insert->execute(array(
+							":cid"=>$catId, 
+							":cf_id"=>$lastId, 
+							":textx"=>$option, 
+							":lang"=>$lang[$x] 
+						));
+					}
+				}
+			}
+			$files = glob(DIR.'_cache/*'); // get all file names
+			foreach($files as $file){ // iterate files
+				if(is_file($file))
+				@unlink($file); // delete file
+			}
+			$insert_notification = new insert_notification();
+			$insert_notification->insert($c,$_SESSION["batumi_id"],"ფორმის განახლება ::".$catId,"Form Updated: ".$catId);
+			echo "Done";
+			exit();
+		}
+
 		if(Input::method("POST","b_auth")=="true" && Input::method("POST","e") && Input::method("POST","p") && Input::method("POST","c")){
 			if($_SESSION['protect_x']!=Input::method("POST","c")){
 				echo "wrongCaptcha";

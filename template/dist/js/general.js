@@ -563,36 +563,145 @@ $(document).on("click","#edit-user-close",function(){
 
 /* Save Form Function START */
 $(document).on("click","#save-form",function(){
+	$(".overlay-loader").fadeIn("slow");
+	var type = new Array();
+	var dlang = new Array();
+	var label = new Array();
+	var name = new Array();
+	var database = new Array();
+	var important = new Array();
+	var list = new Array();
+	var filter = new Array();
+	var dataOption = new Array();
+	var dataCheckbox = new Array();
+	var val = new Array();
+	var params = urlParamiters();
 	$(".interface .element-box").each(function(index, value){
-		var type = $(this).attr("data-elemtype");
-		var dlang = $(this).attr("data-dlang");
-		var label = $(this).attr("data-elemlabel");
-		var name = $(this).attr("data-elemname");
-		var database = $(this).attr("data-database");
-		var important = $(this).attr("data-important");
-		var list = $(this).attr("data-list");
-		var filter = $(this).attr("data-filter");
+		type.push($(this).attr("data-elemtype").replace(/"/g, '').replace(/'/g, '').replace(/#/g, ''));
+		dlang.push($(this).attr("data-dlang").replace(/"/g, '').replace(/'/g, '').replace(/#/g, ''));
+		label.push($(this).attr("data-elemlabel").replace(/"/g, '').replace(/'/g, '').replace(/#/g, ''));
+		name.push($(this).attr("data-elemname").replace(/"/g, '').replace(/'/g, '').replace(/#/g, ''));
+		database.push($(this).attr("data-database").replace(/"/g, '').replace(/'/g, '').replace(/#/g, ''));
+		important.push($(this).attr("data-important").replace(/"/g, '').replace(/'/g, '').replace(/#/g, ''));
+		list.push($(this).attr("data-list").replace(/"/g, '').replace(/'/g, '').replace(/#/g, ''));
+		filter.push($(this).attr("data-filter").replace(/"/g, '').replace(/'/g, '').replace(/#/g, ''));
+		var selectOptions = new Array();
+		var selectCheckbox = new Array();
+		if($(this).attr("data-elemvalue")){
+			val.push($(this).attr("data-elemvalue").replace(/"/g, '').replace(/'/g, '').replace(/#/g, ''));
+		}else{
+			val.push($(this).attr("data-elemvalue"));
+		}
+		
 		//console.log(type+" ");
-		if(type=="text"){
-			var val = $(this).attr("data-elemvalue");
-		}else if(type=="select"){
-			var selectOptions = new Array();
+		if($(this).attr("data-elemtype")=="select"){			
 			$("select option",this).each(function(subindex, subvalue){
-				var v = subvalue.value;
+				var v = subvalue.value.replace(/"/g, '').replace(/'/g, '').replace(/#/g, '');
 				selectOptions.push(v);
 			});
-		}else if(type=="checkbox"){
-			var selectCheckbox = new Array();
+		}else if($(this).attr("data-elemtype")=="checkbox"){			
 			$(".checkbox input[type='checkbox']",this).each(function(subindex, subvalue){
-				var v = subvalue.value;
+				var v = subvalue.value.replace(/"/g, '').replace(/'/g, '').replace(/#/g, '');
 				selectCheckbox.push(v);
 			});
 		}
-
-		$.post(SYSTEM_WELCOME_PAGE, {  }, function(result){
-			
-		});
+		dataOption.push(selectOptions); 
+		dataCheckbox.push(selectCheckbox); 
 	});
+	
+	$.post(AJAX_REQUEST_URL, { 
+		createform:true, 
+		catId:params["parent"], 
+		t:JSON.stringify(type),  
+		lang:JSON.stringify(dlang),  
+		l:JSON.stringify(label),  
+		n:JSON.stringify(name),  
+		d:JSON.stringify(database),  
+		i:JSON.stringify(important),  
+		li:JSON.stringify(list),  
+		f:JSON.stringify(filter),  
+		v:JSON.stringify(val),  
+		dop:JSON.stringify(dataOption),  
+		dch:JSON.stringify(dataCheckbox) 
+	}, function(result){
+		console.log(result);
+		if(result=="Done"){
+			location.reload();
+		}
+	});
+
+});
+
+$(document).on("click","#save-form-close",function(){
+	$(".overlay-loader").fadeIn("slow");
+	var type = new Array();
+	var dlang = new Array();
+	var label = new Array();
+	var name = new Array();
+	var database = new Array();
+	var important = new Array();
+	var list = new Array();
+	var filter = new Array();
+	var dataOption = new Array();
+	var dataCheckbox = new Array();
+	var val = new Array();
+	var params = urlParamiters();
+	$(".interface .element-box").each(function(index, value){
+		type.push($(this).attr("data-elemtype").replace(/"/g, '').replace(/'/g, '').replace(/#/g, ''));
+		dlang.push($(this).attr("data-dlang").replace(/"/g, '').replace(/'/g, '').replace(/#/g, ''));
+		label.push($(this).attr("data-elemlabel").replace(/"/g, '').replace(/'/g, '').replace(/#/g, ''));
+		name.push($(this).attr("data-elemname").replace(/"/g, '').replace(/'/g, '').replace(/#/g, ''));
+		database.push($(this).attr("data-database").replace(/"/g, '').replace(/'/g, '').replace(/#/g, ''));
+		important.push($(this).attr("data-important").replace(/"/g, '').replace(/'/g, '').replace(/#/g, ''));
+		list.push($(this).attr("data-list").replace(/"/g, '').replace(/'/g, '').replace(/#/g, ''));
+		filter.push($(this).attr("data-filter").replace(/"/g, '').replace(/'/g, '').replace(/#/g, ''));
+		var selectOptions = new Array();
+		var selectCheckbox = new Array();
+		if($(this).attr("data-elemvalue")){
+			val.push($(this).attr("data-elemvalue").replace(/"/g, '').replace(/'/g, '').replace(/#/g, ''));
+		}else{
+			val.push($(this).attr("data-elemvalue"));
+		}
+		
+		//console.log(type+" ");
+		if($(this).attr("data-elemtype")=="select"){			
+			$("select option",this).each(function(subindex, subvalue){
+				var v = subvalue.value.replace(/"/g, '').replace(/'/g, '').replace(/#/g, '');
+				selectOptions.push(v);
+			});
+		}else if($(this).attr("data-elemtype")=="checkbox"){			
+			$(".checkbox input[type='checkbox']",this).each(function(subindex, subvalue){
+				var v = subvalue.value.replace(/"/g, '').replace(/'/g, '').replace(/#/g, '');
+				selectCheckbox.push(v);
+			});
+		}
+		dataOption.push(selectOptions); 
+		dataCheckbox.push(selectCheckbox); 
+	});
+	
+	$.post(AJAX_REQUEST_URL, { 
+		createform:true, 
+		catId:params["parent"], 
+		t:JSON.stringify(type),  
+		lang:JSON.stringify(dlang),  
+		l:JSON.stringify(label),  
+		n:JSON.stringify(name),  
+		d:JSON.stringify(database),  
+		i:JSON.stringify(important),  
+		li:JSON.stringify(list),  
+		f:JSON.stringify(filter),  
+		v:JSON.stringify(val),  
+		dop:JSON.stringify(dataOption),  
+		dch:JSON.stringify(dataCheckbox) 
+	}, function(result){
+		console.log(result);
+		if(result=="Done"){
+			if(dlang==1){ var dl = "ge"; }
+			else{ var dl = "en"; }
+			location.href = SYSTEM_WELCOME_PAGE + "/" + dl + "/katalogis-marTva";
+		}
+	});
+
 });
 /* Save Form Function END */
 
