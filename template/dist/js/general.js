@@ -633,6 +633,7 @@ $(document).on("click","#save-form",function(){
 });
 
 $(document).on("click","#save-form-close",function(){
+	var ddll = $(this).data("dlang");
 	$(".overlay-loader").fadeIn("slow");
 	var type = new Array();
 	var dlang = new Array();
@@ -696,7 +697,7 @@ $(document).on("click","#save-form-close",function(){
 	}, function(result){
 		console.log(result);
 		if(result=="Done"){
-			if(dlang==1){ var dl = "ge"; }
+			if(ddll==1){ var dl = "ge"; }
 			else{ var dl = "en"; }
 			location.href = SYSTEM_WELCOME_PAGE + "/" + dl + "/katalogis-marTva";
 		}

@@ -65,6 +65,11 @@
 		<section class="content">
 			<div class="row">
 				<div class="col-md-9">
+					<?php
+					// echo "<pre>";
+					// print_r($data["select_form"]);
+					// echo "</pre>";
+					?>
 					<div class="box box-primary">
 			            <div class="box-header with-border">
 			              <h3 class="box-title"><?=$data["parent_title"]?></h3>
@@ -77,7 +82,99 @@
 			            <!-- form start -->
 			            <form role="form">
 			              <div class="box-body">
-			              	<div class="interface"></div>			                
+			              	<div class="interface">
+			              		<?php
+			              		if(count($data["select_form"]["id"])):
+			              			$x=0;
+			              			foreach($data["select_form"]["id"] as $v): 
+			              				$data["select_form"]["important"][$x] = ($data["select_form"]["important"][$x]=="y") ? "yes" : "no";
+			              				$data["select_form"]["list"][$x] = ($data["select_form"]["list"][$x]=="y") ? "yes" : "no";
+			              				$data["select_form"]["filter"][$x] = ($data["select_form"]["filter"][$x]=="y") ? "yes" : "no";
+			              				if($data["select_form"]["type"][$x]=="text"){
+			              			?>
+						              		<div class="form-group element-box" id="elementinserted<?=$x?>" data-dlang="<?=$data["select_form"]["lang"][$x]?>" data-elemtype="<?=$data["select_form"]["type"][$x]?>" data-elemlabel="<?=$data["select_form"]["label"][$x]?>" data-elemname="<?=$data["select_form"]["name"][$x]?>" data-elemvalue="<?=$data["select_form"]["placeholder"][$x]?>" data-database="<?=$data["select_form"]["attach_column"][$x]?>" data-important="<?=$data["select_form"]["important"][$x]?>" data-list="<?=$data["select_form"]["list"][$x]?>" data-filter="<?=$data["select_form"]["filter"][$x]?>">
+						              			<label><?=$data["select_form"]["label"][$x]?></label>
+						              			<a href="javascript:void(0)" data-uniqueclass="elementinserted<?=$x?>" data-dlang="<?=$data["select_form"]["lang"][$x]?>" style="float:right; margin-left:5px;" class="remove-element"><i class="glyphicon glyphicon-remove"></i></a>
+						              			<a href="javascript:void(0)" data-uniqueclass="elementinserted<?=$x?>" style="float:right;" onclick="editTextElement(this)"><i class="glyphicon glyphicon-edit"></i></a>
+						              			<input type="text" class="form-control" name="elemname" value="<?=$data["select_form"]["placeholder"][$x]?>">
+						              		</div>
+			              			<?php
+			              				}else if($data["select_form"]["type"][$x]=="date"){
+			              					?>
+			              					<div class="form-group element-box" id="elementinserted<?=$x?>" data-dlang="<?=$data["select_form"]["lang"][$x]?>" data-elemtype="<?=$data["select_form"]["type"][$x]?>" data-elemlabel="<?=$data["select_form"]["label"][$x]?>" data-elemname="<?=$data["select_form"]["name"][$x]?>" data-database="<?=$data["select_form"]["attach_column"][$x]?>" data-important="<?=$data["select_form"]["important"][$x]?>" data-list="<?=$data["select_form"]["list"][$x]?>" data-filter="<?=$data["select_form"]["filter"][$x]?>">
+			              						<label><?=$data["select_form"]["label"][$x]?></label>
+			              						<a href="javascript:void(0)" data-uniqueclass="elementinserted<?=$x?>" data-dlang="<?=$data["select_form"]["lang"][$x]?>" style="float:right; margin-left:5px;" class="remove-element"><i class="glyphicon glyphicon-remove"></i></a>
+			              						<a href="javascript:void(0)" data-uniqueclass="elementinserted<?=$x?>" style="float:right; margin-left:5px;" onclick="editInputDateElement(this)"><i class="glyphicon glyphicon-edit"></i></a>
+			              						<div class="input-group">
+			              							<div class="input-group-addon"><i class="fa fa-calendar"></i></div>
+			              								<input type="text" class="form-control" value="dd/mm/YYYY" disabled="disabled">
+			              							</div>
+			              						</div>
+			              					<?php
+			              				}else if($data["select_form"]["type"][$x]=="textarea"){
+			              					?>
+			              						<div class="form-group element-box" id="elementinserted<?=$x?>" data-dlang="<?=$data["select_form"]["lang"][$x]?>" data-elemtype="<?=$data["select_form"]["type"][$x]?>" data-elemlabel="<?=$data["select_form"]["label"][$x]?>" data-elemname="<?=$data["select_form"]["name"][$x]?>" data-database="<?=$data["select_form"]["attach_column"][$x]?>" data-important="<?=$data["select_form"]["important"][$x]?>" data-list="<?=$data["select_form"]["list"][$x]?>" data-filter="<?=$data["select_form"]["filter"][$x]?>">
+			              							<label><?=$data["select_form"]["label"][$x]?></label>
+			              							<a href="javascript:void(0)" data-uniqueclass="elementinserted<?=$x?>" data-dlang="<?=$data["select_form"]["lang"][$x]?>" style="float:right; margin-left:5px;" class="remove-element"><i class="glyphicon glyphicon-remove"></i></a>
+			              							<a href="javascript:void(0)" data-uniqueclass="elementinserted<?=$x?>" style="float:right;" onclick="editTextareaElement(this)"><i class="glyphicon glyphicon-edit"></i></a>
+			              							<textarea class="form-control" rows="3" name="elemname"></textarea>
+			              						</div>
+			              					<?php
+			              				}else if($data["select_form"]["type"][$x]=="select"){
+			              					?>
+			              						<div class="form-group element-box" id="elementinserted<?=$x?>" data-dlang="<?=$data["select_form"]["lang"][$x]?>" data-elemtype="<?=$data["select_form"]["type"][$x]?>" data-elemlabel="<?=$data["select_form"]["label"][$x]?>" data-elemname="<?=$data["select_form"]["name"][$x]?>" data-database="<?=$data["select_form"]["attach_column"][$x]?>" data-important="<?=$data["select_form"]["important"][$x]?>" data-list="<?=$data["select_form"]["list"][$x]?>" data-filter="<?=$data["select_form"]["filter"][$x]?>">
+			              							<label><?=$data["select_form"]["label"][$x]?></label>
+			              							<a href="javascript:void(0)" data-uniqueclass="elementinserted<?=$x?>" data-dlang="<?=$data["select_form"]["lang"][$x]?>" style="float:right; margin-left:5px;" class="remove-element"><i class="glyphicon glyphicon-remove"></i></a>
+			              							<a href="javascript:void(0)" data-uniqueclass="elementinserted<?=$x?>" style="float:right; margin-left:5px" onclick="editSelectElement(this)"><i class="glyphicon glyphicon-edit"></i></a>
+			              							<a href="javascript:void(0)" data-uniqueclass="elementinserted<?=$x?>" data-dlang="<?=$data["select_form"]["lang"][$x]?>" style="float:right;" class="edit-select-options"><i class="glyphicon glyphicon-th-list"></i></a>
+			              							<select class="form-control" name="elemname">
+			              								<?php
+			              								foreach ($data["select_form"]["sub"][$x] as $valop) {
+			              									echo '<option value="'.htmlentities($valop["text"]).'">'.$valop["text"].'</option>';
+			              								}
+			              								?>
+			              							</select>
+			              						</div>
+			              					<?php
+			              				}else if($data["select_form"]["type"][$x]=="checkbox"){
+			              					?>
+			              						<div class="form-group element-box" id="elementinserted<?=$x?>" data-dlang="<?=$data["select_form"]["lang"][$x]?>" data-elemtype="<?=$data["select_form"]["type"][$x]?>" data-elemlabel="<?=$data["select_form"]["label"][$x]?>" data-elemname="<?=$data["select_form"]["name"][$x]?>" data-database="<?=$data["select_form"]["attach_column"][$x]?>" data-important="<?=$data["select_form"]["important"][$x]?>" data-list="<?=$data["select_form"]["list"][$x]?>" data-filter="<?=$data["select_form"]["filter"][$x]?>">
+			              							<label><?=$data["select_form"]["label"][$x]?></label>
+			              							<a href="javascript:void(0)" data-uniqueclass="elementinserted<?=$x?>" data-dlang="<?=$data["select_form"]["lang"][$x]?>" style="float:right; margin-left:5px;" class="remove-element"><i class="glyphicon glyphicon-remove"></i></a>
+			              							<a href="javascript:void(0)" data-uniqueclass="elementinserted<?=$x?>" style="float:right; margin-left:5px" onclick="editCheckboxElement(this)"><i class="glyphicon glyphicon-edit"></i></a>
+			              							<a href="javascript:void(0)" data-uniqueclass="elementinserted<?=$x?>" data-dlang="<?=$data["select_form"]["lang"][$x]?>" style="float:right;" class="edit-checkbox-options"><i class="glyphicon glyphicon-th-list"></i></a>
+			              							
+			              							<div class="checkbox">			              							
+			              								<?php
+			              								foreach ($data["select_form"]["sub"][$x] as $valop) {
+			              									echo '<div class="checkbox-inside">'; 
+			              									echo '<input type="checkbox" value="'.htmlentities($valop["text"]).'"> <span>'.$valop["text"].'</span>';
+			              									echo '</div>';
+			              								}
+			              								?>
+			              							</div>			              							
+			              						</div>
+			              					<?php
+			              				}else if($data["select_form"]["type"][$x]=="file"){
+			              					?>
+			              					<div class="form-group element-box" id="elementinserted<?=$x?>" data-dlang="<?=$data["select_form"]["lang"][$x]?>" data-elemtype="<?=$data["select_form"]["type"][$x]?>" data-elemlabel="<?=$data["select_form"]["label"][$x]?>" data-elemname="<?=$data["select_form"]["name"][$x]?>" data-database="<?=$data["select_form"]["attach_column"][$x]?>" data-important="<?=$data["select_form"]["important"][$x]?>" data-list="<?=$data["select_form"]["list"][$x]?>" data-filter="<?=$data["select_form"]["filter"][$x]?>">
+			              						<label><?=$data["select_form"]["label"][$x]?></label>
+			              						<a href="javascript:void(0)" data-uniqueclass="elementinserted<?=$x?>" data-dlang="<?=$data["select_form"]["lang"][$x]?>" style="float:right; margin-left:5px;" class="remove-element"><i class="glyphicon glyphicon-remove"></i></a>
+			              						<a href="javascript:void(0)" data-uniqueclass="elementinserted<?=$x?>" style="float:right; margin-left:5px;" onclick="editInputDateElement(this)"><i class="glyphicon glyphicon-edit"></i></a>
+			              						<!-- <div class="input-group">
+			              							<div class="input-group-addon"><i class="fa fa-calendar"></i></div>
+			              								<input type="text" class="form-control" value="dd/mm/YYYY" disabled="disabled">
+			              						</div> -->
+			              						<div class="files"><div class="file-inside"><input type="file" value=""> </div></div>
+			              					</div>
+			              					<?php
+			              				}
+			              			$x++;
+			              			endforeach;
+			              		endif;
+			              		?>
+
+			              	</div>			                
 			              </div>
 			              <!-- /.box-body -->
 

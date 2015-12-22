@@ -18,6 +18,10 @@ class formismarTva extends connection{
 		$catalog_table_columns = $cache->index($c,"catalog_table_columns");
 		$data["catalog_table_columns"] = json_decode($catalog_table_columns,true);
 
+		/* all columns catalog table */
+		$select_form = $cache->index($c,"select_form");
+		$data["select_form"] = json_decode($select_form,true);
+
 		/* language variables */
 		$language_data = $cache->index($c,"language_data");
 		$language_data = json_decode($language_data);

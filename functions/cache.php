@@ -8,7 +8,10 @@ class cache extends connection{
 		if(Input::method("GET","i") && Input::method("GET","p")){
 			$proin = "proinside".Input::method("GET","p");
 		}else{ $proin = ""; }
-		$cache_file = "_cache/".$type.$proin.$slug_.LANG_ID.".json"; 
+		if(Input::method("GET","parent")){
+			$partner = "pr".Input::method("GET","parent");
+		}else{ $partner = ""; }
+		$cache_file = "_cache/".$type.$proin.$partner.$slug_.LANG_ID.".json"; 
 		if(file_exists($cache_file)){
 			$output = @file_get_contents($cache_file); 
 		}else{
@@ -33,6 +36,11 @@ class cache extends connection{
 				":lang"=>LANG_ID 
 			)); 
 			$fetch = $prepare->fetchAll(PDO::FETCH_ASSOC); 
+			break;
+			case "select_form":
+			$cid = Input::method("GET","parent");
+			$select_form = new select_form();
+			$fetch = $select_form->form($c, $cid, LANG_ID); 
 			break;
 			case "catalog_table_columns":
 			$sql = 'SELECT * FROM `information_schema`.`columns` WHERE `table_schema` = "geoweb_batumi" AND `table_name`="studio404_media_item"';
