@@ -18,6 +18,69 @@ class ajax extends connection{
 	public function requests($c){
 		$conn = $this->conn($c); 
 
+		if(Input::method("POST","adddatabasecolumn")=="true" && Input::method("POST","a") && Input::method("POST","ct") && Input::method("POST","cn")){
+			$arrayType = array("int","varchar","text","longtext"); 
+			if(in_array(Input::method("POST","ct"),$arrayType)){
+				if(Input::method("POST","ct")=="varchar"){ $type = "VARCHAR(255)"; }
+				else if(Input::method("POST","ct")=="int"){ $type = "INT(11)"; }
+				else if(Input::method("POST","ct")=="text"){ $type = "TEXT"; }
+				else if(Input::method("POST","ct")=="longtext"){ $type = "LONGTEXT"; }
+				$sql = 'ALTER TABLE `studio404_module_item` ADD COLUMN `'.Input::method("POST","cn").'` '.$type.' NOT NULL AFTER `'.str_replace(" ","",Input::method("POST","a")).'` ';
+				$prepare = $conn->prepare($sql); 
+				$prepare->execute();
+				if($prepare->rowCount() > 0){
+					$shrik = 'OPTIMIZE TABLE `geoweb_batumi`.`studio404_module_item`';
+					$prep = $conn->query($shrik);
+
+					$files = glob(DIR.'_cache/*'); // get all file names
+					foreach($files as $file){ // iterate files
+						if(is_file($file))
+						@unlink($file); // delete file
+					}
+					
+					$insert_notification = new insert_notification();
+					$insert_notification->insert($c,$_SESSION["batumi_id"],"ბაზაში სვეტის დამატება ::".Input::method("POST","cn"),"Database Insert New Column ::".Input::method("POST","cn"));
+					echo "Done";
+				}
+			}else{
+				echo "Error";
+			}
+			exit();
+		}
+
+		if(Input::method("POST","updatedatabasecolumn")=="true" && Input::method("POST","ecno") && Input::method("POST","ecn") && Input::method("POST","ect") && Input::method("POST","datatype")){
+			if(Input::method("POST","ect")=="delete"){
+				$sql = 'ALTER TABLE `studio404_module_item` DROP COLUMN `'.Input::method("POST","ecn").'`';
+				$prepare = $conn->prepare($sql); 
+				$prepare->execute();
+
+				if($prepare->rowCount() > 0){
+					$insert_notification = new insert_notification();
+					$insert_notification->insert($c,$_SESSION["batumi_id"],"ბაზაში სვეტის წაშლა ::".Input::method("POST","ecn"),"Database delete Column ::".Input::method("POST","ecn"));
+					echo "Done";
+				}else{
+					echo "Error";
+				}
+			}else{
+				if(Input::method("POST","ecno")!=Input::method("POST","ecn")){
+					$sql = 'ALTER TABLE `studio404_module_item` CHANGE COLUMN `'.Input::method("POST","ecno").'` `'.Input::method("POST","ecn").'` '.Input::method("POST","datatype");
+					$prepare = $conn->prepare($sql); 
+					$prepare->execute();
+					$insert_notification = new insert_notification();
+					$insert_notification->insert($c,$_SESSION["batumi_id"],"ბაზაში სვეტის რედაქტირება ::".Input::method("POST","ecno"),"Database rename Column ::".Input::method("POST","ecno"));
+					echo "Done";					
+				}else{
+					echo "Done";
+				}
+			}
+			$files = glob(DIR.'_cache/*'); // get all file names
+			foreach($files as $file){ // iterate files
+				if(is_file($file))
+				@unlink($file); // delete file
+			}
+			exit();
+		}
+
 		if(Input::method("POST","createform")=="true" && Input::method("POST","t") && Input::method("POST","lang") && Input::method("POST","l") && Input::method("POST","n") && Input::method("POST","d")){
 			$catId = (int)Input::method("POST","catId");
 			$type = json_decode(Input::method("POST","t"),true); 

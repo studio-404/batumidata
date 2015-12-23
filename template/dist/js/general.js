@@ -707,6 +707,77 @@ $(document).on("click","#save-form-close",function(){
 /* Save Form Function END */
 
 
+$(document).on("click",".add-database-column",function(){
+	//database-option-list
+	var dbList = '';
+	$(".database-column-list li a").each(function(index, value){
+		dbList += '<option value="'+$(this).attr("data-databasecolumnname")+'">'+$(this).text()+'</option>';
+	});
+	$("#database-option-list").html(dbList); 
+	$('#bs-example-modal-sm4').modal("show");
+});
+
+$(document).on("click",".add-database-button",function(){
+	var after = $("#database-option-list").val();
+	var columntype = $("#column-type").val(); 
+	var columnname = $("#column-name").val();
+
+	$('#bs-example-modal-sm4').modal("hide");
+	$(".overlay-loader").fadeIn("slow");
+	$.post(AJAX_REQUEST_URL, { adddatabasecolumn:true, a:after, ct:columntype, cn:columnname },function(result){
+		if(result=="Done"){
+			location.reload();
+		}else{
+			alert("Error");
+			location.reload();
+		}
+	});
+});
+
+$(document).on("click",".chnage-delete-column",function(){
+	var databasecolumnname = $(this).attr("data-databasecolumnname");
+	var databasecolumntype = $(this).attr("data-databasecolumntype");
+	$("#edit-column-name").val(databasecolumnname);
+	$("#edit-column-name").attr("data-editcolumnnameold",databasecolumnname);
+	if(databasecolumntype=="int(11)"){
+		$("#edit-column-type").val(1);	
+		$("#edit-column-name").attr("data-editcolumndatatype","INT");
+	}else if(databasecolumntype=="varchar(255)"){
+		$("#edit-column-type").val(2);	
+		$("#edit-column-name").attr("data-editcolumndatatype","VARCHAR");
+	}else if(databasecolumntype=="text"){
+		$("#edit-column-type").val(3);	
+		$("#edit-column-name").attr("data-editcolumndatatype","TEXT");
+	}else if(databasecolumntype=="longtext"){
+		$("#edit-column-type").val(4);	
+		$("#edit-column-name").attr("data-editcolumndatatype","LONGTEXT");
+	}	
+});
+
+$(document).on("click",".edit-database-button",function(){
+	var editcolumnnameold = $("#edit-column-name").attr("data-editcolumnnameold");
+	var editcolumndatatype = $("#edit-column-name").attr("data-editcolumndatatype");
+	var editcolumnname = $("#edit-column-name").val();
+	var editaction = $("#edit-action").val();
+	$('.bs-example-modal-sm5').modal("hide");
+	$(".overlay-loader").fadeIn("slow");
+	$.post(AJAX_REQUEST_URL, {
+		updatedatabasecolumn:true, 
+		ecno:editcolumnnameold, 
+		ecn:editcolumnname, 
+		datatype:editcolumndatatype, 
+		ect:editaction 
+	},function(result){
+		console.log(result);
+		if(result=="Done"){
+			location.reload();
+		}else{
+			alert("Error");
+			location.reload();
+		}
+	});
+});
+
 /* Functions START */
 $(document).on("click",".reloadMe",function(){
 	location.reload();

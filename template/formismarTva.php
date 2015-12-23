@@ -1,55 +1,8 @@
 <?php
 @include("parts/welcome_header.php");
 @include("parts/leftside.php");
+@include("parts/formis-martva-popups.php");
 ?>
-  <!-- START REGISTER POPUP -->
-<div class="modal fade bs-example-modal-sm2" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel">
-  <div class="modal-dialog modal-sm">
-    <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span></button>
-          <h4 class="modal-title"><?=$data["language_data"]["val64"]?></h4>
-        </div>
-        <div class="modal-body">
-          <div class="selectoptionspopup">
-          	<input type="text" class="form-control selectoptionspopup-item" value="option" />
-          </div>
-          <a href="javascript:void(0)" class="selectoptionspopup-item-add" style="margin-top:5px;"><?=$data["language_data"]["val27"]?></a>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-default pull-left" data-dismiss="modal"><?=$data["language_data"]["val33"]?></button>
-          <button type="button" class="btn btn-primary insert-options"><?=$data["language_data"]["val65"]?></button>
-        </div>
-    </div>
-  </div>
-</div>
-<!-- END REGISTER POPUP -->
-
-<!-- START REGISTER POPUP -->
-<div class="modal fade bs-example-modal-sm3" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel">
-  <div class="modal-dialog modal-sm">
-    <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span></button>
-          <h4 class="modal-title"><?=$data["language_data"]["val66"]?></h4>
-        </div>
-        <div class="modal-body">
-          <div class="selectoptionspopup3">
-          	<input type="text" class="form-control selectoptionspopup3-item" value="Text" />
-          </div>
-          <a href="javascript:void(0)" class="selectoptionspopup3-item-add" style="margin-top:5px;"><?=$data["language_data"]["val27"]?></a>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-default pull-left" data-dismiss="modal"><?=$data["language_data"]["val33"]?></button>
-          <button type="button" class="btn btn-primary insert-checkbox-options"><?=$data["language_data"]["val65"]?></button>
-        </div>
-    </div>
-  </div>
-</div>
-<!-- END REGISTER POPUP -->
-
 <!-- Content Wrapper. Contains page content -->
 	<div class="content-wrapper">
 	<!-- Content Header (Page header) -->
@@ -228,28 +181,25 @@
 			            <div class="box-header with-border">
 			              <h3 class="box-title"><?=$data["language_data"]["val63"]?></h3>
 			              <div class="box-tools pull-right">
-			                <button class="btn btn-box-tool"><i class="glyphicon glyphicon-edit"></i></button>
+			                <button class="btn btn-box-tool add-database-column"><i class="glyphicon glyphicon-plus-sign"></i></button>
 			                <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
 			              </div>
 			            </div>
 			            <div class="box-body no-padding">
 
 			            	<ul class="nav nav-pills nav-stacked database-column-list">
-			            		<?php
-			            		foreach($data["catalog_table_columns"] as $val) :
-			            		//class="active"
-			            		?>
-				                	<li><a href="#"><i class="glyphicon glyphicon-menu-hamburger text-light-blue"></i> <?=$val["COLUMN_NAME"]?></a></li>
-				                <?php
+			            		<?php 
+								foreach($data["catalog_table_columns"] as $val) :
+				            		if(!in_array($val["Field"],$c['database.catalog.item.lock.array'])){
+				            			echo '<li><a href="" data-databasecolumnname="'.$val["Field"].'" data-databasecolumntype="'.$val["Type"].'" class="chnage-delete-column" data-toggle="modal" data-target=".bs-example-modal-sm5"><i class="glyphicon glyphicon-menu-hamburger text-light-blue"></i> '.$val["Field"].' <font style="font-size:10px;">'.$val["Type"].'</font></a></li>';
+				            		}else{
+				            			echo '<li><a href="javascript:void(0)" data-databasecolumnname="'.$val["Field"].'"><i class="fa fa-lock text-light-blue"></i> '.$val["Field"].' <font style="font-size:10px;">'.$val["Type"].'</font></a></li>';
+				            		}
 				                endforeach;
 				                ?>
 			              	</ul>
 			        	</div>
 			        </div>
-
-
-
-
 				</div>
 			</div>
 		</section>
