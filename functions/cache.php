@@ -43,7 +43,6 @@ class cache extends connection{
 			$fetch = $select_form->form($c, $cid, LANG_ID); 
 			break;
 			case "catalog_table_columns":
-			//$sql = 'SELECT * FROM `information_schema`.`columns` WHERE `table_schema` = "geoweb_batumi" AND `table_name`="studio404_media_item"';
 			$sql = 'SHOW COLUMNS FROM `studio404_module_item`'; 
 			$prepare = $conn->prepare($sql);
 			$prepare->execute();

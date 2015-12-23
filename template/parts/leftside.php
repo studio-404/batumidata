@@ -49,7 +49,7 @@
                 $y = 0;
                 foreach ($insideArray as $value) {
                   $active_tree2 = ($data["welcomepage_categories"]["item"]["sub"][$parentIdx]["slug"][$y]==$slug_third) ? ' class="active"' : '';
-                  echo '<li'.$active_tree2.'><a href="'.WEBSITE.LANG.'/'.$data["welcomepage_categories"]["item"]["sub"][$parentIdx]["slug"][$y].'">'.$data["welcomepage_categories"]["item"]["sub"][$parentIdx]["title"][$y].'</a></li>';
+                  echo '<li'.$active_tree2.'><a href="'.WEBSITE.LANG.'/'.$data["welcomepage_categories"]["item"]["sub"][$parentIdx]["slug"][$y].'?idx='.$data["welcomepage_categories"]["item"]["sub"][$parentIdx]["idx"][$y].'">'.$data["welcomepage_categories"]["item"]["sub"][$parentIdx]["title"][$y].'</a></li>';
                   $y++;
                 }
                 
@@ -57,7 +57,7 @@
                 echo '</li>';
               }else{
                 $active_tree = ($data["welcomepage_categories"]["item"]["slug"][$x]==$slug_second) ? ' class="active"' : "";
-                echo '<li'.$active_tree.'><a href="'.WEBSITE.LANG.'/'.$data["welcomepage_categories"]["item"]["slug"][$x].'"><i class="fa fa-list-ul"></i> <span>'.$data["welcomepage_categories"]["item"]["title"][$x].'</span></a></li>';
+                echo '<li'.$active_tree.'><a href="'.WEBSITE.LANG.'/'.$data["welcomepage_categories"]["item"]["slug"][$x].'?idx='.$data["welcomepage_categories"]["item"]["idx"][$x].'"><i class="fa fa-list-ul"></i> <span>'.$data["welcomepage_categories"]["item"]["title"][$x].'</span></a></li>';
               }
               $x++;
             }

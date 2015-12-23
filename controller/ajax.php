@@ -28,20 +28,15 @@ class ajax extends connection{
 				$sql = 'ALTER TABLE `studio404_module_item` ADD COLUMN `'.Input::method("POST","cn").'` '.$type.' NOT NULL AFTER `'.str_replace(" ","",Input::method("POST","a")).'` ';
 				$prepare = $conn->prepare($sql); 
 				$prepare->execute();
-				if($prepare->rowCount() > 0){
-					$shrik = 'OPTIMIZE TABLE `geoweb_batumi`.`studio404_module_item`';
-					$prep = $conn->query($shrik);
-
-					$files = glob(DIR.'_cache/*'); // get all file names
-					foreach($files as $file){ // iterate files
-						if(is_file($file))
-						@unlink($file); // delete file
-					}
-					
-					$insert_notification = new insert_notification();
-					$insert_notification->insert($c,$_SESSION["batumi_id"],"ბაზაში სვეტის დამატება ::".Input::method("POST","cn"),"Database Insert New Column ::".Input::method("POST","cn"));
-					echo "Done";
+				$files = glob(DIR.'_cache/*'); // get all file names
+				foreach($files as $file){ // iterate files
+					if(is_file($file))
+					@unlink($file); // delete file
 				}
+				
+				$insert_notification = new insert_notification();
+				$insert_notification->insert($c,$_SESSION["batumi_id"],"ბაზაში სვეტის დამატება ::".Input::method("POST","cn"),"Database Insert New Column ::".Input::method("POST","cn"));
+				echo "Done";
 			}else{
 				echo "Error";
 			}
@@ -53,14 +48,9 @@ class ajax extends connection{
 				$sql = 'ALTER TABLE `studio404_module_item` DROP COLUMN `'.Input::method("POST","ecn").'`';
 				$prepare = $conn->prepare($sql); 
 				$prepare->execute();
-
-				if($prepare->rowCount() > 0){
-					$insert_notification = new insert_notification();
-					$insert_notification->insert($c,$_SESSION["batumi_id"],"ბაზაში სვეტის წაშლა ::".Input::method("POST","ecn"),"Database delete Column ::".Input::method("POST","ecn"));
-					echo "Done";
-				}else{
-					echo "Error";
-				}
+				$insert_notification = new insert_notification();
+				$insert_notification->insert($c,$_SESSION["batumi_id"],"ბაზაში სვეტის წაშლა ::".Input::method("POST","ecn"),"Database delete Column ::".Input::method("POST","ecn"));
+				echo "Done";				
 			}else{
 				if(Input::method("POST","ecno")!=Input::method("POST","ecn")){
 					$sql = 'ALTER TABLE `studio404_module_item` CHANGE COLUMN `'.Input::method("POST","ecno").'` `'.Input::method("POST","ecn").'` '.Input::method("POST","datatype");
