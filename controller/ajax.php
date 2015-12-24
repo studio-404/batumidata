@@ -84,7 +84,9 @@ class ajax extends connection{
 			$filter = json_decode(Input::method("POST","f"),true); 
 			$dataOptions = json_decode(Input::method("POST","dop"),true); 
 			$dataCheckbox = json_decode(Input::method("POST","dch"),true); 
-
+			$fileformat = json_decode(Input::method("POST","ff"),true); 
+			$multiple = json_decode(Input::method("POST","mp"),true); 
+			
 			// delete old catalog form
 			$sql = 'DELETE FROM `studio404_forms` WHERE `cid`=:cid AND `lang`=:lang';
 			$prepare = $conn->prepare($sql); 
@@ -102,7 +104,7 @@ class ajax extends connection{
 			}
 
 			for($x = 0; $x<count($type);$x++){
-				if($type[$x]=="text" || $type[$x]=="date" || $type[$x]=="textarea" || $type[$x]=="file"){
+				if($type[$x]=="text" || $type[$x]=="date" || $type[$x]=="textarea"){
 					$vdb = ($value[$x]) ? $value[$x] : "";
 					$insert = 'INSERT INTO `studio404_forms` SET `cid`=:cid, `label`=:label, `type`=:type, `name`=:name, `placeholder`=:placeholder, `attach_column`=:attach_column, `important`=:important, `list`=:list, `filter`=:filter, `lang`=:lang';
 					$prepare_insert = $conn->prepare($insert); 
@@ -114,6 +116,26 @@ class ajax extends connection{
 						":placeholder"=>$vdb, 
 						":attach_column"=>$database[$x], 
 						":important"=>$important[$x], 
+						":list"=>$list[$x], 
+						":filter"=>$filter[$x], 
+						":lang"=>$lang[$x], 
+					));
+				}else if($type[$x]=="file"){
+					$vdb = ($value[$x]) ? $value[$x] : "";
+					$insert = 'INSERT INTO `studio404_forms` SET `cid`=:cid, `label`=:label, `attach_format`=:attach_format, `attach_multiple`=:attach_multiple, `type`=:type, `name`=:name, `placeholder`=:placeholder, `attach_column`=:attach_column, `important`=:important, `list`=:list, `filter`=:filter, `lang`=:lang';
+					$prepare_insert = $conn->prepare($insert); 
+					$attachformat = ($fileformat[$x]) ? $fileformat[$x] : "jpg";
+					$attachmulti = ($multiple[$x]) ? $multiple[$x] : "no";
+					$prepare_insert->execute(array(
+						":cid"=>$catId, 
+						":label"=>$label[$x], 
+						":type"=>$type[$x], 
+						":name"=>$name[$x], 
+						":placeholder"=>$vdb, 
+						":attach_column"=>$database[$x], 
+						":important"=>$important[$x], 
+						":attach_format"=>$attachformat, 
+						":attach_multiple"=>$attachmulti, 
 						":list"=>$list[$x], 
 						":filter"=>$filter[$x], 
 						":lang"=>$lang[$x], 

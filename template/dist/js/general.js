@@ -569,7 +569,9 @@ $(document).on("click","#save-form",function(){
 	var label = new Array();
 	var name = new Array();
 	var database = new Array();
-	var important = new Array();
+	var important = new Array();	
+	var fileformat = new Array();
+	var multiple = new Array();	
 	var list = new Array();
 	var filter = new Array();
 	var dataOption = new Array();
@@ -592,7 +594,15 @@ $(document).on("click","#save-form",function(){
 		}else{
 			val.push($(this).attr("data-elemvalue"));
 		}
-		
+
+		if($(this).attr("data-elemtype")=="file"){
+			fileformat.push($(this).attr("data-fileformatx").replace(/"/g, '').replace(/'/g, '').replace(/#/g, ''));
+			multiple.push($(this).attr("data-maltiupload").replace(/"/g, '').replace(/'/g, '').replace(/#/g, ''));	
+		}else{
+			fileformat.push($(this).attr("data-fileformatx"));
+			multiple.push($(this).attr("data-maltiupload"));
+		}
+
 		//console.log(type+" ");
 		if($(this).attr("data-elemtype")=="select"){			
 			$("select option",this).each(function(subindex, subvalue){
@@ -622,7 +632,9 @@ $(document).on("click","#save-form",function(){
 		f:JSON.stringify(filter),  
 		v:JSON.stringify(val),  
 		dop:JSON.stringify(dataOption),  
-		dch:JSON.stringify(dataCheckbox) 
+		dch:JSON.stringify(dataCheckbox),  
+		ff:JSON.stringify(fileformat),  
+		mp:JSON.stringify(multiple) 
 	}, function(result){
 		console.log(result);
 		if(result=="Done"){
@@ -641,6 +653,8 @@ $(document).on("click","#save-form-close",function(){
 	var name = new Array();
 	var database = new Array();
 	var important = new Array();
+	var fileformat = new Array();
+	var multiple = new Array();
 	var list = new Array();
 	var filter = new Array();
 	var dataOption = new Array();
@@ -662,6 +676,14 @@ $(document).on("click","#save-form-close",function(){
 			val.push($(this).attr("data-elemvalue").replace(/"/g, '').replace(/'/g, '').replace(/#/g, ''));
 		}else{
 			val.push($(this).attr("data-elemvalue"));
+		}
+
+		if($(this).attr("data-elemtype")=="file"){
+			fileformat.push($(this).attr("data-fileformatx").replace(/"/g, '').replace(/'/g, '').replace(/#/g, ''));
+			multiple.push($(this).attr("data-maltiupload").replace(/"/g, '').replace(/'/g, '').replace(/#/g, ''));	
+		}else{
+			fileformat.push($(this).attr("data-fileformatx"));
+			multiple.push($(this).attr("data-maltiupload"));
 		}
 		
 		//console.log(type+" ");
@@ -693,7 +715,9 @@ $(document).on("click","#save-form-close",function(){
 		f:JSON.stringify(filter),  
 		v:JSON.stringify(val),  
 		dop:JSON.stringify(dataOption),  
-		dch:JSON.stringify(dataCheckbox) 
+		dch:JSON.stringify(dataCheckbox), 
+		ff:JSON.stringify(fileformat),  
+		mp:JSON.stringify(multiple)  
 	}, function(result){
 		console.log(result);
 		if(result=="Done"){

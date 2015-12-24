@@ -25,7 +25,7 @@
 			                   <button type="button" class="btn btn-default btn-sm reloadMe" style="margin-left:5px;"><i class="fa fa-refresh"></i>&nbsp;&nbsp;<?=$data["language_data"]["val25"]?></button>
 			                </div>
 			             </div>
-
+			             <div class="box-body table-responsive no-padding">
 	            		<table id="example1" class="table table-bordered dataTable">
 	            			<tr>
 	            				<th><?=$data["language_data"]["val22"]?></th>
@@ -102,6 +102,7 @@
 	            			
 	            			
 	            		</table>
+	            	</div>
             		</div>
 
 

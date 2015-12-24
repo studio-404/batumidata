@@ -1,10 +1,10 @@
 <?php if(!defined("DIR")){ exit(); }
-class catalog extends connection{
+class monacemisdamateba extends connection{
 	function __construct($c){
-		$this->template($c);
+		$this->template($c,"monacemisdamateba");
 	}
-
-	public function template($c){
+	
+	public function template($c,$page){
 		$conn = $this->conn($c); // connection
 
 		$cache = new cache();
@@ -22,6 +22,7 @@ class catalog extends connection{
 		$prepare->execute(array(
 			":id"=>$_SESSION["batumi_id"]
 		));
+
 		if($prepare->rowCount() > 0){
 			$fetch = $prepare->fetch(PDO::FETCH_ASSOC);
 			$data["userdata"] = $fetch;
@@ -29,13 +30,15 @@ class catalog extends connection{
 			redirect::url(WEBSITE);
 		}
 
-		$catalog_general = $cache->index($c,"catalog_general");
-		$data["catalog_general"] = json_decode($catalog_general,true);
+		$form = $cache->index($c,"form");
+		$data["form"] = json_decode($form,true);
 
-		$catalog_table_list = $cache->index($c,"catalog_table_list");
-		$data["catalog_table_list"] = json_decode($catalog_table_list,true);
-
-		@include($c["website.directory"]."/catalog.php"); 
+		$include = WEB_DIR."/monacemisdamateba.php";
+		if(file_exists($include)){
+			@include($include);
+		}else{
+			$controller = new error_page(); 
+		}
 	}
 }
 ?>

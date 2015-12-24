@@ -48,6 +48,24 @@ class cache extends connection{
 			$prepare->execute();
 			$fetch = $prepare->fetchAll(PDO::FETCH_ASSOC);
 			break;
+			case "catalog_table_list":
+			$sql = 'SELECT `label` FROM `studio404_forms` WHERE `cid`=:cid AND `list`="y" AND `lang`=:lang ORDER BY `id` ASC';
+			$prepare = $conn->prepare($sql); 
+			$prepare->execute(array(
+				":cid"=>Input::method("GET","idx"), 
+				":lang"=>LANG_ID
+			));
+			$fetch = $prepare->fetchAll(PDO::FETCH_ASSOC);
+			break;
+			case "form":
+			$sql = 'SELECT * FROM `studio404_forms` WHERE `cid`=:cid AND `lang`=:lang ORDER BY `id` ASC';
+			$prepare = $conn->prepare($sql); 
+			$prepare->execute(array(
+				":cid"=>Input::method("GET","parent"), 
+				":lang"=>LANG_ID
+			));
+			$fetch = $prepare->fetchAll(PDO::FETCH_ASSOC);
+			break;
 			case "welcomepage_categories": 
 			$sql = 'SELECT `idx`,`title`,`slug` FROM `studio404_pages` WHERE `cid`=:cid AND `lang`=:lang AND `visibility`!=:visibility AND `status`!=:status ORDER BY `position` ASC';	
 			$prepare = $conn->prepare($sql); 

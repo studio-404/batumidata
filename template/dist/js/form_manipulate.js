@@ -118,7 +118,7 @@ function createInputFileElement(dlang){
 	}
 	var uniqueClass = "elementuniquefile"+countMe;
 
-	var elem = '<div class="form-group has-warning element-box" id="'+uniqueClass+'" data-dlang="'+dlang+'" data-elemtype="file" data-elemlabel="Label Text" data-elemname="elemname" data-database="id" data-important="no" data-list="no" data-filter="no">';
+	var elem = '<div class="form-group has-warning element-box" id="'+uniqueClass+'" data-dlang="'+dlang+'" data-elemtype="file" data-elemlabel="Label Text" data-elemname="elemname" data-database="id" data-maltiupload="no" data-fileformatx="jpg" data-important="no" data-list="no" data-filter="no">';
 	elem += '<label>Label Text</label>';
 	elem += '<a href="javascript:void(0)" data-uniqueclass="'+uniqueClass+'" data-dlang="'+dlang+'" style="float:right; color:#f39c12; margin-left:5px;" class="remove-element"><i class="glyphicon glyphicon-remove"></i></a>';
 	elem += '<a href="javascript:void(0)" data-uniqueclass="'+uniqueClass+'" style="float:right; margin-left:5px; color:#f39c12" onclick="editInputFileElement(this)"><i class="glyphicon glyphicon-edit"></i></a>';
@@ -139,6 +139,10 @@ function editInputFileElement(e){
 	var getElemLabel = $("#"+uniqueClass).attr("data-elemlabel").replace(/"/g, '').replace(/'/g, '').replace(/#/g, '');
 	var getElemName = $("#"+uniqueClass).attr("data-elemname").replace(/"/g, '').replace(/'/g, '').replace(/#/g, '');
 	var getElemDatabase = $("#"+uniqueClass).attr("data-database").replace(/"/g, '').replace(/'/g, '').replace(/#/g, '');
+	
+	var getElemMultiple = $("#"+uniqueClass).attr("data-maltiupload");
+	var getElemFileformat = $("#"+uniqueClass).attr("data-fileformatx");
+
 	var getElemImportant = $("#"+uniqueClass).attr("data-important").replace(/"/g, '').replace(/'/g, '').replace(/#/g, '');
 	var getElemList = $("#"+uniqueClass).attr("data-list").replace(/"/g, '').replace(/'/g, '').replace(/#/g, '');
 	var getElemFilter= $("#"+uniqueClass).attr("data-filter").replace(/"/g, '').replace(/'/g, '').replace(/#/g, '');
@@ -148,6 +152,8 @@ function editInputFileElement(e){
 	_input += '<div class="form-group"><label>Element Label:</label><input type="text" class="form-control" value="'+getElemLabel+'" onkeyup="bindLabel(this, \''+uniqueClass+'\')" /></div>';
 	/* Name */
 	_input += '<div class="form-group"><label>Element Name:</label><input type="text" class="form-control" value="'+getElemName+'" onkeyup="bindName(this, \''+uniqueClass+'\')" /></div>';
+	/* File Format */
+	_input += '<div class="form-group"><label>File Format: <font size="1">(Seperate value by comma)</font></label><input type="text" class="form-control" value="'+getElemFileformat+'" onkeyup="bindFormat(this, \''+uniqueClass+'\')" /></div>';
 	
 	/* Database attach */
 	_input += '<div class="form-group"><label>Element Databaze</label>';
@@ -163,6 +169,17 @@ function editInputFileElement(e){
 	}
 	_input += '</select>';
 	_input += '</div>';
+
+	/* Maltiple */
+	if(getElemMultiple=="yes"){ var y2 = 'selected="selected"'; var n2 = ''; }
+	else{ var n2 = 'selected="selected"'; var y2 = ''; }
+	_input += '<div class="form-group"><label>Maltiple:</label>';
+	_input += '<select class="form-control" onchange="bindMultiple(this, \''+uniqueClass+'\')">';
+	_input += '<option value="yes" '+y2+'>Yes</option>';
+	_input += '<option value="no" '+n2+'>No</option>';
+	_input += '</select>';
+	_input += '</div>';
+
 	/* Importent */
 	if(getElemImportant=="yes"){ var y = 'selected="selected"'; var n = ''; }
 	else{ var n = 'selected="selected"'; var y = ''; }
@@ -644,6 +661,11 @@ function bindName(e,l){
 	$("#"+l).attr("data-elemname",latinChars);
 }
 
+function bindFormat(e,l){
+	$("#"+l).attr("data-fileformatx",e.value.replace(/"/g, '').replace(/'/g, '').replace(/#/g, ''));
+	console.log(e.value.replace(/"/g, '').replace(/'/g, '').replace(/#/g, ''));
+}
+
 function bindPlaceholder(e,l){
 	$("#"+l+" input").val(e.value.replace(/"/g, '').replace(/'/g, '').replace(/#/g, ''));
 	$("#"+l).attr("data-elemvalue",e.value.replace(/"/g, '').replace(/'/g, '').replace(/#/g, ''));
@@ -657,6 +679,11 @@ function bindDatabase(e,l){
 
 function bindImportant(e,l){
 	$("#"+l).attr("data-important",e.value.replace(/"/g, '').replace(/'/g, '').replace(/#/g, ''));
+	console.log(e.value.replace(/"/g, '').replace(/'/g, '').replace(/#/g, ''));	
+}
+
+function bindMultiple(e,l){
+	$("#"+l).attr("data-maltiupload",e.value.replace(/"/g, '').replace(/'/g, '').replace(/#/g, ''));
 	console.log(e.value.replace(/"/g, '').replace(/'/g, '').replace(/#/g, ''));	
 }
 

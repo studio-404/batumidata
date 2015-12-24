@@ -37,6 +37,9 @@
 			              <div class="box-body">
 			              	<div class="interface">
 			              		<?php
+			              		// echo "<pre>";
+			              		// print_r($data["select_form"]);
+			              		// echo "</pre>";
 			              		if(count($data["select_form"]["id"])):
 			              			$x=0;
 			              			foreach($data["select_form"]["id"] as $v): 
@@ -109,16 +112,13 @@
 			              						</div>
 			              					<?php
 			              				}else if($data["select_form"]["type"][$x]=="file"){
+			              					if($data["select_form"]["attach_multiple"][$x]=="true"){ $attach_multiple = "multiple"; }else{ $attach_multiple = ""; }
 			              					?>
-			              					<div class="form-group element-box" id="elementinserted<?=$x?>" data-dlang="<?=$data["select_form"]["lang"][$x]?>" data-elemtype="<?=$data["select_form"]["type"][$x]?>" data-elemlabel="<?=$data["select_form"]["label"][$x]?>" data-elemname="<?=$data["select_form"]["name"][$x]?>" data-database="<?=$data["select_form"]["attach_column"][$x]?>" data-important="<?=$data["select_form"]["important"][$x]?>" data-list="<?=$data["select_form"]["list"][$x]?>" data-filter="<?=$data["select_form"]["filter"][$x]?>">
+			              					<div class="form-group element-box" id="elementinserted<?=$x?>" data-dlang="<?=$data["select_form"]["lang"][$x]?>" data-elemtype="<?=$data["select_form"]["type"][$x]?>" data-elemlabel="<?=$data["select_form"]["label"][$x]?>" data-elemname="<?=$data["select_form"]["name"][$x]?>" data-database="<?=$data["select_form"]["attach_column"][$x]?>" data-maltiupload="<?=$data["select_form"]["attach_multiple"][$x]?>" data-fileformatx="<?=$data["select_form"]["attach_fileformat"][$x]?>" data-important="<?=$data["select_form"]["important"][$x]?>" data-list="<?=$data["select_form"]["list"][$x]?>" data-filter="<?=$data["select_form"]["filter"][$x]?>">
 			              						<label><?=$data["select_form"]["label"][$x]?></label>
 			              						<a href="javascript:void(0)" data-uniqueclass="elementinserted<?=$x?>" data-dlang="<?=$data["select_form"]["lang"][$x]?>" style="float:right; margin-left:5px;" class="remove-element"><i class="glyphicon glyphicon-remove"></i></a>
-			              						<a href="javascript:void(0)" data-uniqueclass="elementinserted<?=$x?>" style="float:right; margin-left:5px;" onclick="editInputDateElement(this)"><i class="glyphicon glyphicon-edit"></i></a>
-			              						<!-- <div class="input-group">
-			              							<div class="input-group-addon"><i class="fa fa-calendar"></i></div>
-			              								<input type="text" class="form-control" value="dd/mm/YYYY" disabled="disabled">
-			              						</div> -->
-			              						<div class="files"><div class="file-inside"><input type="file" value=""> </div></div>
+			              						<a href="javascript:void(0)" data-uniqueclass="elementinserted<?=$x?>" style="float:right; margin-left:5px;" onclick="editInputFileElement(this)"><i class="glyphicon glyphicon-edit"></i></a>
+			              						<div class="files"><div class="file-inside"><input type="file" value="" <?=$attach_multiple?> /> </div></div>
 			              					</div>
 			              					<?php
 			              				}

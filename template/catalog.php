@@ -19,69 +19,39 @@
 			<div class="row">
             <div class="col-xs-12">
               <div class="box">
-                <div class="box-header">
-                  <h3 class="box-title">ჰოსტელების ჩამონათვალი</h3>
-                  <div class="box-tools pull-right">
-                   <span class="glyphicon glyphicon-plus">&nbsp;დამატება</span>
-                  </div>
-                </div><!-- /.box-header -->
+                   <div class="mailbox-controls">
+                      <div class="btn-group">
+                        <button type="button" class="btn btn-default btn-sm gotoUrl" data-goto="<?=WEBSITE.LANG?>/monacemis-damateba?parent=<?=Input::method("GET","idx")?>"><i class="glyphicon glyphicon-plus"></i>&nbsp;&nbsp;<?=$data["language_data"]["val24"]?></button>
+                         <button type="button" class="btn btn-default btn-sm reloadMe" style="margin-left:5px;"><i class="fa fa-refresh"></i>&nbsp;&nbsp;<?=$data["language_data"]["val25"]?></button>
+                      </div>
+                   </div>
+                   <?php
+// echo "<pre>";
+// print_r($data["catalog_table_list"]);
+// echo "</pre>";
+                   ?>
+
                 <div class="box-body table-responsive no-padding">
                   <table class="table table-hover">
                     <tr>
                       <th>ID</th>
-                      <th>დასახელება</th>
-                      <th>თარიღი</th>
-                      <th>მისამართი</th>
-                      <th>ტელ. / მობ.</th>
-                      <th>აღწერა მოკლედ</th>
-                      <th>ვრცლად</th>
-                      <th>რედაქტირება</th>
-                      <th>წაშლა</th>
+                      <?php
+                      foreach($data["catalog_table_list"] as $val){
+                        echo '<th>'.$val['label'].'</th>';
+                      }
+                      ?>
+                      <th>მოქმედება</th>
                     </tr>
-                    <tr>
+                    <!-- <tr>
                       <td>183</td>
-                      <td>John Doe</td>
-                      <td>11-7-2014</td>
-                      <th>ბათუმი, ფარნავაზ მეფის ქ. №86</th>
-                      <th>+995 591 22 44 00</th>
-                      <th>აღწერა მოკლედ ჰოსტელის შესახებ</th>
-                      <th><button class="btn btn-block btn-primary btn-sm"><span class="glyphicon glyphicon-info-sign" title="ვრცლად"></span></button></th>
-                      <td><button class="btn btn-block btn-success btn-sm"><span class="glyphicon glyphicon-edit" title="რედაქტირება"></span></button></td>
-                      <td><button class="btn btn-block btn-danger btn-sm"><span class="glyphicon glyphicon-remove" title="წაშლა"></span></button></td>
-                    </tr>
-                    <tr>
-                      <td>219</td>
-                      <td>Alexander Pierce</td>
-                      <td>11-7-2014</td>
-                      <th>ბათუმი, ფარნავაზ მეფის ქ. №86</th>
-                      <th>+995 591 22 44 00</th>
-                      <th>აღწერა მოკლედ ჰოსტელის შესახებ</th>
-                      <th><button class="btn btn-block btn-primary btn-sm"><span class="glyphicon glyphicon-info-sign" title="ვრცლად"></span></button></th>
-                      <td><button class="btn btn-block btn-success btn-sm"><span class="glyphicon glyphicon-edit" title="რედაქტირება"></span></button></td>
-                      <td><button class="btn btn-block btn-danger btn-sm"><span class="glyphicon glyphicon-remove" title="წაშლა"></span></button></td>
-                    </tr>
-                    <tr>
-                      <td>657</td>
-                      <td>Bob Doe</td>
-                      <td>11-7-2014</td>
-                      <th>ბათუმი, ფარნავაზ მეფის ქ. №86</th>
-                      <th>+995 591 22 44 00</th>
-                      <th>აღწერა მოკლედ ჰოსტელის შესახებ</th>
-                      <th><button class="btn btn-block btn-primary btn-sm"><span class="glyphicon glyphicon-info-sign" title="ვრცლად"></span></button></th>
-                      <td><button class="btn btn-block btn-success btn-sm"><span class="glyphicon glyphicon-edit" title="რედაქტირება"></span></button></td>
-                      <td><button class="btn btn-block btn-danger btn-sm"><span class="glyphicon glyphicon-remove" title="წაშლა"></span></button></td>
-                    </tr>
-                    <tr>
-                      <td>175</td>
-                      <td>Mike Doe</td>
-                      <td>11-7-2014</td>
-                      <th>ბათუმი, ფარნავაზ მეფის ქ. №86</th>
-                      <th>+995 591 22 44 00</th>
-                      <th>აღწერა მოკლედ ჰოსტელის შესახებ</th>
-                      <th><button class="btn btn-block btn-primary btn-sm"><span class="glyphicon glyphicon-info-sign" title="ვრცლად"></span></button></th>
-                      <td><button class="btn btn-block btn-success btn-sm"><span class="glyphicon glyphicon-edit" title="რედაქტირება"></span></button></td>
-                      <td><button class="btn btn-block btn-danger btn-sm"><span class="glyphicon glyphicon-remove" title="წაშლა"></span></button></td>
-                    </tr>
+                      
+                      <td>
+                        <a href="<?=WEBSITE.LANG?>/katalogis-marTva/redaqtireba?id=<?=$value['idx']?>" style="padding:0 0 0 5px"><i class="glyphicon glyphicon-edit"></i></a>
+                        <a href="javascript:void(0)" style="padding:0 0 0 5px" class="remove-catalogue" data-dlang="<?=LANG?>" data-catid="<?=$value["idx"]?>"><i class="glyphicon glyphicon-remove"></i></a>
+                      </td>
+                    </tr> -->
+                    
+              
                   </table>
                 </div><!-- /.box-body -->
               </div><!-- /.box -->
