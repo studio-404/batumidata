@@ -52,7 +52,7 @@ function editInputDateElement(e){
 	_input += '<div class="form-group"><label>Element Name:</label><input type="text" class="form-control" value="'+getElemName+'" onkeyup="bindName(this, \''+uniqueClass+'\')" /></div>';
 	
 	/* Database attach */
-	_input += '<div class="form-group"><label>Element Databaze</label>';
+	_input += '<div class="form-group"><label>Element Database</label>';
 	_input += '<select class="form-control" onchange="bindDatabase(this, \''+uniqueClass+'\')">';
 	var db = $(".database-column-list li");
 	for(var x = 0; x<=(db.length-1); x++){
@@ -156,7 +156,7 @@ function editInputFileElement(e){
 	_input += '<div class="form-group"><label>File Format: <font size="1">(Seperate value by comma)</font></label><input type="text" class="form-control" value="'+getElemFileformat+'" onkeyup="bindFormat(this, \''+uniqueClass+'\')" /></div>';
 	
 	/* Database attach */
-	_input += '<div class="form-group"><label>Element Databaze</label>';
+	_input += '<div class="form-group"><label>Element Database</label>';
 	_input += '<select class="form-control" onchange="bindDatabase(this, \''+uniqueClass+'\')">';
 	var db = $(".database-column-list li");
 	for(var x = 0; x<=(db.length-1); x++){
@@ -313,7 +313,7 @@ function editCheckboxElement(e){
 	_input += '<div class="form-group"><label>Element Name:</label><input type="text" class="form-control" value="'+getElemName+'" onkeyup="bindName(this, \''+uniqueClass+'\')" /></div>';
 	
 	/* Database attach */
-	_input += '<div class="form-group"><label>Element Databaze</label>';
+	_input += '<div class="form-group"><label>Element Database</label>';
 	_input += '<select class="form-control" onchange="bindDatabase(this, \''+uniqueClass+'\')">';
 	var db = $(".database-column-list li");
 	for(var x = 0; x<=(db.length-1); x++){
@@ -464,7 +464,7 @@ function editSelectElement(e){
 	_input += '<div class="form-group"><label>Element Name:</label><input type="text" class="form-control" value="'+getElemName+'" onkeyup="bindName(this, \''+uniqueClass+'\')" /></div>';
 	
 	/* Database attach */
-	_input += '<div class="form-group"><label>Element Databaze</label>';
+	_input += '<div class="form-group"><label>Element Database</label>';
 	_input += '<select class="form-control" onchange="bindDatabase(this, \''+uniqueClass+'\')">';
 	var db = $(".database-column-list li");
 	for(var x = 0; x<=(db.length-1); x++){
@@ -543,7 +543,7 @@ function editTextareaElement(e){
 	/* Name */
 	_input += '<div class="form-group"><label>Element Name:</label><input type="text" class="form-control" value="'+getElemName+'" onkeyup="bindName(this, \''+uniqueClass+'\')" /></div>';
 	/* Database attach */
-	_input += '<div class="form-group"><label>Element Databaze</label>';
+	_input += '<div class="form-group"><label>Element Database</label>';
 	_input += '<select class="form-control" onchange="bindDatabase(this, \''+uniqueClass+'\')">';
 	var db = $(".database-column-list li");
 	for(var x = 0; x<=(db.length-1); x++){
@@ -722,7 +722,7 @@ function editTextElement(e){
 	/* Placeholder */
 	_input += '<div class="form-group"><label>Element Placeholder:</label><input type="text" class="form-control" value="'+getElemValue+'" onkeyup="bindPlaceholder(this, \''+uniqueClass+'\')" /></div>';
 	/* Database attach */
-	_input += '<div class="form-group"><label>Element Databaze</label>';
+	_input += '<div class="form-group"><label>Element Database</label>';
 	_input += '<select class="form-control" onchange="bindDatabase(this, \''+uniqueClass+'\')">';
 	var db = $(".database-column-list li");
 	for(var x = 0; x<=(db.length-1); x++){

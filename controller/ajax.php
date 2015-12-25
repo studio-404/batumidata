@@ -18,6 +18,117 @@ class ajax extends connection{
 	public function requests($c){
 		$conn = $this->conn($c); 
 
+		if(Input::method("POST","addCatalogItem")=="true"){
+			$macat = json_decode(Input::method("POST","macat"),true);
+			$types = json_decode(Input::method("POST","ta"),true);
+			$values = json_decode(Input::method("POST","va"),true);
+			$names = json_decode(Input::method("POST","na"),true);
+			$db_columns = json_decode(Input::method("POST","ca"),true);
+			$checkbox_values = json_decode(Input::method("POST","ca2"),true);
+			$importent = json_decode(Input::method("POST","ia"),true);
+
+			$sql = 'SELECT 
+			MAX(`idx`) AS maxidx, 
+			(SELECT MAX(`position`) FROM `studio404_module_item` WHERE `status`!=1 ) AS maxposition
+			FROM 
+			`studio404_module_item`
+			WHERE `status`!=1';
+			$prepare = $conn->prepare($sql); 
+			$prepare->execute();
+			if($prepare->rowCount() > 0){
+				$fetch = $prepare->fetch(PDO::FETCH_ASSOC);
+				$maxidx = $fetch["maxidx"]+1;
+				$maxposition = $fetch["maxposition"]+1;
+			}else{
+				$maxidx = 1;
+				$maxposition = 1;
+			}
+
+			//select gallery max idx
+			$sqlg = 'SELECT MAX(`idx`) AS maxid FROM `studio404_gallery` WHERE `lang`=:lang';
+			$prepareg = $conn->prepare($sqlg);
+			$prepareg->execute(array(
+				":lang"=>1
+			));
+			$fetchg = $prepareg->fetch(PDO::FETCH_ASSOC);
+			$gallery_maxidx = ($fetchg['maxid']) ? ($fetchg['maxid'] + 1) : 1; 
+
+			$columns_and_data = '';
+			$xx = 0;
+			foreach($db_columns as $val){
+				if($types[$xx]=="text" || $types[$xx]=="select" || $types[$xx]=="textarea"){
+					$columns_and_data .= '`'.$val.'`="'.$values[$xx].'", ';
+				}else if($types[$xx]=="checkbox"){
+					if($checkbox_values[$xx]=="yes"){
+						$checkboxdata_value[$val][] = $values[$xx];
+					}
+				}else if($types[$xx]=="file"){
+					$columns_and_data .= '`'.$val.'`="'.$values[$xx].'", ';
+				}
+				$xx++;
+			}
+			// echo '<pre>';
+			// print_r($values);
+			// echo '</pre>';
+			if(is_array($checkboxdata_value)){
+				foreach($checkboxdata_value as $key => $value){
+					$columns_and_data .= '`'.$key.'`="'.implode(",",$checkboxdata_value[$key]).'", ';
+				}
+			}
+			$uid = new uid();
+			$u = $uid->generate(9);
+			foreach ($c['languages.num.array'] as $l) {
+				$insert = 'INSERT INTO `studio404_module_item` SET '.$columns_and_data.' `cataloglist`="'.implode(",",$macat).'", `insert_ip`="'.get_ip::ip().'", `insert_admin`="'.$_SESSION["batumi_id"].'", `position`="'.$maxposition.'", `idx`="'.$maxidx.'", `visibility`=1, `lang`="'.$l.'", `uid`="'.$u.'", `date`="'.time().'", `expiredate`="'.time().'", `module_idx`="25" ';
+				$query = $conn->query($insert);
+
+				// insert gallery
+				$sql_media = 'INSERT INTO `studio404_gallery` SET 
+				`idx`=:idx, 
+				`date`=:datex,
+				`title`=:title, 
+				`lang`=:lang, 
+				`status`=:status 
+				';
+				$prepare_media = $conn->prepare($sql_media);
+				$prepare_media->execute(array(
+					":idx"=>$gallery_maxidx, 
+					":datex"=>time(),
+					":title"=>"batumi catalog", 
+					":lang"=>$l, 
+					":status"=>0
+				));
+				// insert gallery attachment
+				$sql_media2 = 'INSERT INTO `studio404_gallery_attachment` SET 
+				`idx`=:idx, 
+				`connect_idx`=:connect_idx, 
+				`pagetype`=:pagetype, 
+				`lang`=:lang, 
+				`status`=:status
+				'; 
+				$prepare_media2 = $conn->prepare($sql_media2); 
+				$prepare_media2->execute(array(
+					":idx"=>$gallery_maxidx, 
+					":connect_idx"=>$maxidx,
+					":pagetype"=>"catalogpage", 
+					":lang"=>$l, 
+					":status"=>0
+				));
+
+			}
+
+			$files = glob(DIR.'_cache/*'); // get all file names
+			foreach($files as $file){ // iterate files
+				if(is_file($file))
+				@unlink($file); // delete file
+			}
+				
+			$insert_notification = new insert_notification();
+			$insert_notification->insert($c,$_SESSION["batumi_id"],"მონაცემის დამატება ::".$maxidx,"Add Data ::".$maxidx);
+
+			echo "Done";
+
+		}
+
 		if(Input::method("POST","adddatabasecolumn")=="true" && Input::method("POST","a") && Input::method("POST","ct") && Input::method("POST","cn")){
 			$arrayType = array("int","varchar","text","longtext"); 
 			if(in_array(Input::method("POST","ct"),$arrayType)){
@@ -87,86 +198,94 @@ class ajax extends connection{
 			$fileformat = json_decode(Input::method("POST","ff"),true); 
 			$multiple = json_decode(Input::method("POST","mp"),true); 
 			
-			// delete old catalog form
-			$sql = 'DELETE FROM `studio404_forms` WHERE `cid`=:cid AND `lang`=:lang';
-			$prepare = $conn->prepare($sql); 
-			$prepare->execute(array(
-				":cid"=>$catId, 
-				":lang"=>$lang[0]
-			));
-			if($prepare->rowCount() > 0){
-				$sql2 = 'DELETE FROM `studio404_forms_lists` WHERE `cid`=:cid AND `lang`=:lang';
-				$prepare2 = $conn->prepare($sql2); 
-				$prepare2->execute(array(
-					":cid"=>$catId, 
-					":lang"=>$lang[0]
-				));
-			}
+			if(Input::method("POST","update_lang")=="single"){
+				$c['languages.num.array'] = array($lang[0]);
+			}			
 
-			for($x = 0; $x<count($type);$x++){
-				if($type[$x]=="text" || $type[$x]=="date" || $type[$x]=="textarea"){
-					$vdb = ($value[$x]) ? $value[$x] : "";
-					$insert = 'INSERT INTO `studio404_forms` SET `cid`=:cid, `label`=:label, `type`=:type, `name`=:name, `placeholder`=:placeholder, `attach_column`=:attach_column, `important`=:important, `list`=:list, `filter`=:filter, `lang`=:lang';
-					$prepare_insert = $conn->prepare($insert); 
-					$prepare_insert->execute(array(
+			foreach($c['languages.num.array'] as $lang_numeric_array_value){
+
+				// delete old catalog form
+				$sql = 'DELETE FROM `studio404_forms` WHERE `cid`=:cid AND `lang`=:lang';
+				$prepare = $conn->prepare($sql); 
+				$prepare->execute(array(
+					":cid"=>$catId, 
+					":lang"=>$lang_numeric_array_value
+				));
+
+				if($prepare->rowCount() > 0){
+					$sql2 = 'DELETE FROM `studio404_forms_lists` WHERE `cid`=:cid AND `lang`=:lang';
+					$prepare2 = $conn->prepare($sql2); 
+					$prepare2->execute(array(
 						":cid"=>$catId, 
-						":label"=>$label[$x], 
-						":type"=>$type[$x], 
-						":name"=>$name[$x], 
-						":placeholder"=>$vdb, 
-						":attach_column"=>$database[$x], 
-						":important"=>$important[$x], 
-						":list"=>$list[$x], 
-						":filter"=>$filter[$x], 
-						":lang"=>$lang[$x], 
+						":lang"=>$lang_numeric_array_value
 					));
-				}else if($type[$x]=="file"){
-					$vdb = ($value[$x]) ? $value[$x] : "";
-					$insert = 'INSERT INTO `studio404_forms` SET `cid`=:cid, `label`=:label, `attach_format`=:attach_format, `attach_multiple`=:attach_multiple, `type`=:type, `name`=:name, `placeholder`=:placeholder, `attach_column`=:attach_column, `important`=:important, `list`=:list, `filter`=:filter, `lang`=:lang';
-					$prepare_insert = $conn->prepare($insert); 
-					$attachformat = ($fileformat[$x]) ? $fileformat[$x] : "jpg";
-					$attachmulti = ($multiple[$x]) ? $multiple[$x] : "no";
-					$prepare_insert->execute(array(
-						":cid"=>$catId, 
-						":label"=>$label[$x], 
-						":type"=>$type[$x], 
-						":name"=>$name[$x], 
-						":placeholder"=>$vdb, 
-						":attach_column"=>$database[$x], 
-						":important"=>$important[$x], 
-						":attach_format"=>$attachformat, 
-						":attach_multiple"=>$attachmulti, 
-						":list"=>$list[$x], 
-						":filter"=>$filter[$x], 
-						":lang"=>$lang[$x], 
-					));
-				}else if($type[$x]=="select" || $type[$x]=="checkbox"){
-					$vdb = ($value[$x]) ? $value[$x] : "";
-					$insert = 'INSERT INTO `studio404_forms` SET `cid`=:cid, `label`=:label, `type`=:type, `name`=:name, `placeholder`=:placeholder, `attach_column`=:attach_column, `important`=:important, `list`=:list, `filter`=:filter, `lang`=:lang';
-					$prepare_insert = $conn->prepare($insert); 
-					$prepare_insert->execute(array(
-						":cid"=>$catId, 
-						":label"=>$label[$x], 
-						":type"=>$type[$x], 
-						":name"=>$name[$x], 
-						":placeholder"=>$vdb, 
-						":attach_column"=>$database[$x], 
-						":important"=>$important[$x], 
-						":list"=>$list[$x], 
-						":filter"=>$filter[$x], 
-						":lang"=>$lang[$x], 
-					));
-					$lastId = $conn->lastInsertId();
-					$foreachelement = ($type[$x]=="select") ? $dataOptions[$x] : $dataCheckbox[$x];
-					foreach($foreachelement as $option){
-						$optioninsert = 'INSERT INTO `studio404_forms_lists` SET `cid`=:cid, `cf_id`=:cf_id, `text`=:textx, `lang`=:lang';
-						$prepare_option_insert = $conn->prepare($optioninsert); 
-						$prepare_option_insert->execute(array(
+				}
+
+				for($x = 0; $x<count($type);$x++){
+					if($type[$x]=="text" || $type[$x]=="date" || $type[$x]=="textarea"){
+						$vdb = ($value[$x]) ? $value[$x] : "";
+						$insert = 'INSERT INTO `studio404_forms` SET `cid`=:cid, `label`=:label, `type`=:type, `name`=:name, `placeholder`=:placeholder, `attach_column`=:attach_column, `important`=:important, `list`=:list, `filter`=:filter, `lang`=:lang';
+						$prepare_insert = $conn->prepare($insert); 
+						$prepare_insert->execute(array(
 							":cid"=>$catId, 
-							":cf_id"=>$lastId, 
-							":textx"=>$option, 
-							":lang"=>$lang[$x] 
+							":label"=>$label[$x], 
+							":type"=>$type[$x], 
+							":name"=>$name[$x], 
+							":placeholder"=>$vdb, 
+							":attach_column"=>rtrim($database[$x]), 
+							":important"=>$important[$x], 
+							":list"=>$list[$x], 
+							":filter"=>$filter[$x], 
+							":lang"=>$lang_numeric_array_value, 
 						));
+					}else if($type[$x]=="file"){
+						$vdb = ($value[$x]) ? $value[$x] : "";
+						$insert = 'INSERT INTO `studio404_forms` SET `cid`=:cid, `label`=:label, `attach_format`=:attach_format, `attach_multiple`=:attach_multiple, `type`=:type, `name`=:name, `placeholder`=:placeholder, `attach_column`=:attach_column, `important`=:important, `list`=:list, `filter`=:filter, `lang`=:lang';
+						$prepare_insert = $conn->prepare($insert); 
+						$attachformat = ($fileformat[$x]) ? $fileformat[$x] : "jpg";
+						$attachmulti = ($multiple[$x]) ? $multiple[$x] : "no";
+						$prepare_insert->execute(array(
+							":cid"=>$catId, 
+							":label"=>$label[$x], 
+							":type"=>$type[$x], 
+							":name"=>$name[$x], 
+							":placeholder"=>$vdb, 
+							":attach_column"=>$database[$x], 
+							":important"=>$important[$x], 
+							":attach_format"=>$attachformat, 
+							":attach_multiple"=>$attachmulti, 
+							":list"=>$list[$x], 
+							":filter"=>$filter[$x], 
+							":lang"=>$lang_numeric_array_value, 
+						));
+					}else if($type[$x]=="select" || $type[$x]=="checkbox"){
+						$vdb = ($value[$x]) ? $value[$x] : "";
+						$insert = 'INSERT INTO `studio404_forms` SET `cid`=:cid, `label`=:label, `type`=:type, `name`=:name, `placeholder`=:placeholder, `attach_column`=:attach_column, `important`=:important, `list`=:list, `filter`=:filter, `lang`=:lang';
+						$prepare_insert = $conn->prepare($insert); 
+						$prepare_insert->execute(array(
+							":cid"=>$catId, 
+							":label"=>$label[$x], 
+							":type"=>$type[$x], 
+							":name"=>$name[$x], 
+							":placeholder"=>$vdb, 
+							":attach_column"=>$database[$x], 
+							":important"=>$important[$x], 
+							":list"=>$list[$x], 
+							":filter"=>$filter[$x], 
+							":lang"=>$lang_numeric_array_value, 
+						));
+						$lastId = $conn->lastInsertId();
+						$foreachelement = ($type[$x]=="select") ? $dataOptions[$x] : $dataCheckbox[$x];
+						foreach($foreachelement as $option){
+							$optioninsert = 'INSERT INTO `studio404_forms_lists` SET `cid`=:cid, `cf_id`=:cf_id, `text`=:textx, `lang`=:lang';
+							$prepare_option_insert = $conn->prepare($optioninsert); 
+							$prepare_option_insert->execute(array(
+								":cid"=>$catId, 
+								":cf_id"=>$lastId, 
+								":textx"=>$option, 
+								":lang"=>$lang_numeric_array_value
+							));
+						}
 					}
 				}
 			}
@@ -175,6 +294,7 @@ class ajax extends connection{
 				if(is_file($file))
 				@unlink($file); // delete file
 			}
+
 			$insert_notification = new insert_notification();
 			$insert_notification->insert($c,$_SESSION["batumi_id"],"ფორმის განახლება ::".$catId,"Form Updated: ".$catId);
 			echo "Done";

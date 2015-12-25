@@ -35,11 +35,21 @@
 			            <!-- form start -->
 			            <form role="form">
 			              <div class="box-body">
+			              	<div class="form-group">
+		              			<label><?=$data["language_data"]["val76"]?></label>
+		              			<select class="form-control" id="update_language">
+		              				<option value="single"><?=$data["language_data"]["val77"]?> ( <?=LANG?> )</option>
+		              				<option value="both"><?=$data["language_data"]["val78"]?></option>
+		              			</select>
+		              		</div>
 			              	<div class="interface">
+
 			              		<?php
 			              		// echo "<pre>";
 			              		// print_r($data["select_form"]);
 			              		// echo "</pre>";
+
+
 			              		if(count($data["select_form"]["id"])):
 			              			$x=0;
 			              			foreach($data["select_form"]["id"] as $v): 
@@ -191,9 +201,9 @@
 			            		<?php 
 								foreach($data["catalog_table_columns"] as $val) :
 				            		if(!in_array($val["Field"],$c['database.catalog.item.lock.array'])){
-				            			echo '<li><a href="" data-databasecolumnname="'.$val["Field"].'" data-databasecolumntype="'.$val["Type"].'" class="chnage-delete-column" data-toggle="modal" data-target=".bs-example-modal-sm5"><i class="glyphicon glyphicon-menu-hamburger text-light-blue"></i> '.$val["Field"].' <font style="font-size:10px;">'.$val["Type"].'</font></a></li>';
+				            			echo '<li><a href="" data-databasecolumnname="'.$val["Field"].'" data-databasecolumntype="'.$val["Type"].'" class="chnage-delete-column" data-toggle="modal" data-target=".bs-example-modal-sm5"><i class="glyphicon glyphicon-menu-hamburger text-light-blue"></i>'.$val["Field"].' <font style="font-size:10px;">'.$val["Type"].'</font></a></li>';
 				            		}else{
-				            			echo '<li><a href="javascript:void(0)" data-databasecolumnname="'.$val["Field"].'"><i class="fa fa-lock text-light-blue"></i> '.$val["Field"].' <font style="font-size:10px;">'.$val["Type"].'</font></a></li>';
+				            			echo '<li><a href="javascript:void(0)" data-databasecolumnname="'.$val["Field"].'"><i class="fa fa-lock text-light-blue"></i>'.$val["Field"].' <font style="font-size:10px;">'.$val["Type"].'</font></a></li>';
 				            		}
 				                endforeach;
 				                ?>

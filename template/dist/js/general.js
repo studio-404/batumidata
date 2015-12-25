@@ -109,6 +109,101 @@ $(document).on("change","#profile-image",function(e){
 
 });
 
+$(document).on("click","#add-catalogue-item",function(){
+	var dbcolumn = '';
+	var typeArray = new Array();
+	var valueArray = new Array();
+	var nameArray = new Array();
+	var columnArray = new Array();
+	var checkedArray = new Array();
+	var importantArray = new Array();
+	var mainpagecategory = $("#mainpagecategory").val();
+
+	$(".catalog-add-form-data .form-input").each(function(){
+		$(".overlay-loader").fadeIn("slow");
+		var type = $(this).attr("data-type"); 
+		if(type=="text"){
+			valueArray.push($(this).val());
+			typeArray.push($(this).attr("data-type"));
+			nameArray.push($(this).attr("data-name"));
+			importantArray.push($(this).attr("data-important"));
+			dbcolumn = $(this).attr("data-attach").split(" ");
+			columnArray.push(dbcolumn[0]);
+			checkedArray.push("no");
+		}else if(type=="select"){
+			valueArray.push($(this).val());
+			typeArray.push($(this).attr("data-type"));
+			nameArray.push($(this).attr("data-name"));
+			importantArray.push($(this).attr("data-important"));
+			dbcolumn = $(this).attr("data-attach").split(" ");
+			columnArray.push(dbcolumn[0]);
+			checkedArray.push("no");
+		}else if(type=="checkbox"){
+			valueArray.push($(this).val());
+			nameArray.push($(this).attr("data-name"));
+			typeArray.push($(this).attr("data-type"));
+			importantArray.push($(this).attr("data-important"));
+			dbcolumn = $(this).attr("data-attach").split(" ");
+			columnArray.push(dbcolumn[0]);
+			if($(this).is(':checked')){
+				checkedArray.push("yes");	
+			}else{
+				checkedArray.push("no");	
+			}			
+		}else if(type=="file"){
+			valueArray.push($(this).val());
+			typeArray.push($(this).attr("data-type"));
+			nameArray.push($(this).attr("data-name"));
+			importantArray.push($(this).attr("data-important"));
+			dbcolumn = $(this).attr("data-attach").split(" ");
+			columnArray.push(dbcolumn[0]);
+			checkedArray.push("no");
+		}else if(type=="date"){
+			valueArray.push($(this).val());
+			nameArray.push($(this).attr("data-name"));
+			typeArray.push($(this).attr("data-type"));
+			importantArray.push($(this).attr("data-important"));
+			dbcolumn = $(this).attr("data-attach").split(" ");
+			columnArray.push(dbcolumn[0]);
+			checkedArray.push("no");
+		}else if(type=="textarea"){
+			valueArray.push($(this).val());
+			typeArray.push($(this).attr("data-type"));
+			nameArray.push($(this).attr("data-name"));
+			importantArray.push($(this).attr("data-important"));
+			dbcolumn = $(this).attr("data-attach").split(" ");
+			columnArray.push(dbcolumn[0]);
+			checkedArray.push("no");
+		}
+	});
+	
+	$.post(AJAX_REQUEST_URL, { 
+		addCatalogItem:true, 
+		ta:JSON.stringify(typeArray), 
+		va:JSON.stringify(valueArray), 
+		na:JSON.stringify(nameArray), 
+		ca:JSON.stringify(columnArray), 
+		ca2:JSON.stringify(checkedArray), 
+		ia:JSON.stringify(importantArray), 
+		macat:JSON.stringify(mainpagecategory) 
+	}, function(result){
+		$(".overlay-loader").fadeOut("slow");
+		if(result=="Done"){
+			var l = $("#system-language").text();
+			if(l=="EN"){
+				$(".form-message-output").html("<p>"+MESSAGE_OPERATION_DONE_GE+"</p>").fadeIn("slow");
+			}else{
+				$(".form-message-output").html("<p>"+MESSAGE_OPERATION_DONE_EN+"</p>").fadeIn("slow");
+			}
+			$("input[type='text']").val("");
+			$("textarea").val("");
+			$("input[type='checkbox']").removeAttr('checked');
+			$("select").val(0);
+			window.scrollTo(0,0);
+		}
+	});
+	// console.log(nameArray);
+});
 
 $(document).on("click","#add-catalogue",function(){
 	var name = $("#titlex").val();
@@ -564,6 +659,7 @@ $(document).on("click","#edit-user-close",function(){
 /* Save Form Function START */
 $(document).on("click","#save-form",function(){
 	$(".overlay-loader").fadeIn("slow");
+	var update_language = $("#update_language").val();
 	var type = new Array();
 	var dlang = new Array();
 	var label = new Array();
@@ -621,6 +717,7 @@ $(document).on("click","#save-form",function(){
 	
 	$.post(AJAX_REQUEST_URL, { 
 		createform:true, 
+		update_lang:update_language, 
 		catId:params["parent"], 
 		t:JSON.stringify(type),  
 		lang:JSON.stringify(dlang),  
@@ -647,6 +744,7 @@ $(document).on("click","#save-form",function(){
 $(document).on("click","#save-form-close",function(){
 	var ddll = $(this).data("dlang");
 	$(".overlay-loader").fadeIn("slow");
+	var update_language = $("#update_language").val();
 	var type = new Array();
 	var dlang = new Array();
 	var label = new Array();
@@ -704,6 +802,7 @@ $(document).on("click","#save-form-close",function(){
 	
 	$.post(AJAX_REQUEST_URL, { 
 		createform:true, 
+		update_lang:update_language, 
 		catId:params["parent"], 
 		t:JSON.stringify(type),  
 		lang:JSON.stringify(dlang),  

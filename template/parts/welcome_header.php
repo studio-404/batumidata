@@ -87,7 +87,7 @@
             $replace = (LANG=="ge") ? "en" : "ge";
             $changeLink = str_replace("/".LANG."/", "/".$replace."/", $actual_link);
             ?>
-            <li class="dropdown"><a href="<?=$changeLink?>"><?=strtoupper($replace)?></a></li>
+            <li class="dropdown"><a href="<?=$changeLink?>" id="system-language"><?=strtoupper($replace)?></a></li>
             <?php
             @include("template/parts/messages.php");
             @include("template/parts/notifications.php");
