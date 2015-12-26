@@ -53,9 +53,9 @@
 			              		if(count($data["select_form"]["id"])):
 			              			$x=0;
 			              			foreach($data["select_form"]["id"] as $v): 
-			              				$data["select_form"]["important"][$x] = ($data["select_form"]["important"][$x]=="y") ? "yes" : "no";
-			              				$data["select_form"]["list"][$x] = ($data["select_form"]["list"][$x]=="y") ? "yes" : "no";
-			              				$data["select_form"]["filter"][$x] = ($data["select_form"]["filter"][$x]=="y") ? "yes" : "no";
+			              				$data["select_form"]["important"][$x] = ($data["select_form"]["important"][$x]=="yes") ? "yes" : "no";
+			              				$data["select_form"]["list"][$x] = ($data["select_form"]["list"][$x]=="yes") ? "yes" : "no";
+			              				$data["select_form"]["filter"][$x] = ($data["select_form"]["filter"][$x]=="yes") ? "yes" : "no";
 			              				if($data["select_form"]["type"][$x]=="text"){
 			              			?>
 						              		<div class="form-group element-box" id="elementinserted<?=$x?>" data-dlang="<?=$data["select_form"]["lang"][$x]?>" data-elemtype="<?=$data["select_form"]["type"][$x]?>" data-elemlabel="<?=$data["select_form"]["label"][$x]?>" data-elemname="<?=$data["select_form"]["name"][$x]?>" data-elemvalue="<?=$data["select_form"]["placeholder"][$x]?>" data-database="<?=$data["select_form"]["attach_column"][$x]?>" data-important="<?=$data["select_form"]["important"][$x]?>" data-list="<?=$data["select_form"]["list"][$x]?>" data-filter="<?=$data["select_form"]["filter"][$x]?>">

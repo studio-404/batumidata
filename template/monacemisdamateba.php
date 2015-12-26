@@ -13,11 +13,7 @@
                 <div class="row">
                 	<div class="col-md-12 form-message-output" style="display:none"><p></p></div> 
                     <div class="col-md-12 catalog-add-form-data">
-                    <?php
-                    // echo "<pre>";
-                    // print_r($data["welcomepage_categories"]);
-                    // echo "</pre>";
-                    ?>
+                   
 					<?php if($data["parent_title"]!="" && Input::method("GET","parent")) : ?>
 						<div class="form-group">
 						<label><?=$data["language_data"]["val32"]?>: <font color="red">*</font></label>
@@ -41,23 +37,22 @@
                       ?>
                     </select>
                   </div>
-
 						<?php
 						$select_form = new select_form();
 						foreach($data["form"] as $form){
 							if($form["type"]=="text"){
-								if($form["important"]=="y"){ $dataimportant = "data-important='true'"; }
+								if($form["important"]=="yes"){ $dataimportant = "data-important='true'"; }
 								else{ $dataimportant = "data-important='false'"; }
 							?>
 	                          <div class="form-group">
-	                            <label><?=$form["label"]?>: <?=($form["important"]=="y") ? '<font color="red">*</font>' : ''?></label> <!-- Fisrname & lastname -->
+	                            <label><?=$form["label"]?>: <?=($form["important"]=="yes") ? '<font color="red">*</font>' : ''?></label> <!-- Fisrname & lastname -->
 	                            <input class="form-control form-input" type="text" placeholder="<?=$form["placeholder"]?>" data-name="<?=$form["name"]?>" data-attach="<?=$form["attach_column"]?>" data-type="text" data-important="<?=$form["important"]?>" value="" />
 	                          </div>
                         	<?php
                         	}else if($form["type"]=="select"){
                         		?>
                         		<div class="form-group">
-	                            <label><?=$form["label"]?>: <?=($form["important"]=="y") ? '<font color="red">*</font>' : ''?></label> <!-- Fisrname & lastname -->
+	                            <label><?=$form["label"]?>: <?=($form["important"]=="yes") ? '<font color="red">*</font>' : ''?></label> <!-- Fisrname & lastname -->
 	                           	<select class="form-control form-input" data-name="<?=$form["name"]?>" data-attach="<?=$form["attach_column"]?>" data-important="<?=$form["important"]?>" data-type="select">
 				                    <?php
 				                    $fetchx = $select_form->select_options($c,$form["id"]);
@@ -71,7 +66,7 @@
                         	}else if($form["type"]=="checkbox"){
                         		?>
                         		<div class="form-group">
-	                            	<label><?=$form["label"]?>: <?=($form["important"]=="y") ? '<font color="red">*</font>' : ''?></label> <!-- Fisrname & lastname -->
+	                            	<label><?=$form["label"]?>: <?=($form["important"]=="yes") ? '<font color="red">*</font>' : ''?></label> <!-- Fisrname & lastname -->
 	                        		<?php
 				                    $fetchx = $select_form->select_options($c,$form["id"]);
 				                    foreach ($fetchx as $value) {
@@ -87,21 +82,21 @@
                         		$multiple = ($form["attach_multiple"]=="yes") ? "multiple" : "";
                         		?>
                         		<div class="form-group">
-	                            	<label><?=$form["label"]?>: <?=($form["important"]=="y") ? '<font color="red">*</font>' : ''?></label> <!-- Fisrname & lastname -->
+	                            	<label><?=$form["label"]?>: <?=($form["important"]=="yes") ? '<font color="red">*</font>' : ''?></label> <!-- Fisrname & lastname -->
 	                        		<input class="form-control form-input" type="file" data-name="<?=$form["name"]?>" data-attach="<?=$form["attach_column"]?>" data-type="file" data-important="<?=$form["important"]?>" data-multiple="<?=$multiple?>" data-formatsx="<?=$form["attach_format"]?>" value="" <?=$multiple?>/>
 	                        	</div>
                         		<?php
                         	}else if($form["type"]=="date"){
                         		?>
                         		<div class="form-group">
-	                            	<label><?=$form["label"]?>: <?=($form["important"]=="y") ? '<font color="red">*</font>' : ''?></label> <!-- Fisrname & lastname -->
+	                            	<label><?=$form["label"]?>: <?=($form["important"]=="yes") ? '<font color="red">*</font>' : ''?></label> <!-- Fisrname & lastname -->
 	                        		<input type="text" class="form-control form-input" data-inputmask="'alias': 'dd/mm/yyyy'" data-mask="" data-name="<?=$form["name"]?>" data-attach="<?=$form["attach_column"]?>" data-important="<?=$form["important"]?>" data-type="date" value="" />
 	                        	</div>
                         		<?php
                         	}else if($form["type"]=="textarea"){
                         		?>
                         		<div class="form-group">
-	                            	<label><?=$form["label"]?>: <?=($form["important"]=="y") ? '<font color="red">*</font>' : ''?></label> <!-- Fisrname & lastname -->
+	                            	<label><?=$form["label"]?>: <?=($form["important"]=="yes") ? '<font color="red">*</font>' : ''?></label> <!-- Fisrname & lastname -->
 	                        		<textarea class="form-control form-input" data-name="<?=$form["name"]?>" data-attach="<?=$form["attach_column"]?>" data-type="textarea" data-important="<?=$form["important"]?>"></textarea>
 	                        	</div>
                         		<?php
