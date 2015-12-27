@@ -11,7 +11,16 @@ class cache extends connection{
 		if(Input::method("GET","parent")){
 			$partner = "pr".Input::method("GET","parent");
 		}else{ $partner = ""; }
-		$cache_file = "_cache/".$type.$proin.$partner.$slug_.LANG_ID.".json"; 
+
+		if(Input::method("GET","pn")){
+			$pn = "pn".Input::method("GET","pn");
+		}else{ $pn = ""; }
+
+		if(Input::method("GET","sw")){
+			$sw = "sw".Input::method("GET","sw");
+		}else{ $sw = ""; }
+
+		$cache_file = "_cache/".$type.$proin.$partner.$slug_.$pn.$sw.LANG_ID.".json"; 
 		if(file_exists($cache_file)){
 			$output = @file_get_contents($cache_file); 
 		}else{
@@ -49,13 +58,51 @@ class cache extends connection{
 			$fetch = $prepare->fetchAll(PDO::FETCH_ASSOC);
 			break;
 			case "catalog_table_list":
-			$sql = 'SELECT `label` FROM `studio404_forms` WHERE `cid`=:cid AND `list`="yes" AND `lang`=:lang ORDER BY `id` ASC';
+			$sql = 'SELECT `attach_column`,`label` FROM `studio404_forms` WHERE `cid`=:cid AND `list`="yes" AND `lang`=:lang ORDER BY `id` ASC';
 			$prepare = $conn->prepare($sql); 
 			$prepare->execute(array(
 				":cid"=>Input::method("GET","idx"), 
 				":lang"=>LANG_ID
 			));
 			$fetch = $prepare->fetchAll(PDO::FETCH_ASSOC);
+			break;
+			case "catalogitems": 
+			$offset = (Input::method("GET","pn")) ? Input::method("GET","pn")-1 : 0;
+			$sw = (Input::method("GET","sw") && is_numeric(Input::method("GET","sw"))) ? Input::method("GET","sw") : 10;
+			if(!Input::method("GET","pn") || !is_numeric(Input::method("GET","pn"))){ $offset = 0; }
+			$sql = 'SELECT 
+			`studio404_module_item`.*
+			FROM `studio404_module_item` WHERE 
+			FIND_IN_SET('.Input::method("GET","idx").', `studio404_module_item`.`cataloglist`) AND 
+			`studio404_module_item`.`lang`=:lang AND 
+			`studio404_module_item`.`visibility`!=:visibility AND 
+			`studio404_module_item`.`status`!=:status ORDER BY `id` DESC LIMIT '.$offset.', '.$sw;	
+			$prepare = $conn->prepare($sql); 
+			$prepare->execute(array(
+				":lang"=>LANG_ID, 
+				":status"=>1, 
+				":visibility"=>1 
+			)); 
+			$fetch = $prepare->fetchAll(PDO::FETCH_ASSOC); 
+			break;
+			case "catalogitemsnovisiable": 
+			$offset = (Input::method("GET","pn")) ? Input::method("GET","pn")-1 : 0;
+			$sw = (Input::method("GET","sw") && is_numeric(Input::method("GET","sw"))) ? Input::method("GET","sw") : 10;
+			if(!Input::method("GET","pn") || !is_numeric(Input::method("GET","pn"))){ $offset = 0; }
+			$sql = 'SELECT 
+			`studio404_module_item`.*
+			FROM `studio404_module_item` WHERE 
+			`module_idx`=25 AND 
+			`studio404_module_item`.`lang`=:lang AND 
+			`studio404_module_item`.`visibility`=:visibility AND 
+			`studio404_module_item`.`status`!=:status ORDER BY `id` DESC LIMIT '.$offset.', '.$sw;	
+			$prepare = $conn->prepare($sql); 
+			$prepare->execute(array(
+				":lang"=>LANG_ID, 
+				":status"=>1, 
+				":visibility"=>1 
+			)); 
+			$fetch = $prepare->fetchAll(PDO::FETCH_ASSOC); 
 			break;
 			case "form":
 			$sql = 'SELECT * FROM `studio404_forms` WHERE `cid`=:cid AND `lang`=:lang ORDER BY `id` ASC';

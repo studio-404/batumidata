@@ -1,6 +1,26 @@
 <?php
 @include("parts/login_header.php");
 ?>
+<div class="modal fade" id="add-organisation" tabindex="-1" role="dialog" labelledby="smallModal">
+  <div class="modal-dialog modal-sm" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">დამატების ფორმა</h4>
+      </div>
+      <div class="modal-body">
+        test body
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">დახურვა</button>
+        <button type="button" class="btn btn-primary">დამატება</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
 <div class="login-box">
       <div class="login-logo">
         <a href=""><b>Intra</b>Net</a>
@@ -17,7 +37,7 @@
             <span class="glyphicon glyphicon-lock form-control-feedback"></span>
           </div>
           <div class="form-group has-feedback">
-            <input type="text" class="form-control" id="login-captcha" placeholder="დამცავი კოდი">
+            <input type="text" class="form-control" id="login-captcha" placeholder="დამცავი კოდი" autocomplete="off" />
             <span class="glyphicon glyphicon-plus form-control-feedback"></span>
             <div style="clear:both"></div>
             <?php
@@ -35,14 +55,18 @@
               </div>
             </div><!-- /.col -->
             <div class="col-xs-4">
-              <button type="submit" class="btn btn-primary btn-block btn-flat" id="login-button">შესვლა</button>
+              <button type="submit" class="btn btn-primary btn-block btn-flat" id="login-button">შესვლა</button
             </div><!-- /.col -->
           </div>
+
         </form>
 
 
       </div><!-- /.login-box-body -->
+
     </div><!-- /.login-box -->
+
+    <button type="button" class="btn bg-olive margin" style="width:100%; margin:20px 0px; padding:10px 0" data-toggle="modal" data-target="#add-organisation">ორგანიზაციის დამატება</button>
 <?php
 @include("parts/login_footer.php");
 ?>

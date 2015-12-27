@@ -411,6 +411,14 @@ $(document).on("click",".dojobbutton",function(){
 	}
 });
 
+$(document).on("change","#showitems",function(){
+	var val = $(this).val();
+	var param = urlParamiters();
+	if(!param["pn"]){ param["pn"] = 1; }
+	var urltogo = "?idx="+param["idx"]+"&pn=1&sw="+val;
+	location.href = urltogo;
+});
+
 $(document).on("click",".up-catalog",function(){
 	var idx = $(this).data("idx");
 	var cid = $(this).data("cid");
@@ -897,6 +905,26 @@ $(document).on("click",".edit-database-button",function(){
 		}else{
 			alert("Error");
 			location.reload();
+		}
+	});
+});
+
+$(document).on("click",".give-permision",function(){
+	var param = urlParamiters();
+	var dlang = $(this).attr("data-dlang");
+	$.post(AJAX_REQUEST_URL, { givepermision:true, p:param["view"] }, function(result){
+		if(result=="Done"){
+			location.href = SYSTEM_WELCOME_PAGE + "/"+dlang+"/nebarTvis-micema";
+		}
+	});
+});
+
+$(document).on("click",".remove-permision",function(){
+	var param = urlParamiters();
+	var dlang = $(this).attr("data-dlang");
+	$.post(AJAX_REQUEST_URL, { removepermision:true, p:param["view"] }, function(result){
+		if(result=="Done"){
+			location.href = SYSTEM_WELCOME_PAGE + "/"+dlang+"/nebarTvis-micema";
 		}
 	});
 });

@@ -18,6 +18,40 @@ class ajax extends connection{
 	public function requests($c){
 		$conn = $this->conn($c); 
 
+		if(Input::method("POST","givepermision")=="true"){
+			$idx = (Input::method("POST","p") && is_numeric(Input::method("POST","p"))) ? Input::method("POST","p") : 0;
+			$sql = 'UPDATE `studio404_module_item` SET `visibility`=2 WHERE `idx`='.$idx;
+			$conn->query($sql);
+
+			$files = glob(DIR.'_cache/*'); // get all file names
+			foreach($files as $file){ // iterate files
+				if(is_file($file))
+				@unlink($file); // delete file
+			}
+				
+			$insert_notification = new insert_notification();
+			$insert_notification->insert($c,$_SESSION["batumi_id"],"ნებართვის მიცემა ::".$idx,"Give Permision ::".$idx);
+
+			echo "Done";
+		}
+
+		if(Input::method("POST","removepermision")=="true"){
+			$idx = (Input::method("POST","p") && is_numeric(Input::method("POST","p"))) ? Input::method("POST","p") : 0;
+			$sql = 'UPDATE `studio404_module_item` SET `visibility`=1 WHERE `idx`='.$idx;
+			$conn->query($sql);
+
+			$files = glob(DIR.'_cache/*'); // get all file names
+			foreach($files as $file){ // iterate files
+				if(is_file($file))
+				@unlink($file); // delete file
+			}
+				
+			$insert_notification = new insert_notification();
+			$insert_notification->insert($c,$_SESSION["batumi_id"],"ნებართვის მოხსნა ::".$idx,"Remove Permision ::".$idx);
+
+			echo "Done";
+		}
+
 		if(Input::method("POST","addCatalogItem")=="true"){
 			$macat = json_decode(Input::method("POST","macat"),true);
 			$types = json_decode(Input::method("POST","ta"),true);

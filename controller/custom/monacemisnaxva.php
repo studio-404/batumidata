@@ -1,15 +1,14 @@
 <?php if(!defined("DIR")){ exit(); }
-class catalog extends connection{
+class monacemisnaxva extends connection{
 	function __construct($c){
-		$this->template($c);
-	}
-
-	public function template($c){
-		$conn = $this->conn($c); // connection
-
-		if(empty(Input::method("GET","idx"))){
-			redirect::url(WEBSITE.LANG."/welcomesystem");
+		if(!Input::method("GET","view") || !is_numeric(Input::method("GET","view"))){
+			redirect::url(WEBSITE.LANG."/welcomesystem"); 
 		}
+		$this->template($c,"monacemisnaxva");
+	}
+	
+	public function template($c,$page){
+		$conn = $this->conn($c); // connection
 
 		$cache = new cache();
 		$welcomepage_categories = $cache->index($c,"welcomepage_categories");
@@ -33,32 +32,34 @@ class catalog extends connection{
 			redirect::url(WEBSITE);
 		}
 
-		$catalog_general = $cache->index($c,"catalog_general");
-		$data["catalog_general"] = json_decode($catalog_general,true);
+		$catalog_table_columns = $cache->index($c,"catalog_table_columns");
+		$data["catalog_table_columns"] = json_decode($catalog_table_columns,true);
 
-		$catalog_table_list = $cache->index($c,"catalog_table_list");
-		$data["catalog_table_list"] = json_decode($catalog_table_list,true);
-
-		$catalogitems = $cache->index($c,"catalogitems");
-		$data["catalogitems"] = json_decode($catalogitems,true);
-
+		
 		$sql2 = 'SELECT 
-		COUNT(`studio404_module_item`.`idx`) AS allitems
+		`studio404_module_item`.* 
 		FROM `studio404_module_item` WHERE 
-		FIND_IN_SET('.Input::method("GET","idx").', `studio404_module_item`.`cataloglist`) AND 
+		`module_idx`=25 AND 
+		`studio404_module_item`.`idx`=:idx AND 
 		`studio404_module_item`.`lang`=:lang AND 
-		`studio404_module_item`.`visibility`!=:visibility AND 
 		`studio404_module_item`.`status`!=:status';	
 		$prepare2 = $conn->prepare($sql2); 
 		$prepare2->execute(array(
+			":idx"=>Input::method("GET","view"), 
 			":lang"=>LANG_ID, 
-			":status"=>1, 
-			":visibility"=>1 
+			":status"=>1 
 		));
-		$data["fetch"]  = $prepare2->fetch(PDO::FETCH_ASSOC);
-
-
-		@include($c["website.directory"]."/catalog.php"); 
+		if($prepare2->rowCount() > 0){
+			$data["fetch"]  = $prepare2->fetch(PDO::FETCH_ASSOC);
+		}else{
+			redirect::url(WEBSITE.LANG."/welcomesystem"); 
+		}
+		$include = WEB_DIR."/monacemisnaxva.php";
+		if(file_exists($include)){
+			@include($include);
+		}else{
+			$controller = new error_page(); 
+		}
 	}
 }
 ?>

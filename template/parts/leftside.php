@@ -61,7 +61,11 @@
               }
               $x++;
             }
+            $select_disallowed_items = new select_disallowed_items(); 
             ?>
+            <li class="<?=($slug_second=="nebarTvis-micema") ? 'active' : ''?>">
+              <a href="<?=WEBSITE.LANG?>/nebarTvis-micema"><i class="fa fa-minus-circle"></i> <span><?=(LANG=="ge") ? "ნებართვის მიცემა" : "Allow"?></span> <small class="label pull-right bg-red"><?=$select_disallowed_items->cc($c)?></small></a>
+            </li>
             <li class="<?=($slug_second=="katalogis-marTva") ? 'active' : ''?>">
               <a href="<?=WEBSITE.LANG?>/katalogis-marTva"><i class="fa fa-wrench"></i> <span><?=(LANG=="ge") ? "კატალოგის მართვა" : "Manage catalog"?></span></a>
             </li>

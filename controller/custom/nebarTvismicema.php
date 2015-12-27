@@ -1,15 +1,11 @@
 <?php if(!defined("DIR")){ exit(); }
-class catalog extends connection{
+class nebarTvismicema extends connection{
 	function __construct($c){
-		$this->template($c);
+		$this->template($c,"nebarTvismicema");
 	}
-
-	public function template($c){
+	
+	public function template($c,$page){
 		$conn = $this->conn($c); // connection
-
-		if(empty(Input::method("GET","idx"))){
-			redirect::url(WEBSITE.LANG."/welcomesystem");
-		}
 
 		$cache = new cache();
 		$welcomepage_categories = $cache->index($c,"welcomepage_categories");
@@ -36,18 +32,15 @@ class catalog extends connection{
 		$catalog_general = $cache->index($c,"catalog_general");
 		$data["catalog_general"] = json_decode($catalog_general,true);
 
-		$catalog_table_list = $cache->index($c,"catalog_table_list");
-		$data["catalog_table_list"] = json_decode($catalog_table_list,true);
-
-		$catalogitems = $cache->index($c,"catalogitems");
-		$data["catalogitems"] = json_decode($catalogitems,true);
+		$catalogitemsnovisiable = $cache->index($c,"catalogitemsnovisiable");
+		$data["catalogitems"] = json_decode($catalogitemsnovisiable,true);
 
 		$sql2 = 'SELECT 
 		COUNT(`studio404_module_item`.`idx`) AS allitems
 		FROM `studio404_module_item` WHERE 
-		FIND_IN_SET('.Input::method("GET","idx").', `studio404_module_item`.`cataloglist`) AND 
+		`module_idx`=25 AND 
 		`studio404_module_item`.`lang`=:lang AND 
-		`studio404_module_item`.`visibility`!=:visibility AND 
+		`studio404_module_item`.`visibility`=:visibility AND 
 		`studio404_module_item`.`status`!=:status';	
 		$prepare2 = $conn->prepare($sql2); 
 		$prepare2->execute(array(
@@ -57,8 +50,12 @@ class catalog extends connection{
 		));
 		$data["fetch"]  = $prepare2->fetch(PDO::FETCH_ASSOC);
 
-
-		@include($c["website.directory"]."/catalog.php"); 
+		$include = WEB_DIR."/nebarTvismicema.php";
+		if(file_exists($include)){
+			@include($include);
+		}else{
+			$controller = new error_page(); 
+		}
 	}
 }
 ?>

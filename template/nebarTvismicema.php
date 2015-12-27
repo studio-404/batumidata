@@ -2,21 +2,21 @@
 @include("parts/welcome_header.php");
 @include("parts/leftside.php");
 ?>
-	<!-- Content Wrapper. Contains page content -->
-	<div class="content-wrapper">
-	<!-- Content Header (Page header) -->
-		<section class="content-header">
-			<h1>
-				<?=$data["catalog_general"][0]["title"]?>
-				<!-- <small>ჰოსტელის გვერდის მოკლე აღწერა</small> -->
-			</h1>
-			<ol class="breadcrumb">
-				<li><a href="#"><i class="fa fa-dashboard"></i> <?=$data["catalog_general"][0]["title"]?></a></li>
-			</ol>
-		</section>
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper">
+  <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <h1>
+        <?=$data["catalog_general"][0]["title"]?>
+        <!-- <small>ჰოსტელის გვერდის მოკლე აღწერა</small> -->
+      </h1>
+      <ol class="breadcrumb">
+        <li><a href="#"><i class="fa fa-dashboard"></i> <?=$data["catalog_general"][0]["title"]?></a></li>
+      </ol>
+    </section>
 
-		<section class="content">
-			<div class="row">
+    <section class="content">
+      <div class="row">
             <div class="col-xs-12">
               <div class="box">
                    <div class="mailbox-controls">
@@ -43,11 +43,8 @@
                   <table class="table table-hover">
                     <tr>
                       <th>ID</th>
-                      <?php
-                      foreach($data["catalog_table_list"] as $val){
-                        echo '<th>'.$val['label'].'</th>';
-                      }
-                      ?>
+                      <th><?=$data["language_data"]["val83"]?></th>
+                      <th><?=$data["language_data"]["val82"]?></th>
                       <th><?=$data["language_data"]["val80"]?></th>
                       <th><?=$data["language_data"]["val81"]?></th>
                     </tr>
@@ -57,13 +54,8 @@
                     ?>
                       <tr>
                         <td><?=$val['idx']?></td>
-                        <?php
-
-                        foreach($data["catalog_table_list"] as $v){
-                          $attach_column = explode(" ",$v['attach_column']);
-                          echo '<td>'.$val[$attach_column[0]].'</td>';
-                        }
-                        ?>
+                        <td><?=date("d/m/Y H:i:s",$val['date'])?></td>
+                        <td><?=$val['title']?></td>
                         <td><a href=""><?=$getusername->names($c,$val['insert_admin'])?></a></td>
                         <td>
                           <a href="<?=WEBSITE.LANG."/monacemis-naxva?view=".$val['idx']?>" target="_blank" style="padding:0 0 0 5px"><i class="glyphicon glyphicon-new-window"></i></a>
@@ -106,8 +98,8 @@
               </div><!-- /.box -->
             </div>
           </div>
-		</section>
-	</div>
+    </section>
+  </div>
      
 
 <?php
