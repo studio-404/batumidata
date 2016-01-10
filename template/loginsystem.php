@@ -2,14 +2,30 @@
 @include("parts/login_header.php");
 ?>
 <div class="modal fade" id="add-organisation" tabindex="-1" role="dialog" labelledby="smallModal">
-  <div class="modal-dialog modal-sm" role="document">
+  <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
         <h4 class="modal-title" id="myModalLabel">დამატების ფორმა</h4>
       </div>
       <div class="modal-body">
-        test body
+          <form action="" method="post">
+            <select class="form-control select-catalog">
+              <option value="">აირჩიეთ</option>
+              <?php
+              $x=0;
+              foreach($data["welcomepage_categories"]["item"]["title"] as $val){
+              ?>
+                <option value="<?=$data["welcomepage_categories"]["item"]["idx"][$x]?>"><?=$data["welcomepage_categories"]["item"]["title"][$x]?></option>
+              <?php
+              $x++;
+              }
+              ?>
+            </select>
+            <div class="insert-form" style="margin:20px 0 0 0; text-align:center; display:none">
+              
+            </div>
+          </form>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">დახურვა</button>

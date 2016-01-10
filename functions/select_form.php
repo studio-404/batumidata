@@ -56,14 +56,17 @@ class select_form extends connection{
 		return $output;
 	}
 
-	public function select_options($c,$parentidx){
+	public function select_options($c,$parentidx, $cid = "", $lang = ""){
 		$conn = $this->conn($c); 
+		if($cid==""){ $cid = Input::method("GET","parent"); }
+		if($lang==""){ $lang = LANG_ID; }
+		
 		$sql2 = 'SELECT * FROM `studio404_forms_lists` WHERE `cid`=:cid AND `cf_id`=:cf_id AND `lang`=:lang ORDER BY `id` ASC'; 
 		$prepare2 = $conn->prepare($sql2);
 		$prepare2->execute(array(
-			":cid"=>Input::method("GET","parent"), 
+			":cid"=>$cid, 
 			":cf_id"=>$parentidx, 
-			":lang"=>LANG_ID
+			":lang"=>$lang
 		));
 
 		if($prepare2->rowCount() > 0){

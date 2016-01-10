@@ -18,6 +18,83 @@ class ajax extends connection{
 	public function requests($c){
 		$conn = $this->conn($c); 
 
+		if(Input::method("POST","loadcatalogform")=="true" && Input::method("POST","v")){
+			$sql = 'SELECT * FROM `studio404_forms` WHERE `cid`=:cid AND `lang`=:lang ORDER BY `id` ASC';
+			$prepare = $conn->prepare($sql); 
+			$prepare->execute(array(
+				":cid"=>Input::method("POST","v"), 
+				":lang"=>1
+			));
+			$fetch = $prepare->fetchAll(PDO::FETCH_ASSOC);
+			echo "<div style='text-align:left'>";
+			$select_form = new select_form();
+			foreach($fetch as $form){
+			if($form["type"]=="text"){
+				if($form["important"]=="yes"){ $dataimportant = "data-important='true'"; }
+				else{ $dataimportant = "data-important='false'"; }
+			?>
+	            <div class="form-group">
+	               <label><?=$form["label"]?>: <?=($form["important"]=="yes") ? '<font color="red">*</font>' : ''?></label> <!-- Fisrname & lastname -->
+	               <input class="form-control form-input" type="text" placeholder="<?=$form["placeholder"]?>" data-name="<?=$form["name"]?>" data-attach="<?=$form["attach_column"]?>" data-type="text" data-important="<?=$form["important"]?>" value="" />
+	               </div>
+            <?php
+            }else if($form["type"]=="select"){ 
+            	$fetchx = $select_form->select_options($c,$form["id"],Input::method("POST","v"),1);
+            ?>
+            <div class="form-group">
+	            <label><?=$form["label"]?>: <?=($form["important"]=="yes") ? '<font color="red">*</font>' : ''?></label> <!-- Fisrname & lastname -->
+	            <select class="form-control form-input" data-name="<?=$form["name"]?>" data-attach="<?=$form["attach_column"]?>" data-important="<?=$form["important"]?>" data-type="select">
+				<?php
+				
+				foreach ($fetchx as $value) {
+				    echo '<option value="'.htmlentities($value["text"]).'">'.$value["text"].'</option>';
+				}
+			?>
+			</select>
+	        </div>
+            <?php
+            }else if($form["type"]=="checkbox"){
+            ?>
+            <div class="form-group">
+	        <label><?=$form["label"]?>: <?=($form["important"]=="yes") ? '<font color="red">*</font>' : ''?></label> <!-- Fisrname & lastname -->
+	        <?php
+			$fetchx = $select_form->select_options($c,$form["id"],Input::method("POST","v"),1);
+			foreach ($fetchx as $value) {
+			echo '<div class="checkbox">';
+			echo '<label><input type="checkbox" class="form-input" data-name="'.$form["name"].'" data-attach="'.$form["attach_column"].'" data-important="'.$form["important"].'" data-type="checkbox" value="'.htmlentities($value["text"]).'" />'.$value["text"].'</label>';
+			echo '</div>';
+			}
+			?>
+	        </div>
+            <?php
+            }else if($form["type"]=="file"){
+            $multiple = ($form["attach_multiple"]=="yes") ? "multiple" : "";
+            ?>
+            <div class="form-group">
+	        <label><?=$form["label"]?>: <?=($form["important"]=="yes") ? '<font color="red">*</font>' : ''?></label> <!-- Fisrname & lastname -->
+	        <input class="form-control form-input" type="file" data-name="<?=$form["name"]?>" data-attach="<?=$form["attach_column"]?>" data-type="file" data-important="<?=$form["important"]?>" data-multiple="<?=$multiple?>" data-formatsx="<?=$form["attach_format"]?>" value="" <?=$multiple?>/>
+	        </div>
+            <?php
+            }else if($form["type"]=="date"){
+            ?>
+            <div class="form-group">
+	        <label><?=$form["label"]?>: <?=($form["important"]=="yes") ? '<font color="red">*</font>' : ''?></label> <!-- Fisrname & lastname -->
+	        <input type="text" class="form-control form-input" data-inputmask="'alias': 'dd/mm/yyyy'" data-mask="" data-name="<?=$form["name"]?>" data-attach="<?=$form["attach_column"]?>" data-important="<?=$form["important"]?>" data-type="date" value="" />
+	        </div>
+            <?php
+            }else if($form["type"]=="textarea"){
+            ?>
+            <div class="form-group">
+	        <label><?=$form["label"]?>: <?=($form["important"]=="yes") ? '<font color="red">*</font>' : ''?></label> <!-- Fisrname & lastname -->
+	        <textarea class="form-control form-input" data-name="<?=$form["name"]?>" data-attach="<?=$form["attach_column"]?>" data-type="textarea" data-important="<?=$form["important"]?>"></textarea>
+	        </div>
+            <?php
+            }
+			}
+			echo '</div>'; 
+			exit();
+		}
+
 		if(Input::method("POST","givepermision")=="true"){
 			$idx = (Input::method("POST","p") && is_numeric(Input::method("POST","p"))) ? Input::method("POST","p") : 0;
 			$sql = 'UPDATE `studio404_module_item` SET `visibility`=2 WHERE `idx`='.$idx;
@@ -33,6 +110,7 @@ class ajax extends connection{
 			$insert_notification->insert($c,$_SESSION["batumi_id"],"ნებართვის მიცემა ::".$idx,"Give Permision ::".$idx);
 
 			echo "Done";
+			exit();
 		}
 
 		if(Input::method("POST","removepermision")=="true"){
@@ -50,6 +128,7 @@ class ajax extends connection{
 			$insert_notification->insert($c,$_SESSION["batumi_id"],"ნებართვის მოხსნა ::".$idx,"Remove Permision ::".$idx);
 
 			echo "Done";
+			exit();
 		}
 
 		if(Input::method("POST","addCatalogItem")=="true"){
@@ -159,8 +238,8 @@ class ajax extends connection{
 			$insert_notification = new insert_notification();
 			$insert_notification->insert($c,$_SESSION["batumi_id"],"მონაცემის დამატება ::".$maxidx,"Add Data ::".$maxidx);
 
-			echo "Done";
-
+			echo $gallery_maxidx;
+			exit();
 		}
 
 		if(Input::method("POST","adddatabasecolumn")=="true" && Input::method("POST","a") && Input::method("POST","ct") && Input::method("POST","cn")){

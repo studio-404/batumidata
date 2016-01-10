@@ -15,6 +15,22 @@ var MESSAGE_OPERATION_DONE_GE = "ოპერაცია წარმატე�
 var MESSAGE_OPERATION_ERROR_EN = "Error !";
 var MESSAGE_OPERATION_ERROR_GE = "მოხდა შეცდომა !";
 
+/*
+typeof(valuex) == "undefined" || valuex==null
+*/
+$(document).on("change",".select-catalog",function(){
+	var valuex = $(this).val();
+	var loader = '<i class="glyphicon glyphicon-refresh fa-spin" style="font-size:22px;"></i>';
+	$(".insert-form").html(loader).fadeIn(); 
+	if(valuex==""){
+		$(".insert-form").html('<p>ფორმა ვერ მოიძებნა !</p>');
+	}else{
+		$.post(AJAX_REQUEST_URL, { loadcatalogform:true, v:valuex }, function(result){
+			$(".insert-form").html(result);
+		});
+	}
+});
+
 $(document).on("click","#login-button",function(){
 
 	$(".text-red").text(MESSAGE_WAIT);
@@ -151,13 +167,13 @@ $(document).on("click","#add-catalogue-item",function(){
 				checkedArray.push("no");	
 			}			
 		}else if(type=="file"){
-			valueArray.push($(this).val());
-			typeArray.push($(this).attr("data-type"));
-			nameArray.push($(this).attr("data-name"));
-			importantArray.push($(this).attr("data-important"));
-			dbcolumn = $(this).attr("data-attach").split(" ");
-			columnArray.push(dbcolumn[0]);
-			checkedArray.push("no");
+			// valueArray.push($(this).val());
+			// typeArray.push($(this).attr("data-type"));
+			// nameArray.push($(this).attr("data-name"));
+			// importantArray.push($(this).attr("data-important"));
+			// dbcolumn = $(this).attr("data-attach").split(" ");
+			// columnArray.push(dbcolumn[0]);
+			// checkedArray.push("no");
 		}else if(type=="date"){
 			valueArray.push($(this).val());
 			nameArray.push($(this).attr("data-name"));
@@ -188,7 +204,13 @@ $(document).on("click","#add-catalogue-item",function(){
 		macat:JSON.stringify(mainpagecategory) 
 	}, function(result){
 		$(".overlay-loader").fadeOut("slow");
-		if(result=="Done"){
+		if(result!=""){
+			$("#monacemisdamatebaform").append('<input type="hidden" name="gallery_idx_post" value="'+result+'" />');
+			var file_length = $(".catalog-add-form-data input[type='file']").length;
+			if(file_length > 0){
+				$("#monacemisdamatebaform").submit();
+			}
+			
 			var l = $("#system-language").text();
 			if(l=="EN"){
 				$(".form-message-output").html("<p>"+MESSAGE_OPERATION_DONE_GE+"</p>").fadeIn("slow");
@@ -200,10 +222,73 @@ $(document).on("click","#add-catalogue-item",function(){
 			$("input[type='checkbox']").removeAttr('checked');
 			$("select").val(0);
 			window.scrollTo(0,0);
+			
+		}else{
+			alert("Error: 3001");
 		}
 	});
 	// console.log(nameArray);
 });
+
+$(document).on("click",".makemedouble",function(){
+	var doubleid = $(this).attr("data-doubleid"); 
+	var filename = $(this).attr("data-filename"); 
+	var fileaccept = $(this).attr("data-fileaccept"); 
+	var file = '<input class="form-control form-input" type="file" name="'+filename+'" value="" accept="'+fileaccept+'" />';
+	$("#"+doubleid).append(file);
+});
+
+
+function upload(file,typesx){
+	var fileName = file.name;
+	var ex = fileName.split(".");
+	var extLast = ex[ex.length - 1].toLowerCase();
+
+	xhr = new XMLHttpRequest();
+	// initiate request
+	var par = urlParamiters();
+	xhr.open('post','/en/ajaxupload?token='+par['token'],true);
+	//set header
+
+	var rforeign = /[^\u0000-\u007f]/;
+	if (rforeign.test(file.name)) {
+	  alert("File name error !");
+	  return false;
+	}
+	
+	xhr.setRequestHeader('Content-Type','multipart/form-data');
+	xhr.setRequestHeader('X-File-Name',file.name);
+	xhr.setRequestHeader('X-File-Size',file.size);
+	xhr.setRequestHeader('X-File-Type',file.type);
+	if(extLast!="jpeg" && extLast!="jpg" && extLast!="png" && extLast!="gif"){
+		alert("Please drop jpeg, jpg, gif or png file !");
+		$('#img').html('<p>No Image</p>');
+		return false;
+	}
+
+	//send file
+	xhr.send(file);
+
+	xhr.upload.addEventListener("progress",function(e){
+		var progress = (e.loaded / e.total) * 100;
+		$('#progress-bar').css({'width': progress+"%"});
+	},true);
+
+	xhr.onreadystatechange = function(e){
+		if(xhr.readyState == 4){
+			if(xhr.status == 200){
+				var res = xhr.responseText;
+				if(res!=2){  
+					$('#img').html('<img src="/'+res+'" width="100%" /><div class="close" onclick="removePreFile()"><i class="fa fa-times"></i></div>'); 
+					var files_pre = res.split("/files/");
+					$("#background").val('/files_pre/'+files_pre);
+				}
+			}
+		}
+	}
+
+}
+
 
 $(document).on("click","#add-catalogue",function(){
 	var name = $("#titlex").val();

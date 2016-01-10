@@ -112,6 +112,7 @@ function createInputFileElement(dlang){
 	var countMe = $(this).attr("data-countme");
 	if(!countMe || countMe=="undefined"){
 		 $(this).attr("data-countme",1);
+		 countMe = 1;
 	}else{
 		countMe = countMe + 1;
 		$(this).attr("data-countme",countMe);
