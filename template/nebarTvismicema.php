@@ -51,12 +51,14 @@
                     <?php
                     $getusername = new getusername();
                     foreach($data["catalogitems"] as $key => $val){
+                      $insert_admin = $getusername->names($c,$val['insert_admin']);
+                      $insert_notsigned = (LANG=="ge") ? "არარეგისტრირებული მომხმარებელი" : "Not Signed User";
                     ?>
                       <tr>
                         <td><?=$val['idx']?></td>
                         <td><?=date("d/m/Y H:i:s",$val['date'])?></td>
                         <td><?=$val['title']?></td>
-                        <td><a href=""><?=$getusername->names($c,$val['insert_admin'])?></a></td>
+                        <td><a href=""><?=($insert_admin) ? $insert_admin : $insert_notsigned?></a></td>
                         <td>
                           <a href="<?=WEBSITE.LANG."/monacemis-naxva?view=".$val['idx']?>&amp;cataloglist=<?=$val['cataloglist']?>" target="_blank" style="padding:0 0 0 5px"><i class="glyphicon glyphicon-new-window"></i></a>
                           <a href="" style="padding:0 0 0 5px"><i class="glyphicon glyphicon-edit"></i></a>

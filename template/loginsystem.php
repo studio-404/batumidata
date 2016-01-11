@@ -10,7 +10,7 @@
       </div>
       <div class="modal-body">
           <form action="" method="post">
-            <select class="form-control select-catalog">
+            <select class="form-control select-catalog" id="mcat">
               <option value="">აირჩიეთ</option>
               <?php
               $x=0;
@@ -29,7 +29,7 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">დახურვა</button>
-        <button type="button" class="btn btn-primary">დამატება</button>
+        <button type="button" class="btn btn-primary" id="add-catalogue-nouser">დამატება</button>
       </div>
     </div>
   </div>

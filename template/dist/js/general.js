@@ -31,6 +31,87 @@ $(document).on("change",".select-catalog",function(){
 	}
 });
 
+$(document).on("click","#add-catalogue-nouser",function(){
+	var mcat = $("#mcat").val();
+	var mainpagecategory = new Array(); 
+	mainpagecategory.push(mcat);
+	var valueArray = new Array();
+	var nameArray = new Array();
+	var importantArray = new Array();
+	var dbcolumn = new Array();
+	var columnArray = new Array();
+	var checkedArray = new Array();
+	var typeArray = new Array();
+	$(".catalog-add-form-data .form-input").each(function(){
+		$(".insert-form").html('<p>მოთხოვნა მუშავდება ...</p>');
+		var type = $(this).attr("data-type"); 
+		if(type=="text"){
+			valueArray.push($(this).val());
+			typeArray.push($(this).attr("data-type"));
+			nameArray.push($(this).attr("data-name"));
+			importantArray.push($(this).attr("data-important"));
+			dbcolumn = $(this).attr("data-attach").split(" ");
+			columnArray.push(dbcolumn[0]);
+			checkedArray.push("no");
+		}else if(type=="select"){
+			valueArray.push($(this).val());
+			typeArray.push($(this).attr("data-type"));
+			nameArray.push($(this).attr("data-name"));
+			importantArray.push($(this).attr("data-important"));
+			dbcolumn = $(this).attr("data-attach").split(" ");
+			columnArray.push(dbcolumn[0]);
+			checkedArray.push("no");
+		}else if(type=="checkbox"){
+			valueArray.push($(this).val());
+			nameArray.push($(this).attr("data-name"));
+			typeArray.push($(this).attr("data-type"));
+			importantArray.push($(this).attr("data-important"));
+			dbcolumn = $(this).attr("data-attach").split(" ");
+			columnArray.push(dbcolumn[0]);
+			if($(this).is(':checked')){
+				checkedArray.push("yes");	
+			}else{
+				checkedArray.push("no");	
+			}			
+		}else if(type=="date"){
+			valueArray.push($(this).val());
+			nameArray.push($(this).attr("data-name"));
+			typeArray.push($(this).attr("data-type"));
+			importantArray.push($(this).attr("data-important"));
+			dbcolumn = $(this).attr("data-attach").split(" ");
+			columnArray.push(dbcolumn[0]);
+			checkedArray.push("no");
+		}else if(type=="textarea"){
+			valueArray.push($(this).val());
+			typeArray.push($(this).attr("data-type"));
+			nameArray.push($(this).attr("data-name"));
+			importantArray.push($(this).attr("data-important"));
+			dbcolumn = $(this).attr("data-attach").split(" ");
+			columnArray.push(dbcolumn[0]);
+			checkedArray.push("no");
+		}
+	});
+	
+	$.post(AJAX_REQUEST_URL, { 
+		addCatalogItem:true, 
+		ta:JSON.stringify(typeArray), 
+		va:JSON.stringify(valueArray), 
+		na:JSON.stringify(nameArray), 
+		ca:JSON.stringify(columnArray), 
+		ca2:JSON.stringify(checkedArray), 
+		ia:JSON.stringify(importantArray), 
+		macat:JSON.stringify(mainpagecategory) 
+	}, function(result){
+		$(".overlay-loader").fadeOut("slow");
+		if(result!=""){
+			$(".insert-form").html('<p>მონაცემი წარმატებით დაემატა !</p>');
+			window.scrollTo(0,0);			
+		}else{
+			alert("Error: 3001");
+		}
+	});
+});
+
 $(document).on("click","#login-button",function(){
 
 	$(".text-red").text(MESSAGE_WAIT);

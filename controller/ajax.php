@@ -15,7 +15,10 @@ class ajax extends connection{
 		$this->requests($c);
 	}
 
-	public function requests($c){
+	public function requests($c){ 
+
+		// .catalog-add-form-data .form-input
+		// #add-catalogue-item
 		$conn = $this->conn($c); 
 
 		if(Input::method("POST","loadcatalogform")=="true" && Input::method("POST","v")){
@@ -26,8 +29,9 @@ class ajax extends connection{
 				":lang"=>1
 			));
 			$fetch = $prepare->fetchAll(PDO::FETCH_ASSOC);
-			echo "<div style='text-align:left'>";
+			echo "<div style='text-align:left' class='catalog-add-form-data'>";
 			$select_form = new select_form();
+			$file_count = 0;
 			foreach($fetch as $form){
 			if($form["type"]=="text"){
 				if($form["important"]=="yes"){ $dataimportant = "data-important='true'"; }
@@ -67,13 +71,34 @@ class ajax extends connection{
 			?>
 	        </div>
             <?php
-            }else if($form["type"]=="file"){
-            $multiple = ($form["attach_multiple"]=="yes") ? "multiple" : "";
+            }else if($form["type"]=="filex"){ // not signed cant upload
+            	$multiple = ""; // not signed cant upload multy
+            	$fileformat = $form["attach_format"];
+            	$fileformat = explode(",",$form["attach_format"]);
+            	$accept = "";
+            	foreach ($fileformat as $value) {
+            		$accept .= ".".$value.",";
+            	}
             ?>
-            <div class="form-group">
-	        <label><?=$form["label"]?>: <?=($form["important"]=="yes") ? '<font color="red">*</font>' : ''?></label> <!-- Fisrname & lastname -->
-	        <input class="form-control form-input" type="file" data-name="<?=$form["name"]?>" data-attach="<?=$form["attach_column"]?>" data-type="file" data-important="<?=$form["important"]?>" data-multiple="<?=$multiple?>" data-formatsx="<?=$form["attach_format"]?>" value="" <?=$multiple?>/>
-	        </div>
+            	<label><?=$form["label"]?>: <?=($multiple=="multiple") ? '<a href="javascript:void(0)" class="makemedouble" data-doubleid="form-name-'.$file_count.'" data-filename="file['.$file_count.'][]" data-fileaccept="'.$accept.'"><i class="glyphicon glyphicon-plus-sign"></i></a>' : ''?><?=($form["important"]=="yes") ? '<font color="red">*</font>' : ''?> ( <?=$form["attach_format"]?> )</label> <!-- Fisrname & lastname -->
+        		<input type="hidden" name="file" value="true" />
+        		<input type="hidden" name="filenumber[<?=$file_count?>]" value="<?=$file_count?>" />
+        		<input type="hidden" name="form-name-<?=$file_count?>" value="<?=$form["name"]?>" />
+        		<input type="hidden" name="form-attach-<?=$file_count?>" value="<?=$form["attach_column"]?>" />
+        		<input type="hidden" name="form-important-<?=$file_count?>" value="<?=$form["important"]?>" />
+        		<input type="hidden" name="form-multiple-<?=$file_count?>" value="<?=$multiple?>" />
+        		<input type="hidden" name="form-format-<?=$file_count?>" value="<?=$form["attach_format"]?>" />
+        		<?php 
+        		if($multiple){
+        			echo '<span id="form-name-'.$file_count.'"><input class="form-control form-input" type="file" name="file['.$file_count.'][]" value="" accept="'.$accept.'" /></span>';
+        		}else{
+        		?>
+        			<input class="form-control form-input" type="file" name="file[<?=$file_count?>][]" value="" accept="<?=$accept?>" />
+        		<?php } ?>
+	            <!-- <div class="form-group">
+		        	<label><?=$form["label"]?>: <?=($form["important"]=="yes") ? '<font color="red">*</font>' : ''?></label> 
+		        	<input class="form-control form-input" type="file" data-name="<?=$form["name"]?>" data-attach="<?=$form["attach_column"]?>" data-type="file" data-important="<?=$form["important"]?>" data-multiple="<?=$multiple?>" data-formatsx="<?=$form["attach_format"]?>" value="" <?=$multiple?>/>
+		        </div> -->
             <?php
             }else if($form["type"]=="date"){
             ?>
@@ -90,6 +115,7 @@ class ajax extends connection{
 	        </div>
             <?php
             }
+            $file_count++;
 			}
 			echo '</div>'; 
 			exit();
@@ -132,6 +158,9 @@ class ajax extends connection{
 		}
 
 		if(Input::method("POST","addCatalogItem")=="true"){
+			if(!isset($_SESSION["batumi_id"])){
+				$_SESSION["batumi_id"] = 0;
+			}
 			$macat = json_decode(Input::method("POST","macat"),true);
 			$types = json_decode(Input::method("POST","ta"),true);
 			$values = json_decode(Input::method("POST","va"),true);
