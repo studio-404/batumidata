@@ -34,26 +34,6 @@ class monacemisdamateba extends connection{
 		$data["form"] = json_decode($form,true);
 
 		if(Input::method("POST","file")){
-			// $sql = 'SELECT 
-			// `studio404_gallery_attachment`.`idx` as sga_idx 
-			// FROM 
-			// `studio404_module_item`,`studio404_gallery_attachment` 
-			// WHERE 
-			// `studio404_module_item`.`cataloglist`=:cataloglist AND 
-			// `studio404_module_item`.`lang`=:lang AND 
-			// `studio404_module_item`.`status`!=:one AND 
-			// `studio404_module_item`.`idx`=`studio404_gallery_attachment`.`connect_idx` AND 
-			// `studio404_gallery_attachment`.`lang`=:lang AND  
-			// `studio404_gallery_attachment`.`status`!=:one 
-			// ORDER BY `studio404_module_item`.`idx` DESC LIMIT 1
-			// ';
-			// $prepare = $conn->prepare($sql);
-			// $prepare->execute(array(
-			// 	":cataloglist"=>Input::method("GET","parent"), 
-			// 	":lang"=>LANG_ID, 
-			// 	":one"=>1
-			// ));
-			// $fetch = $prepare->fetch(PDO::FETCH_ASSOC); 
 			$model_admin_selectLanguage = new model_admin_selectLanguage();
 			$lang_query = $model_admin_selectLanguage->select_languages($c);
 			for($input_file_count = 0; $input_file_count<count($_FILES["file"]["name"]); $input_file_count++){
@@ -132,8 +112,12 @@ class monacemisdamateba extends connection{
 					}
 				}
 			}
+		}
 
-
+		if(Input::method("POST","close_after_add")){
+			$parent = Input::method("GET","parent"); 
+			$back = Input::method("GET","back"); 
+			redirect::url(WEBSITE.LANG."/".$back."?idx=".$parent);
 		}
 
 		$include = WEB_DIR."/monacemisdamateba.php";

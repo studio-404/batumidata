@@ -21,7 +21,7 @@
               <div class="box">
                    <div class="mailbox-controls">
                       <div class="btn-group" style="width:100%">
-                        <button type="button" class="btn btn-default btn-sm gotoUrl" data-goto="<?=WEBSITE.LANG?>/monacemis-damateba?parent=<?=Input::method("GET","idx")?>" style="float:left"><i class="glyphicon glyphicon-plus"></i>&nbsp;&nbsp;<?=$data["language_data"]["val24"]?></button>
+                        <!-- <button type="button" class="btn btn-default btn-sm gotoUrl" data-goto="<?=WEBSITE.LANG?>/monacemis-damateba?parent=<?=Input::method("GET","idx")?>" style="float:left"><i class="glyphicon glyphicon-plus"></i>&nbsp;&nbsp;<?=$data["language_data"]["val24"]?></button> -->
                         <button type="button" class="btn btn-default btn-sm reloadMe" style="float:left; margin-left:5px;"><i class="fa fa-refresh"></i>&nbsp;&nbsp;<?=$data["language_data"]["val25"]?></button>
                         
                         <label style="float:right; width:135px;">
@@ -58,7 +58,7 @@
                         <td><?=$val['title']?></td>
                         <td><a href=""><?=$getusername->names($c,$val['insert_admin'])?></a></td>
                         <td>
-                          <a href="<?=WEBSITE.LANG."/monacemis-naxva?view=".$val['idx']?>" target="_blank" style="padding:0 0 0 5px"><i class="glyphicon glyphicon-new-window"></i></a>
+                          <a href="<?=WEBSITE.LANG."/monacemis-naxva?view=".$val['idx']?>&amp;cataloglist=<?=$val['cataloglist']?>" target="_blank" style="padding:0 0 0 5px"><i class="glyphicon glyphicon-new-window"></i></a>
                           <a href="" style="padding:0 0 0 5px"><i class="glyphicon glyphicon-edit"></i></a>
                           <a href="javascript:void(0)" style="padding:0 0 0 5px" class="" data-dlang="<?=LANG?>" data-catid=""><i class="glyphicon glyphicon-remove"></i></a>
                         </td>
@@ -75,23 +75,25 @@
                 
               <ul class="pagination pagination-sm no-margin pull-right">
                 <?php
-                $sw = (Input::method("GET","sw")) ? '&sw='.Input::method("GET","sw") : '';
+               // echo $data["fetch"]["allitems"];
+                $sw = (Input::method("GET","sw")) ? '&sw='.Input::method("GET","sw") : "";
+                $sw2 = (Input::method("GET","sw")) ? Input::method("GET","sw") : 10;
                 $back = (Input::method("GET","pn")>2) ? Input::method("GET","pn")-1 : 1;
                 $froward = (Input::method("GET","pn")<$data["fetch"]["allitems"]) ? Input::method("GET","pn")+1 : $data["fetch"]["allitems"];
                 if(!Input::method("GET","pn")){ $froward = 2; }
                 ?>
-                <li><a href="?idx=<?=Input::method("GET","idx")?>&amp;pn=<?=$back?><?=$sw?>">«</a></li>
+                <li><a href="?pn=<?=$back?><?=$sw?>">«</a></li>
                 <?php
-                $howmany = $data["fetch"]["allitems"] / Input::method("GET","sw");
+                $howmany = $data["fetch"]["allitems"] / $sw2;
                 if($howmany<1){ $howmany = 1; }
                 
-                for($x=1;$x<=$howmany;$x++){
+                for($x=1;$x<=ceil($howmany);$x++){
                   $active = (Input::method("GET","pn")==$x) ? ' class="active"' : '';
                   if(!Input::method("GET","pn") && $x==1){ $active = ' class="active"'; }
                 ?>
-                <li<?=$active?>><a href="?idx=<?=Input::method("GET","idx")?>&amp;pn=<?=$x?><?=$sw?>"><?=$x?></a></li>
+                <li<?=$active?>><a href="?pn=<?=$x?><?=$sw?>"><?=$x?></a></li>
                 <?php } ?>
-                <li><a href="?idx=<?=Input::method("GET","idx")?>&amp;pn=<?=$froward?><?=$sw?>">»</a></li>
+                <li><a href="?pn=<?=$froward?><?=$sw?>">»</a></li>
               </ul>
             </div>
 

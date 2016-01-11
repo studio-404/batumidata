@@ -167,13 +167,7 @@ $(document).on("click","#add-catalogue-item",function(){
 				checkedArray.push("no");	
 			}			
 		}else if(type=="file"){
-			// valueArray.push($(this).val());
-			// typeArray.push($(this).attr("data-type"));
-			// nameArray.push($(this).attr("data-name"));
-			// importantArray.push($(this).attr("data-important"));
-			// dbcolumn = $(this).attr("data-attach").split(" ");
-			// columnArray.push(dbcolumn[0]);
-			// checkedArray.push("no");
+			
 		}else if(type=="date"){
 			valueArray.push($(this).val());
 			nameArray.push($(this).attr("data-name"));
@@ -227,7 +221,107 @@ $(document).on("click","#add-catalogue-item",function(){
 			alert("Error: 3001");
 		}
 	});
-	// console.log(nameArray);
+});
+
+
+
+$(document).on("click","#add-catalogue-item-close",function(){
+	var dbcolumn = '';
+	var typeArray = new Array();
+	var valueArray = new Array();
+	var nameArray = new Array();
+	var columnArray = new Array();
+	var checkedArray = new Array();
+	var importantArray = new Array();
+	var mainpagecategory = $("#mainpagecategory").val();
+
+	$(".catalog-add-form-data .form-input").each(function(){
+		$(".overlay-loader").fadeIn("slow");
+		var type = $(this).attr("data-type"); 
+		if(type=="text"){
+			valueArray.push($(this).val());
+			typeArray.push($(this).attr("data-type"));
+			nameArray.push($(this).attr("data-name"));
+			importantArray.push($(this).attr("data-important"));
+			dbcolumn = $(this).attr("data-attach").split(" ");
+			columnArray.push(dbcolumn[0]);
+			checkedArray.push("no");
+		}else if(type=="select"){
+			valueArray.push($(this).val());
+			typeArray.push($(this).attr("data-type"));
+			nameArray.push($(this).attr("data-name"));
+			importantArray.push($(this).attr("data-important"));
+			dbcolumn = $(this).attr("data-attach").split(" ");
+			columnArray.push(dbcolumn[0]);
+			checkedArray.push("no");
+		}else if(type=="checkbox"){
+			valueArray.push($(this).val());
+			nameArray.push($(this).attr("data-name"));
+			typeArray.push($(this).attr("data-type"));
+			importantArray.push($(this).attr("data-important"));
+			dbcolumn = $(this).attr("data-attach").split(" ");
+			columnArray.push(dbcolumn[0]);
+			if($(this).is(':checked')){
+				checkedArray.push("yes");	
+			}else{
+				checkedArray.push("no");	
+			}			
+		}else if(type=="file"){
+			
+		}else if(type=="date"){
+			valueArray.push($(this).val());
+			nameArray.push($(this).attr("data-name"));
+			typeArray.push($(this).attr("data-type"));
+			importantArray.push($(this).attr("data-important"));
+			dbcolumn = $(this).attr("data-attach").split(" ");
+			columnArray.push(dbcolumn[0]);
+			checkedArray.push("no");
+		}else if(type=="textarea"){
+			valueArray.push($(this).val());
+			typeArray.push($(this).attr("data-type"));
+			nameArray.push($(this).attr("data-name"));
+			importantArray.push($(this).attr("data-important"));
+			dbcolumn = $(this).attr("data-attach").split(" ");
+			columnArray.push(dbcolumn[0]);
+			checkedArray.push("no");
+		}
+	});
+	
+	$.post(AJAX_REQUEST_URL, { 
+		addCatalogItem:true, 
+		ta:JSON.stringify(typeArray), 
+		va:JSON.stringify(valueArray), 
+		na:JSON.stringify(nameArray), 
+		ca:JSON.stringify(columnArray), 
+		ca2:JSON.stringify(checkedArray), 
+		ia:JSON.stringify(importantArray), 
+		macat:JSON.stringify(mainpagecategory) 
+	}, function(result){
+		$(".overlay-loader").fadeOut("slow");
+		if(result!=""){
+			$("#monacemisdamatebaform").append('<input type="hidden" name="gallery_idx_post" value="'+result+'" />');
+			$("#monacemisdamatebaform").append('<input type="hidden" name="close_after_add" value="1" />');
+			var file_length = $(".catalog-add-form-data input[type='file']").length;
+			if(file_length > 0){
+				$("#monacemisdamatebaform").submit();
+			}
+			
+			var l = $("#system-language").text();
+			if(l=="EN"){
+				$(".form-message-output").html("<p>"+MESSAGE_OPERATION_DONE_GE+"</p>").fadeIn("slow");
+			}else{
+				$(".form-message-output").html("<p>"+MESSAGE_OPERATION_DONE_EN+"</p>").fadeIn("slow");
+			}
+			$("input[type='text']").val("");
+			$("textarea").val("");
+			$("input[type='checkbox']").removeAttr('checked');
+			$("select").val(0);
+			window.scrollTo(0,0);
+			
+		}else{
+			alert("Error: 3001");
+		}
+	});
 });
 
 $(document).on("click",".makemedouble",function(){

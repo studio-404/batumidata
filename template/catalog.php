@@ -21,7 +21,7 @@
               <div class="box">
                    <div class="mailbox-controls">
                       <div class="btn-group" style="width:100%">
-                        <button type="button" class="btn btn-default btn-sm gotoUrl" data-goto="<?=WEBSITE.LANG?>/monacemis-damateba?parent=<?=Input::method("GET","idx")?>" style="float:left"><i class="glyphicon glyphicon-plus"></i>&nbsp;&nbsp;<?=$data["language_data"]["val24"]?></button>
+                        <button type="button" class="btn btn-default btn-sm gotoUrl" data-goto="<?=WEBSITE.LANG?>/monacemis-damateba?parent=<?=Input::method("GET","idx")?>&amp;back=<?=$data["catalog_general"][0]["slug"]?>" style="float:left"><i class="glyphicon glyphicon-plus"></i>&nbsp;&nbsp;<?=$data["language_data"]["val24"]?></button>
                         <button type="button" class="btn btn-default btn-sm reloadMe" style="float:left; margin-left:5px;"><i class="fa fa-refresh"></i>&nbsp;&nbsp;<?=$data["language_data"]["val25"]?></button>
                         
                         <label style="float:right; width:135px;">
@@ -93,7 +93,7 @@
                 $howmany = $data["fetch"]["allitems"] / Input::method("GET","sw");
                 if($howmany<1){ $howmany = 1; }
                 
-                for($x=1;$x<=$howmany;$x++){
+                for($x=1;$x<=ceil($howmany);$x++){
                   $active = (Input::method("GET","pn")==$x) ? ' class="active"' : '';
                   if(!Input::method("GET","pn") && $x==1){ $active = ' class="active"'; }
                 ?>

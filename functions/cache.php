@@ -102,6 +102,7 @@ class cache extends connection{
 				":status"=>1, 
 				":visibility"=>1 
 			)); 
+			// echo $sql;
 			$fetch = $prepare->fetchAll(PDO::FETCH_ASSOC); 
 			break;
 			case "form":

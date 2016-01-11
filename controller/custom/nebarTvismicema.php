@@ -38,7 +38,6 @@ class nebarTvismicema extends connection{
 		$sql2 = 'SELECT 
 		COUNT(`studio404_module_item`.`idx`) AS allitems
 		FROM `studio404_module_item` WHERE 
-		`module_idx`=25 AND 
 		`studio404_module_item`.`lang`=:lang AND 
 		`studio404_module_item`.`visibility`=:visibility AND 
 		`studio404_module_item`.`status`!=:status';	

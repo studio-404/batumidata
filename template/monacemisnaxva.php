@@ -12,19 +12,14 @@
             <div class="box-body">
             	<?php
             	// echo "<pre>";
-            	// print_r($data["catalog_table_columns"]);
+             //  print_r($data["labellists"]);
+            	// print_r($data["fetch"]);
             	// echo "</pre>";
             	?>
-               
-
-            	<?php
-                    $cataloglist_names = new cataloglist_names();
-                    $getusername = new getusername();
-                    ?>
 	     	 	<div class="box-body table-responsive no-padding">
                   <table class="table table-hover">
                     <tr>
-                      <th>ID</th>
+                      <th style="min-width:250px;">ID</th>
                       <td><?=$data["fetch"]["idx"]?></td>
                     </tr>  
 
@@ -40,45 +35,60 @@
 
                     <tr>
                       <th><?=$data["language_data"]["val86"]?></th>
-                      <td><?=$getusername->names($c,$data["fetch"]["insert_admin"])?></td>
-                    </tr> 
-
-                    
+                      <td><?=$data["getusername"]->names($c,$data["fetch"]["insert_admin"])?></td>
+                    </tr>                     
                     
                     <tr>
                       <th><?=$data["language_data"]["val85"]?></th>
-                      <td><?=implode(", ",$cataloglist_names->names($c,$data["fetch"]["cataloglist"]))?></td>
+                      <td><?=implode(", ",$data["cataloglist_names"]->names($c,$data["fetch"]["cataloglist"]))?></td>
                     </tr> 
-
-                    <tr>
-                      <th><?=$data["language_data"]["val82"]?></th>
-                      <td><?=$data["fetch"]["title"]?></td>
-                    </tr> 
-
-                    <?php
+                        
+                    <?php 
                     $select_form_label = new select_form_label();
-                    foreach ($data["catalog_table_columns"] as $value) { 
-                      	
-                       	if(in_array($value["Field"], $c['database.catalog.item.lock.array'])){ continue; }
-						$label = $select_form_label->label($c,$value["Field"]);
-						$v = ($label) ? $label : $value["Field"]; 
-						echo '<tr>
-						<th>'.$v.'</th>
-						<td>'.$data["fetch"][$value["Field"]].'</td>
-						</tr>';
+                    foreach ($data["labellists"] as $value) {
+                      $attach_column = explode(" ",$value['attach_column']);
+
+                      if($value['type']!="file"){
+                        echo '<tr>';
+                        echo '<th>'.$value["label"].'</th>';
+                        echo '<td>'.$data["fetch"][$attach_column[0]].'</td>';
+                        echo '</tr>';
+                      }else if($value["type"]=="file" && ($value['attach_format']=="png" || $value['attach_format']=="gif" || $value['attach_format']=="jpg")){ 
+                        $files = $labellists->loadpictures($c,$value["name"]); 
+                        echo '<tr>';
+                        echo '<th>'.$value["label"].'</th>';
+                        echo '<td>';
+                        foreach ($files as $v) {
+                          echo '<div class="col-md-2">';
+                          echo '<img src="'.WEBSITE.'files/document/'.$v['sgf_file'].'" width="100%" alt="" border="1" />';
+                          echo '</div>';
+                        }                       
+                        echo '</td>';
+                        echo '</tr>';
+                      }else{
+                        $files = $labellists->loadpictures($c,$value["name"]); 
+                        echo '<tr>';
+                        echo '<th>'.$value["label"].'</th>';
+                        echo '<td>';
+                        foreach ($files as $v) {
+                          echo '<a href="'.WEBSITE.'files/document/'.$v['sgf_file'].'" target="_blank">'.$v['sgf_file'].'</a><br />';
+                        }                       
+                        echo '</td>';
+                        echo '</tr>';
+                      }
+                    
                     }
-                    ?>
-					 <tr>
+                    ?>         
+                    <tr>
                       <th><?=$data["language_data"]["val87"]?></th>
                       <td><?php
                       if($data["fetch"]["visibility"]==1){
-                      	echo '<span class="label label-success give-permision" style="cursor:pointer" data-dlang="'.LANG.'">'.$data["language_data"]["val88"].'</span>'; 
+                        echo '<span class="label label-success give-permision" style="cursor:pointer" data-dlang="'.LANG.'">'.$data["language_data"]["val88"].'</span>'; 
                       }else{
-                      	echo '<span class="label label-danger remove-permision" style="cursor:pointer" data-dlang="'.LANG.'">'.$data["language_data"]["val89"].'</span>';
+                        echo '<span class="label label-danger remove-permision" style="cursor:pointer" data-dlang="'.LANG.'">'.$data["language_data"]["val89"].'</span>';
                       }
                       ?></td>
-                    </tr>               
-              
+                    </tr> 
                   </table>
                 </div><!-- /.box-body -->
 

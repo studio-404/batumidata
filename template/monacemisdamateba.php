@@ -13,15 +13,7 @@
                 <div class="row">
                 	<div class="col-md-12 form-message-output" style="display:none"><p></p></div> 
                     <div class="col-md-12 catalog-add-form-data">
-                 	
-                 	<?php
-     //             	if(Input::method("POST","file")){
-					// 	echo "<pre>";
-					// 	print_r($_POST['filenumber']);
-					// 	print_r($_FILES["file"]["name"]);
-					// 	echo "</pre>";
-					// }
-                 	?>
+                 
 
                    <form action=""  method="post" enctype="multipart/form-data" name="monacemisdamatebaform" id="monacemisdamatebaform">
 					<?php if($data["parent_title"]!="" && Input::method("GET","parent")) : ?>
@@ -114,7 +106,7 @@
 	                        			echo '<span id="form-name-'.$file_count.'"><input class="form-control form-input" type="file" name="file['.$file_count.'][]" value="" accept="'.$accept.'" /></span>';
 	                        		}else{
 	                        		?>
-	                        			<input class="form-control form-input" type="file" name="file[<?=$file_count?>]" value="" accept="<?=$accept?>" />
+	                        			<input class="form-control form-input" type="file" name="file[<?=$file_count?>][]" value="" accept="<?=$accept?>" />
 	                        		<?php } ?>
 	                        	</div>
                         		<?php

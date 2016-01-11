@@ -32,9 +32,12 @@ class monacemisnaxva extends connection{
 			redirect::url(WEBSITE);
 		}
 
-		$catalog_table_columns = $cache->index($c,"catalog_table_columns");
-		$data["catalog_table_columns"] = json_decode($catalog_table_columns,true);
+		$data["cataloglist_names"] = new cataloglist_names();
+        $data["getusername"] = new getusername();
 
+		$labellists = new labellists();
+		$data["labellists"] = $labellists->loadlabels($c);
+		
 		
 		$sql2 = 'SELECT 
 		`studio404_module_item`.* 
