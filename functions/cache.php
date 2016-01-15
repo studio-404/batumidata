@@ -151,22 +151,14 @@ class cache extends connection{
 					$countSql = 'SELECT 
 					COUNT(`studio404_module_item`.`id`) AS catalogItemCount 
 					FROM 
-					`studio404_module_attachment`, `studio404_module`, `studio404_module_item` 
+					`studio404_module_item` 
 					WHERE 
-					`studio404_module_attachment`.`connect_idx`=:connect_idx AND 
-					`studio404_module_attachment`.`page_type`="catalogpage" AND 
-					`studio404_module_attachment`.`lang`=:lang AND 
-					`studio404_module_attachment`.`status`!=:status AND 
-					`studio404_module_attachment`.`idx`=`studio404_module`.`idx` AND 
-					`studio404_module`.`lang`=:lang AND 
-					`studio404_module`.`status`!=:status AND 
-					`studio404_module`.`idx`=`studio404_module_item`.`module_idx` AND 
+					FIND_IN_SET('.$value['idx'].', `studio404_module_item`.`cataloglist`) AND 
 					`studio404_module_item`.`lang`=:lang AND 
 					`studio404_module_item`.`visibility`!=:status AND 
 					`studio404_module_item`.`status`!=:status';
 					$prepareCount = $conn->prepare($countSql);
 					$prepareCount->execute(array(
-						":connect_idx"=>$value['idx'], 
 						":lang"=>LANG_ID, 
 						":status"=>1  
 					));
