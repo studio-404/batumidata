@@ -1189,6 +1189,27 @@ $(document).on("click",".remove-permision",function(){
 	});
 });
 
+$(document).on("click",".deleteUnpublishData",function(){
+	var id = $(this).attr("data-id");
+	$("#bs-example-xx").modal("show");
+	$(".deleteUnsuportedItem").attr("data-id",id);
+});
+
+//
+$(document).on("click",".deleteUnsuportedItem",function(){
+	var id = $(this).attr("data-id");
+	$(".overlay-loader").fadeIn("slow");
+	$("#bs-example-xx").fadeOut("slow");
+	$.post(AJAX_REQUEST_URL, { removeUnpublished:true, i:id },function(r){
+		if(r=="Done"){
+			location.reload();
+		}else{
+			alert("Error ");
+		}
+	});
+});
+
+
 /* Functions START */
 $(document).on("click",".reloadMe",function(){
 	location.reload();

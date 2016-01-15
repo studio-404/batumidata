@@ -2,6 +2,26 @@
 @include("parts/welcome_header.php");
 @include("parts/leftside.php");
 ?>
+  <!-- START REGISTER POPUP -->
+<div class="modal fade" id="bs-example-xx" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel">
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title"><?=$data["language_data"]["val38"]?></h4>
+        </div>
+        <div class="modal-body">
+          <?=$data["language_data"]["val91"]?>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default pull-left" data-dismiss="modal"><?=$data["language_data"]["val33"]?></button>
+          <button type="button" class="btn btn-primary deleteUnsuportedItem"><?=$data["language_data"]["val73"]?></button>
+        </div>
+    </div>
+  </div>
+</div>
+<!-- END REGISTER POPUP -->
   <!-- Content Wrapper. Contains page content -->
   <div class="content-wrapper">
   <!-- Content Header (Page header) -->
@@ -61,8 +81,8 @@
                         <td><a href=""><?=($insert_admin) ? $insert_admin : $insert_notsigned?></a></td>
                         <td>
                           <a href="<?=WEBSITE.LANG."/monacemis-naxva?view=".$val['idx']?>&amp;cataloglist=<?=$val['cataloglist']?>" target="_blank" style="padding:0 0 0 5px"><i class="glyphicon glyphicon-new-window"></i></a>
-                          <a href="" style="padding:0 0 0 5px"><i class="glyphicon glyphicon-edit"></i></a>
-                          <a href="javascript:void(0)" style="padding:0 0 0 5px" class="" data-dlang="<?=LANG?>" data-catid=""><i class="glyphicon glyphicon-remove"></i></a>
+                          <a href="<?=WEBSITE.LANG?>/monacemis-redaqtireba?idx=<?=$val['idx']?>&amp;cataloglist=<?=$val['cataloglist']?>" style="padding:0 0 0 5px"><i class="glyphicon glyphicon-edit"></i></a>
+                          <a href="javascript:void(0)" style="padding:0 0 0 5px" class="deleteUnpublishData" data-dlang="<?=LANG?>" data-id="<?=$val['idx']?>"><i class="glyphicon glyphicon-remove"></i></a>
                         </td>
                       </tr> 
                     <?php

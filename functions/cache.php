@@ -86,8 +86,9 @@ class cache extends connection{
 			$fetch = $prepare->fetchAll(PDO::FETCH_ASSOC); 
 			break;
 			case "catalogitemsnovisiable": 
-			$offset = (Input::method("GET","pn")) ? Input::method("GET","pn")-1 : 0;
+			
 			$sw = (Input::method("GET","sw") && is_numeric(Input::method("GET","sw"))) ? Input::method("GET","sw") : 10;
+			$offset = (Input::method("GET","pn")) ? ((Input::method("GET","pn")-1) * $sw) : 0;
 			if(!Input::method("GET","pn") || !is_numeric(Input::method("GET","pn"))){ $offset = 0; }
 			$sql = 'SELECT 
 			`studio404_module_item`.*
@@ -96,6 +97,7 @@ class cache extends connection{
 			`studio404_module_item`.`lang`=:lang AND 
 			`studio404_module_item`.`visibility`=:visibility AND 
 			`studio404_module_item`.`status`!=:status ORDER BY `id` DESC LIMIT '.$offset.', '.$sw;	
+
 			$prepare = $conn->prepare($sql); 
 			$prepare->execute(array(
 				":lang"=>LANG_ID, 
@@ -114,7 +116,19 @@ class cache extends connection{
 			$fetch = $prepare->fetchAll(PDO::FETCH_ASSOC);
 			break;
 			case "welcomepage_categories": 
-			$sql = 'SELECT `idx`,`title`,`slug` FROM `studio404_pages` WHERE `cid`=:cid AND `lang`=:lang AND `visibility`!=:visibility AND `status`!=:status ORDER BY `position` ASC';	
+			$sql = 'SELECT 
+			`studio404_pages`.`idx` AS idx,
+			`studio404_pages`.`title` AS title,
+			`studio404_pages`.`slug` AS slug 
+			FROM 
+			`studio404_pages` 
+			WHERE 
+			`studio404_pages`.`cid`=:cid AND 
+			`studio404_pages`.`lang`=:lang AND 
+			`studio404_pages`.`visibility`!=:visibility AND 
+			`studio404_pages`.`status`!=:status 
+			ORDER BY 
+			`studio404_pages`.`position` ASC';	
 			$prepare = $conn->prepare($sql); 
 			$prepare->execute(array(
 				":cid"=>4, 
@@ -133,9 +147,40 @@ class cache extends connection{
 						":lang"=>LANG_ID, 
 						":one"=>1
 					));
+
+					$countSql = 'SELECT 
+					COUNT(`studio404_module_item`.`id`) AS catalogItemCount 
+					FROM 
+					`studio404_module_attachment`, `studio404_module`, `studio404_module_item` 
+					WHERE 
+					`studio404_module_attachment`.`connect_idx`=:connect_idx AND 
+					`studio404_module_attachment`.`page_type`="catalogpage" AND 
+					`studio404_module_attachment`.`lang`=:lang AND 
+					`studio404_module_attachment`.`status`!=:status AND 
+					`studio404_module_attachment`.`idx`=`studio404_module`.`idx` AND 
+					`studio404_module`.`lang`=:lang AND 
+					`studio404_module`.`status`!=:status AND 
+					`studio404_module`.`idx`=`studio404_module_item`.`module_idx` AND 
+					`studio404_module_item`.`lang`=:lang AND 
+					`studio404_module_item`.`visibility`!=:status AND 
+					`studio404_module_item`.`status`!=:status';
+					$prepareCount = $conn->prepare($countSql);
+					$prepareCount->execute(array(
+						":connect_idx"=>$value['idx'], 
+						":lang"=>LANG_ID, 
+						":status"=>1  
+					));
+					if($prepareCount->rowCount() > 0){
+						$fetchCount = $prepareCount->fetch(PDO::FETCH_ASSOC);
+						$catalogItemCount = $fetchCount['catalogItemCount'];
+					}else{
+						$catalogItemCount = "0";
+					}
+
 					$fetch["item"]['idx'][] = $value['idx']; 
 					$fetch["item"]['title'][] = $value['title']; 
 					$fetch["item"]['slug'][] = $value['slug']; 
+					$fetch["item"]['catalogItemCount'][] = $catalogItemCount; 
 					if($prepare2->rowCount()>0){
 						$fetch2 = $prepare2->fetchAll(PDO::FETCH_ASSOC);
 						foreach ($fetch2 as $value2) {

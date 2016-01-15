@@ -16,7 +16,6 @@
             </div>
           </div>
 
-
           <form action="#" method="get" class="sidebar-form">
             <div class="input-group">
               <input type="text" name="q" class="form-control" placeholder="<?=$data["language_data"]["val3"]?>...">
@@ -57,7 +56,7 @@
                 echo '</li>';
               }else{
                 $active_tree = ($data["welcomepage_categories"]["item"]["slug"][$x]==$slug_second) ? ' class="active"' : "";
-                echo '<li'.$active_tree.'><a href="'.WEBSITE.LANG.'/'.$data["welcomepage_categories"]["item"]["slug"][$x].'?idx='.$data["welcomepage_categories"]["item"]["idx"][$x].'"><i class="fa fa-list-ul"></i> <span>'.$data["welcomepage_categories"]["item"]["title"][$x].'</span></a></li>';
+                echo '<li'.$active_tree.'><a href="'.WEBSITE.LANG.'/'.$data["welcomepage_categories"]["item"]["slug"][$x].'?idx='.$data["welcomepage_categories"]["item"]["idx"][$x].'"><i class="fa fa-list-ul"></i> <span>'.$data["welcomepage_categories"]["item"]["title"][$x].'</span> <small class="label pull-right bg-green">'.$data["welcomepage_categories"]["item"]["catalogItemCount"][$x].'</small></a></li>';
               }
               $x++;
             }

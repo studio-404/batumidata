@@ -121,6 +121,25 @@ class ajax extends connection{
 			exit();
 		}
 
+		if(Input::method("POST","removeUnpublished")=="true" && Input::method("POST","i")){
+			$sql = 'UPDATE `studio404_module_item` SET `status`=1 WHERE `idx`=:idx';
+			$prepare = $conn->prepare($sql); 
+			$idx = (int)Input::method("POST","i");
+			$prepare->execute(array(
+				":idx"=>$idx
+			));
+			$files = glob(DIR.'_cache/*'); // get all file names
+			foreach($files as $file){ // iterate files
+				if(is_file($file))
+				@unlink($file); // delete file
+			}
+				
+			$insert_notification = new insert_notification();
+			$insert_notification->insert($c,$_SESSION["batumi_id"],"მონაცემის წაშლა ::".$idx,"Delete Item ::".$idx);
+
+			echo "Done";
+		}
+
 		if(Input::method("POST","givepermision")=="true"){
 			$idx = (Input::method("POST","p") && is_numeric(Input::method("POST","p"))) ? Input::method("POST","p") : 0;
 			$sql = 'UPDATE `studio404_module_item` SET `visibility`=2 WHERE `idx`='.$idx;
