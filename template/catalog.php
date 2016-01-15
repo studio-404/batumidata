@@ -79,7 +79,7 @@
                       <tr>
                         <td><?=$val['idx']?></td>
                         <?php
-
+                        $actual_link = $c['site.protocol']."$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
                         foreach($data["catalog_table_list"] as $v){
                           $attach_column = explode(" ",$v['attach_column']);
                           echo '<td>'.$val[$attach_column[0]].'</td>';
@@ -88,7 +88,7 @@
                         <td><a href=""><?=$getusername->names($c,$val['insert_admin'])?></a></td>
                         <td>
                           <a href="<?=WEBSITE.LANG."/monacemis-naxva?view=".$val['idx']?>&amp;cataloglist=<?=$val['cataloglist']?>" target="_blank" style="padding:0 0 0 5px"><i class="glyphicon glyphicon-new-window"></i></a>
-                          <a href="<?=WEBSITE.LANG?>/monacemis-redaqtireba?parent=<?=$val['cataloglist']?>&amp;idx=<?=$val['idx']?>" style="padding:0 0 0 5px"><i class="glyphicon glyphicon-edit"></i></a>
+                          <a href="<?=WEBSITE.LANG?>/monacemis-redaqtireba?parent=<?=$val['cataloglist']?>&amp;idx=<?=$val['idx']?>&amp;back=<?=$actual_link?>" style="padding:0 0 0 5px"><i class="glyphicon glyphicon-edit"></i></a>
                           <a href="javascript:void(0)" style="padding:0 0 0 5px" class="deleteUnpublishData" data-dlang="<?=LANG?>" data-id="<?=$val['idx']?>"><i class="glyphicon glyphicon-remove"></i></a>
                         </td>
                       </tr> 

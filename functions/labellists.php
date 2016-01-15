@@ -14,9 +14,9 @@ class labellists extends connection{
 		return $fetch;
 	}
 
-	public function loadpictures($c,$name){
+	public function loadpictures($c,$name,$idx = ""){
 		$conn = $this->conn($c);
-		//$sql = 'SELECT `idx`,`file` FROM `studio404_gallery_file` WHERE `fileinputname`=:fileinputname AND `lang`=:lang AND `status`!=1';
+		$view = ($idx == "") ? Input::method('GET','view') : $idx;
 		$sql = 'SELECT 
 		`studio404_gallery_file`.`idx` AS sgf_idx, 
 		`studio404_gallery_file`.`file` AS sgf_file 
@@ -33,7 +33,7 @@ class labellists extends connection{
 		';
 		$prepare = $conn->prepare($sql); 
 		$prepare->execute(array(
-			":connect_idx"=>Input::method('GET','view'), 
+			":connect_idx"=>$view, 
 			":fileinputname"=>$name, 
 			":lang"=>LANG_ID 
 		));

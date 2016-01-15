@@ -225,6 +225,9 @@ class ajax extends connection{
 					}
 				}else if($types[$xx]=="file"){
 					$columns_and_data .= '`'.$val.'`="'.$values[$xx].'", ';
+				}else if($types[$xx]=="date"){
+					$timestamp = strtotime(str_replace('/', '-', $values[$xx])); 
+					$columns_and_data .= '`'.$val.'`="'.$timestamp.'", ';
 				}
 				$xx++;
 			}

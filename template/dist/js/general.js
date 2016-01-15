@@ -1182,6 +1182,17 @@ $(document).on("click",".give-permision",function(){
 	});
 });
 
+$(document).on("click",".give-permision-table",function(){
+	var param = urlParamiters();
+	var dlang = $(this).attr("data-dlang");
+	var view = $(this).attr("data-view");
+	$.post(AJAX_REQUEST_URL, { givepermision:true, p:view }, function(result){
+		if(result=="Done"){
+			location.href = SYSTEM_WELCOME_PAGE + "/"+dlang+"/nebarTvis-micema";
+		}
+	});
+});
+
 $(document).on("click",".remove-permision",function(){
 	var param = urlParamiters();
 	var dlang = $(this).attr("data-dlang");

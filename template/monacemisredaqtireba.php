@@ -13,12 +13,11 @@
                 <div class="row">
                 	<div class="col-md-12 form-message-output" style="display:none"><p></p></div> 
                     <div class="col-md-12 catalog-add-form-data">
-                 	<?php
-                 	// echo "<pre>";
-                 	// print_r($data["fetch"]); 
-                 	// echo "</pre>";
-                 	?>
+                    	<?php
+                    	$labellists = new labellists();
+						$data["labellists"] = $labellists->loadlabels($c);
 
+                    	?>
                    <form action=""  method="post" enctype="multipart/form-data" name="monacemisdamatebaform" id="monacemisdamatebaform">
 					<?php if($data["parent_title"]!="" && Input::method("GET","idx")) : ?>
 						<div class="form-group">
@@ -118,20 +117,87 @@
 	                        			<input class="form-control form-input" type="file" name="file[<?=$file_count?>][]" value="" accept="<?=$accept?>" />
 	                        		<?php } ?>
 	                        	</div>
+	                        	<?php
+	                        	$files = $labellists->loadpictures($c,$form["name"],Input::method("GET","idx")); 
+		                    	// echo "<pre>"; sgf_idx, sgf_file
+		                    	// print_r($files);
+		                    	// echo "</pre>";
+		                    	$attach_format = explode(",",$form['attach_format']);
+	                        	?>
+	                        	<div class="post">
+					                <ul class="mailbox-attachments clearfix">
+					                	<?php
+					                	foreach ($files as $file) {
+					                	$file_url = WEBSITE."files/document/".$file["sgf_file"];
+					                	$file_url_dir = DIR."files/document/".$file["sgf_file"];
+					                	$filesize = filesize($file_url_dir);
+
+					                	if(in_array("pdf", $attach_format)){
+					                	?>
+										<li>
+											<span class="mailbox-attachment-icon"><i class="fa fa-file-pdf-o"></i></span>
+
+											<div class="mailbox-attachment-info">
+												<a href="#" class="mailbox-attachment-name"><i class="fa fa-file-pdf-o"></i> Document PDF</a>
+												<span class="mailbox-attachment-size">
+												<?php echo filesizeconvert::byt($filesize); ?>
+												<a href="#" class="btn btn-default btn-xs pull-right"><i class="fa fa-times-circle"></i></a>
+												<a href="#" class="btn btn-default btn-xs pull-right" style="margin-right:5px"><i class="fa fa-cloud-download"></i></a>
+												</span>
+											</div>
+										</li>
+										<?php
+										}else if(in_array("png", $attach_format) || in_array("jpg", $attach_format) || in_array("gif", $attach_format) || in_array("jpeg", $attach_format)){
+											?>
+											<li>
+												<span class="mailbox-attachment-icon has-img"><img src="<?=$file_url?>" alt="Attachment"></span>
+
+												<div class="mailbox-attachment-info">
+													<a href="#" class="mailbox-attachment-name"><i class="fa fa-camera"></i> Photo</a>
+													<span class="mailbox-attachment-size">
+													<?php echo filesizeconvert::byt($filesize); ?>
+													<a href="#" class="btn btn-default btn-xs pull-right"><i class="fa fa-times-circle"></i></a>
+													<a href="#" class="btn btn-default btn-xs pull-right" style="margin-right:5px"><i class="fa fa-eye"></i></a>
+													</span>
+												</div>
+											</li>
+											<?php
+										}else{
+										?>
+											<li>
+												<span class="mailbox-attachment-icon"><i class="fa fa-file"></i></span>
+
+												<div class="mailbox-attachment-info">
+													<a href="#" class="mailbox-attachment-name"><i class="fa fa-file"></i> Document</a>
+													<span class="mailbox-attachment-size">
+													<?php echo filesizeconvert::byt($filesize); ?>
+													<a href="#" class="btn btn-default btn-xs pull-right"><i class="fa fa-times-circle"></i></a>
+													<a href="#" class="btn btn-default btn-xs pull-right" style="margin-right:5px"><i class="fa fa-cloud-download"></i></a>
+													
+													</span>
+												</div>
+											</li>
+										<?php
+										}
+										}
+										?>
+										
+									</ul>
+					            </div>
                         		<?php
                         		$file_count++;
                         	}else if($form["type"]=="date"){
                         		?>
                         		<div class="form-group">
 	                            	<label><?=$form["label"]?>: <?=($form["important"]=="yes") ? '<font color="red">*</font>' : ''?></label> <!-- Fisrname & lastname -->
-	                        		<input type="text" class="form-control form-input" data-inputmask="'alias': 'dd/mm/yyyy'" data-mask="" data-name="<?=$form["name"]?>" data-attach="<?=$form["attach_column"]?>" data-important="<?=$form["important"]?>" data-type="date" value="" />
+	                        		<input type="text" class="form-control form-input" data-inputmask="'alias': 'dd/mm/yyyy'" data-mask="" data-name="<?=$form["name"]?>" data-attach="<?=$form["attach_column"]?>" data-important="<?=$form["important"]?>" data-type="date" value="<?=date("d/m/Y",$value_input)?>" />
 	                        	</div>
                         		<?php
                         	}else if($form["type"]=="textarea"){
                         		?>
                         		<div class="form-group">
 	                            	<label><?=$form["label"]?>: <?=($form["important"]=="yes") ? '<font color="red">*</font>' : ''?></label> <!-- Fisrname & lastname -->
-	                        		<textarea class="form-control form-input" data-name="<?=$form["name"]?>" data-attach="<?=$form["attach_column"]?>" data-type="textarea" data-important="<?=$form["important"]?>"></textarea>
+	                        		<textarea class="form-control form-input" data-name="<?=$form["name"]?>" data-attach="<?=$form["attach_column"]?>" data-type="textarea" data-important="<?=$form["important"]?>"><?=$value_input?></textarea>
 	                        	</div>
                         		<?php
                         	}
@@ -143,11 +209,11 @@
                 </div>
 	          </div>
 	          <div class="box-footer">
-			   	  <button class="btn btn-primary" type="submit" data-dlang="<?=LANG?>" id="add-catalogue-item">
-			   	  	<?=$data["language_data"]["val27"]?></button>
-			   	  <button class="btn btn-primary" type="submit" data-dlang="<?=LANG?>" id="add-catalogue-item-close">
-			   	  	<?=$data["language_data"]["val28"]?></button>
-			   	  <button class="btn btn-primary btn-warning gotoUrl" data-goto="<?=WEBSITE.LANG?>/sastumroebi?idx=<?=Input::method("GET","parent")?>" type="submit"><?=$data["language_data"]["val33"]?></button>
+			   	  <button class="btn btn-primary" type="submit" data-dlang="<?=LANG?>" id="edit-catalogue-item">
+			   	  	<?=$data["language_data"]["val74"]?></button>
+			   	  <button class="btn btn-primary" type="submit" data-dlang="<?=LANG?>" id="edit-catalogue-item-close">
+			   	  	<?=$data["language_data"]["val36"]?></button>
+			   	  <button class="btn btn-primary btn-warning gotoUrl" data-goto="<?=Input::method("GET","back")?>" type="submit"><?=$data["language_data"]["val33"]?></button>
 			  </div>
 	      </div>
 		</section>

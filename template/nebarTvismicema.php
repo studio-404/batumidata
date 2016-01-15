@@ -70,6 +70,7 @@
                     </tr>
                     <?php
                     $getusername = new getusername();
+                    $actual_link = $c['site.protocol']."$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
                     foreach($data["catalogitems"] as $key => $val){
                       $insert_admin = $getusername->names($c,$val['insert_admin']);
                       $insert_notsigned = (LANG=="ge") ? "არარეგისტრირებული მომხმარებელი" : "Not Signed User";
@@ -80,8 +81,9 @@
                         <td><?=$val['title']?></td>
                         <td><a href=""><?=($insert_admin) ? $insert_admin : $insert_notsigned?></a></td>
                         <td>
+                          <a href="javascript:void(0)" class="give-permision-table" data-dlang="<?=LANG?>" data-view="<?=$val['idx']?>" style="padding:0 0 0 5px"><i class="glyphicon glyphicon-ok"></i></a>
                           <a href="<?=WEBSITE.LANG."/monacemis-naxva?view=".$val['idx']?>&amp;cataloglist=<?=$val['cataloglist']?>" target="_blank" style="padding:0 0 0 5px"><i class="glyphicon glyphicon-new-window"></i></a>
-                          <a href="<?=WEBSITE.LANG?>/monacemis-redaqtireba?parent=<?=$val['cataloglist']?>&amp;idx=<?=$val['idx']?>" style="padding:0 0 0 5px"><i class="glyphicon glyphicon-edit"></i></a>
+                          <a href="<?=WEBSITE.LANG?>/monacemis-redaqtireba?parent=<?=$val['cataloglist']?>&amp;idx=<?=$val['idx']?>&amp;back=<?=$actual_link?>" style="padding:0 0 0 5px"><i class="glyphicon glyphicon-edit"></i></a>
                           <a href="javascript:void(0)" style="padding:0 0 0 5px" class="deleteUnpublishData" data-dlang="<?=LANG?>" data-id="<?=$val['idx']?>"><i class="glyphicon glyphicon-remove"></i></a>
                         </td>
                       </tr> 
