@@ -385,6 +385,9 @@ $(document).on("click","#add-catalogue-item-close",function(){
 			var file_length = $(".catalog-add-form-data input[type='file']").length;
 			if(file_length > 0){
 				$("#monacemisdamatebaform").submit();
+			}else{
+				var LANG = ($("#system-language").text()=="EN") ? "ge" : "en";
+				location.href = SYSTEM_WELCOME_PAGE+"/"+LANG+"/welcomesystem";
 			}
 			
 			var l = $("#system-language").text();

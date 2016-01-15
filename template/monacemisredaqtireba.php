@@ -13,10 +13,14 @@
                 <div class="row">
                 	<div class="col-md-12 form-message-output" style="display:none"><p></p></div> 
                     <div class="col-md-12 catalog-add-form-data">
-                 
+                 	<?php
+                 	// echo "<pre>";
+                 	// print_r($data["fetch"]); 
+                 	// echo "</pre>";
+                 	?>
 
                    <form action=""  method="post" enctype="multipart/form-data" name="monacemisdamatebaform" id="monacemisdamatebaform">
-					<?php if($data["parent_title"]!="" && Input::method("GET","parent")) : ?>
+					<?php if($data["parent_title"]!="" && Input::method("GET","idx")) : ?>
 						<div class="form-group">
 						<label><?=$data["language_data"]["val32"]?>: <font color="red">*</font></label>
 						<input class="form-control" type="text" placeholder="" value="<?=$data["parent_title"]?>" disabled="disabled" />
@@ -29,7 +33,8 @@
                       <?php
                       $x = 0;
                       foreach ($data["welcomepage_categories"]["item"]["idx"] as $value) {
-                      	if($data["welcomepage_categories"]["item"]["idx"][$x]==Input::method("GET","parent")){
+                      	$parent = explode(",", Input::method("GET","parent"));
+                      	if(in_array($data["welcomepage_categories"]["item"]["idx"][$x],$parent)){
                       		echo '<option value="'.$data["welcomepage_categories"]["item"]['idx'][$x].'" selected="selected">'.$data["welcomepage_categories"]["item"]['title'][$x].'</option>';
                       	}else{
                       		echo '<option value="'.$data["welcomepage_categories"]["item"]['idx'][$x].'">'.$data["welcomepage_categories"]["item"]['title'][$x].'</option>';
@@ -43,24 +48,27 @@
 						$select_form = new select_form();
 						$file_count = 0;
 						foreach($data["form"] as $form){
+							$attach_column = explode(" ",$form["attach_column"]);
+							$value_input = $data["fetch"][$attach_column[0]];
 							if($form["type"]=="text"){
 								if($form["important"]=="yes"){ $dataimportant = "data-important='true'"; }
-								else{ $dataimportant = "data-important='false'"; }
+								else{ $dataimportant = "data-important='false'"; }								
 							?>
 	                          <div class="form-group">
 	                            <label><?=$form["label"]?>: <?=($form["important"]=="yes") ? '<font color="red">*</font>' : ''?></label> <!-- Fisrname & lastname -->
-	                            <input class="form-control form-input" type="text" placeholder="<?=$form["placeholder"]?>" data-name="<?=$form["name"]?>" data-attach="<?=$form["attach_column"]?>" data-type="text" data-important="<?=$form["important"]?>" value="" />
+	                            <input class="form-control form-input" type="text" placeholder="<?=$form["placeholder"]?>" data-name="<?=$form["name"]?>" data-attach="<?=$form["attach_column"]?>" data-type="text" data-important="<?=$form["important"]?>" value="<?=$value_input?>" />
 	                          </div>
                         	<?php
                         	}else if($form["type"]=="select"){
-                        		?>
+							?>
                         		<div class="form-group">
 	                            <label><?=$form["label"]?>: <?=($form["important"]=="yes") ? '<font color="red">*</font>' : ''?></label> <!-- Fisrname & lastname -->
 	                           	<select class="form-control form-input" data-name="<?=$form["name"]?>" data-attach="<?=$form["attach_column"]?>" data-important="<?=$form["important"]?>" data-type="select">
 				                    <?php
 				                    $fetchx = $select_form->select_options($c,$form["id"]);
-				                    foreach ($fetchx as $value) {
-				                    	echo '<option value="'.htmlentities($value["text"]).'">'.$value["text"].'</option>';
+				                    foreach ($fetchx as $value){
+				                    	$selected = ($value_input==$value["text"]) ? 'selected="selected"' : '';
+				                    	echo '<option value="'.htmlentities($value["text"]).'" '.$selected.'>'.$value["text"].'</option>';
 				                    }
 				                    ?>
 				                  </select>
@@ -72,13 +80,14 @@
 	                            	<label><?=$form["label"]?>: <?=($form["important"]=="yes") ? '<font color="red">*</font>' : ''?></label> <!-- Fisrname & lastname -->
 	                        		<?php
 				                    $fetchx = $select_form->select_options($c,$form["id"]);
+				                    $ex = explode(",",$value_input);
 				                    foreach ($fetchx as $value) {
+				                    	$selected = (in_array($value["text"], $ex)) ? 'checked="checked"' : '';
 				                    	echo '<div class="checkbox">';
-										echo '<label><input type="checkbox" class="form-input" data-name="'.$form["name"].'" data-attach="'.$form["attach_column"].'" data-important="'.$form["important"].'" data-type="checkbox" value="'.htmlentities($value["text"]).'" />'.$value["text"].'</label>';
+										echo '<label><input type="checkbox" class="form-input" data-name="'.$form["name"].'" data-attach="'.$form["attach_column"].'" data-important="'.$form["important"].'" data-type="checkbox" value="'.htmlentities($value["text"]).'" '.$selected.' />'.$value["text"].'</label>';
 										echo '</div>';
 				                    }
-				                    ?>
-	                        		
+				                    ?>	                        		
 	                        	</div>
                         		<?php
                         	}else if($form["type"]=="file"){

@@ -147,7 +147,6 @@ class cache extends connection{
 						":lang"=>LANG_ID, 
 						":one"=>1
 					));
-
 					$countSql = 'SELECT 
 					COUNT(`studio404_module_item`.`id`) AS catalogItemCount 
 					FROM 

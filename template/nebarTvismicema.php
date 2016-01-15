@@ -81,7 +81,7 @@
                         <td><a href=""><?=($insert_admin) ? $insert_admin : $insert_notsigned?></a></td>
                         <td>
                           <a href="<?=WEBSITE.LANG."/monacemis-naxva?view=".$val['idx']?>&amp;cataloglist=<?=$val['cataloglist']?>" target="_blank" style="padding:0 0 0 5px"><i class="glyphicon glyphicon-new-window"></i></a>
-                          <a href="<?=WEBSITE.LANG?>/monacemis-redaqtireba?idx=<?=$val['idx']?>&amp;cataloglist=<?=$val['cataloglist']?>" style="padding:0 0 0 5px"><i class="glyphicon glyphicon-edit"></i></a>
+                          <a href="<?=WEBSITE.LANG?>/monacemis-redaqtireba?parent=<?=$val['cataloglist']?>&amp;idx=<?=$val['idx']?>" style="padding:0 0 0 5px"><i class="glyphicon glyphicon-edit"></i></a>
                           <a href="javascript:void(0)" style="padding:0 0 0 5px" class="deleteUnpublishData" data-dlang="<?=LANG?>" data-id="<?=$val['idx']?>"><i class="glyphicon glyphicon-remove"></i></a>
                         </td>
                       </tr> 
