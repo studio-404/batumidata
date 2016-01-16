@@ -588,6 +588,53 @@ $(document).on("click","#edit-catalogue-close",function(){
 	}
 });
 
+$(document).on("click",".loadimagesrc",function(){
+	var imagesrc = $(this).attr("data-imagesrc");
+	modalOpen("#bs-example-xx","image",imagesrc);
+});
+
+$(document).on("click",".delete-document",function(){
+	var imgIdx = $(this).attr("data-imageidx");
+	modalOpen("#bs-example-xx","delete",imgIdx);
+});
+
+$(document).on("click",".deleteDocumentx",function(){
+	var docidx = $(this).attr("data-docidx");
+	$("#bs-example-xx").modal("hide");
+	$(".overlay-loader").fadeIn("slow");
+	$.post(AJAX_REQUEST_URL, { deleteGalleryItem:true, i:docidx }, function(r){
+		if(r=="Done"){
+			$(".overlay-loader").fadeOut("slow");
+			location.reload();
+		}else{
+			alert("Error: 4005");
+		}
+	});
+});
+
+function modalOpen(ele,type,data){
+	if(type=="image"){
+		$(".modal-header").hide();
+		$(".modal-footer").hide();
+		$(".modal-dialog").removeClass("modal-sm");
+		$(".insertimage_popup").html("<img src=\""+data+"\" alt=\"\" style=\"width:100%\" />"); 
+	}else if(type=="delete"){
+		$(".modal-header").show();
+		$(".modal-footer").show();
+		$(".modal-dialog").addClass("modal-sm");
+		$(".deleteDocumentx").attr("data-docidx",data);
+		var dlang = $("#system-language").text();
+		if(dlang=="EN"){
+			$(".insertimage_popup").html("გნებავთ წაშალოთ ფაილი ?");
+		}else{
+			$(".insertimage_popup").html("Would you like to delete do ?");
+		}		
+	}
+	$(ele).modal("show");
+}
+
+
+
 $(document).on("click",".remove-catalogue",function(){
 	var dlang = $(this).data("dlang"); 
 	var catid = $(this).data("catid"); 

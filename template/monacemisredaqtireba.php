@@ -2,6 +2,31 @@
 @include("parts/welcome_header.php");
 @include("parts/leftside.php");
 ?>
+<!-- START image POPUP -->
+<div class="modal fade" id="bs-example-xx" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel">
+  <div class="modal-dialog">
+    <div class="modal-content">
+    	<div class="modal-header" style="display:none">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title"><?=$data["language_data"]["val38"]?></h4>
+        </div>
+
+        <div class="modal-body insertimage_popup">
+         <?=$data["language_data"]["val91"]?>
+        </div>
+
+        <div class="modal-footer" style="display:none">
+          <button type="button" class="btn btn-default pull-left" data-dismiss="modal"><?=$data["language_data"]["val33"]?></button>
+          <button type="button" class="btn btn-primary deleteDocumentx"><?=$data["language_data"]["val73"]?></button>
+        </div> 
+    </div>
+  </div>
+</div>
+<!-- END image POPUP -->
+
+
+
 	<!-- Content Wrapper. Contains page content -->
 	<div class="content-wrapper">
 		<section class="content">
@@ -130,6 +155,7 @@
 					                	foreach ($files as $file) {
 					                	$file_url = WEBSITE."files/document/".$file["sgf_file"];
 					                	$file_url_dir = DIR."files/document/".$file["sgf_file"];
+					                	$file_idx = $file["sgf_idx"];
 					                	$filesize = filesize($file_url_dir);
 
 					                	if(in_array("pdf", $attach_format)){
@@ -138,11 +164,11 @@
 											<span class="mailbox-attachment-icon"><i class="fa fa-file-pdf-o"></i></span>
 
 											<div class="mailbox-attachment-info">
-												<a href="#" class="mailbox-attachment-name"><i class="fa fa-file-pdf-o"></i> Document PDF</a>
+												<a href="<?=$file_url?>" target="_blank" class="mailbox-attachment-name"><i class="fa fa-file-pdf-o"></i> Document PDF</a>
 												<span class="mailbox-attachment-size">
 												<?php echo filesizeconvert::byt($filesize); ?>
-												<a href="#" class="btn btn-default btn-xs pull-right"><i class="fa fa-times-circle"></i></a>
-												<a href="#" class="btn btn-default btn-xs pull-right" style="margin-right:5px"><i class="fa fa-cloud-download"></i></a>
+												<a href="javascript:void(0)" class="btn btn-default btn-xs pull-right delete-document" data-imageidx="<?=$file_idx?>"><i class="fa fa-times-circle"></i></a>
+												<a href="<?=$file_url?>" target="_blank" class="btn btn-default btn-xs pull-right" style="margin-right:5px"><i class="fa fa-cloud-download"></i></a>
 												</span>
 											</div>
 										</li>
@@ -156,8 +182,8 @@
 													<a href="#" class="mailbox-attachment-name"><i class="fa fa-camera"></i> Photo</a>
 													<span class="mailbox-attachment-size">
 													<?php echo filesizeconvert::byt($filesize); ?>
-													<a href="#" class="btn btn-default btn-xs pull-right"><i class="fa fa-times-circle"></i></a>
-													<a href="#" class="btn btn-default btn-xs pull-right" style="margin-right:5px"><i class="fa fa-eye"></i></a>
+													<a href="javascript:void(0)" class="btn btn-default btn-xs pull-right delete-document" data-imageidx="<?=$file_idx?>"><i class="fa fa-times-circle"></i></a>
+													<a href="javascript:void(0)" data-imagesrc="<?=$file_url?>" class="btn btn-default btn-xs pull-right loadimagesrc" style="margin-right:5px"><i class="fa fa-eye"></i></a>
 													</span>
 												</div>
 											</li>
@@ -168,11 +194,11 @@
 												<span class="mailbox-attachment-icon"><i class="fa fa-file"></i></span>
 
 												<div class="mailbox-attachment-info">
-													<a href="#" class="mailbox-attachment-name"><i class="fa fa-file"></i> Document</a>
+													<a href="<?=$file_url?>" target="_blank" class="mailbox-attachment-name"><i class="fa fa-file"></i> Document</a>
 													<span class="mailbox-attachment-size">
 													<?php echo filesizeconvert::byt($filesize); ?>
-													<a href="#" class="btn btn-default btn-xs pull-right"><i class="fa fa-times-circle"></i></a>
-													<a href="#" class="btn btn-default btn-xs pull-right" style="margin-right:5px"><i class="fa fa-cloud-download"></i></a>
+													<a href="javascript:void(0)" class="btn btn-default btn-xs pull-right delete-document" data-imageidx="<?=$file_idx?>"><i class="fa fa-times-circle"></i></a>
+													<a href="<?=$file_url?>" target="_blank" class="btn btn-default btn-xs pull-right" style="margin-right:5px"><i class="fa fa-cloud-download"></i></a>
 													
 													</span>
 												</div>

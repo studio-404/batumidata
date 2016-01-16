@@ -121,6 +121,28 @@ class ajax extends connection{
 			exit();
 		}
 
+		if(Input::method("POST","deleteGalleryItem")=="true" && is_numeric(Input::method("POST","i"))){
+			$sql = 'SELECT `idx`,`file` FROM `studio404_gallery_file` WHERE `idx`=:idx';
+			$prepare = $conn->prepare($sql); 
+			$prepare->execute(array(
+				":idx"=>Input::method("POST","i")
+			));
+			if($prepare->rowCount() > 0){
+				$fecth = $prepare->fetch(PDO::FETCH_ASSOC);
+				$getFile = DIR.$fecth['file']; 
+				if(file_exists($getFile)){
+					@unlink($getFile); 
+				}
+				$update = 'UPDATE `studio404_gallery_file` SET `status`=:status WHERE `idx`=:idx';
+				$prepareup = $conn->prepare($update);
+				$prepareup->execute(array(
+					":idx"=>$fecth['idx'], 
+					":status"=>1
+				));
+				echo "Done";
+			}
+		}
+
 		if(Input::method("POST","removeUnpublished")=="true" && Input::method("POST","i")){
 			$sql = 'UPDATE `studio404_module_item` SET `status`=1 WHERE `idx`=:idx';
 			$prepare = $conn->prepare($sql); 

@@ -78,11 +78,10 @@ echo $title;
 <?php 
 /* captcha code generation */
 $_SESSION['protect_x'] = uid::captcha(2).ustring::random(2); 
-include("login.php");
-include("register.php");
-include("recover_password.php");
-include("message.php");
-include("addcertificate.php");
+// include("login.php");
+// include("register.php");
+// include("recover_password.php");
+// include("message.php");
 ?>
 <center>Website Is Under Development</center>
 <header id="header" class="container-fluid" style="padding:0;">
