@@ -152,24 +152,24 @@ function editInputFileElement(e){
 	/* label */
 	_input += '<div class="form-group"><label>Element Label:</label><input type="text" class="form-control" value="'+getElemLabel+'" onkeyup="bindLabel(this, \''+uniqueClass+'\')" /></div>';
 	/* Name */
-	_input += '<div class="form-group"><label>Element Name:</label><input type="text" class="form-control" value="'+getElemName+'" onkeyup="bindName(this, \''+uniqueClass+'\')" /></div>';
+	_input += '<div class="form-group"><label>Element Name: (Unique *)</label><input type="text" class="form-control" value="'+getElemName+'" onkeyup="bindName(this, \''+uniqueClass+'\')" /></div>';
 	/* File Format */
 	_input += '<div class="form-group"><label>File Format: <font size="1">(Seperate value by comma)</font></label><input type="text" class="form-control" value="'+getElemFileformat+'" onkeyup="bindFormat(this, \''+uniqueClass+'\')" /></div>';
 	
 	/* Database attach */
-	_input += '<div class="form-group"><label>Element Database</label>';
-	_input += '<select class="form-control" onchange="bindDatabase(this, \''+uniqueClass+'\')">';
-	var db = $(".database-column-list li");
-	for(var x = 0; x<=(db.length-1); x++){
-		var valdb = db.eq(x).text().replace(/"/g, '').replace(/'/g, '').replace(/#/g, '');
-		if(getElemDatabase==valdb){
-			_input += '<option value="'+valdb+'" selected="selected">'+valdb+'</option>';
-		}else{
-			_input += '<option value="'+valdb+'">'+valdb+'</option>';
-		}
-	}
-	_input += '</select>';
-	_input += '</div>';
+	// _input += '<div class="form-group"><label>Element Database</label>';
+	// _input += '<select class="form-control" onchange="bindDatabase(this, \''+uniqueClass+'\')">';
+	// var db = $(".database-column-list li");
+	// for(var x = 0; x<=(db.length-1); x++){
+	// 	var valdb = db.eq(x).text().replace(/"/g, '').replace(/'/g, '').replace(/#/g, '');
+	// 	if(getElemDatabase==valdb){
+	// 		_input += '<option value="'+valdb+'" selected="selected">'+valdb+'</option>';
+	// 	}else{
+	// 		_input += '<option value="'+valdb+'">'+valdb+'</option>';
+	// 	}
+	// }
+	// _input += '</select>';
+	// _input += '</div>';
 
 	/* Maltiple */
 	if(getElemMultiple=="yes"){ var y2 = 'selected="selected"'; var n2 = ''; }

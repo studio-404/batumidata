@@ -408,6 +408,109 @@ $(document).on("click","#add-catalogue-item-close",function(){
 	});
 });
 
+/* EDIT start */
+$(document).on("click","#edit-catalogue-item",function(){
+	var dbcolumn = '';
+	var typeArray = new Array();
+	var valueArray = new Array();
+	var nameArray = new Array();
+	var columnArray = new Array();
+	var checkedArray = new Array();
+	var importantArray = new Array();
+	var mainpagecategory = $("#mainpagecategory").val();
+
+	$(".catalog-add-form-data .form-input").each(function(){
+		$(".overlay-loader").fadeIn("slow");
+		var type = $(this).attr("data-type"); 
+		if(type=="text"){
+			valueArray.push($(this).val());
+			typeArray.push($(this).attr("data-type"));
+			nameArray.push($(this).attr("data-name"));
+			importantArray.push($(this).attr("data-important"));
+			dbcolumn = $(this).attr("data-attach").split(" ");
+			columnArray.push(dbcolumn[0]);
+			checkedArray.push("no");
+		}else if(type=="select"){
+			valueArray.push($(this).val());
+			typeArray.push($(this).attr("data-type"));
+			nameArray.push($(this).attr("data-name"));
+			importantArray.push($(this).attr("data-important"));
+			dbcolumn = $(this).attr("data-attach").split(" ");
+			columnArray.push(dbcolumn[0]);
+			checkedArray.push("no");
+		}else if(type=="checkbox"){
+			valueArray.push($(this).val());
+			nameArray.push($(this).attr("data-name"));
+			typeArray.push($(this).attr("data-type"));
+			importantArray.push($(this).attr("data-important"));
+			dbcolumn = $(this).attr("data-attach").split(" ");
+			columnArray.push(dbcolumn[0]);
+			if($(this).is(':checked')){
+				checkedArray.push("yes");	
+			}else{
+				checkedArray.push("no");	
+			}			
+		}else if(type=="file"){
+			
+		}else if(type=="date"){
+			valueArray.push($(this).val());
+			nameArray.push($(this).attr("data-name"));
+			typeArray.push($(this).attr("data-type"));
+			importantArray.push($(this).attr("data-important"));
+			dbcolumn = $(this).attr("data-attach").split(" ");
+			columnArray.push(dbcolumn[0]);
+			checkedArray.push("no");
+		}else if(type=="textarea"){
+			valueArray.push($(this).val());
+			typeArray.push($(this).attr("data-type"));
+			nameArray.push($(this).attr("data-name"));
+			importantArray.push($(this).attr("data-important"));
+			dbcolumn = $(this).attr("data-attach").split(" ");
+			columnArray.push(dbcolumn[0]);
+			checkedArray.push("no");
+		}
+	});
+	var param = urlParamiters();
+	var l = $("#system-language").text();
+	var dlang = (l=="EN") ? "1" : "2";
+	var dlang2 = (l=="EN") ? "ge" : "en";
+	$.post(AJAX_REQUEST_URL, { 
+		editCatalogItem:true, 
+		editidx:param["idx"],
+		edit_language:dlang,
+		ta:JSON.stringify(typeArray), 
+		va:JSON.stringify(valueArray), 
+		na:JSON.stringify(nameArray), 
+		ca:JSON.stringify(columnArray), 
+		ca2:JSON.stringify(checkedArray), 
+		ia:JSON.stringify(importantArray), 
+		macat:JSON.stringify(mainpagecategory) 
+	}, function(result){
+		$(".overlay-loader").fadeOut("slow");
+		if(result=="Done"){
+			$("#monacemisdamatebaform").append('<input type="hidden" name="gallery_idx_post" value="'+param["idx"]+'" />');
+			var file_length = $(".catalog-add-form-data input[type='file']").length;
+			if(file_length > 0){
+				$("#monacemisdamatebaform").submit();
+			}else{
+				if(l=="EN"){
+					$(".form-message-output").html("<p>"+MESSAGE_OPERATION_DONE_GE+"</p>").fadeIn("slow");
+				}else{
+					$(".form-message-output").html("<p>"+MESSAGE_OPERATION_DONE_EN+"</p>").fadeIn("slow");
+				}
+				
+				var gotourl = SYSTEM_WELCOME_PAGE+"/"+dlang2+"/monacemis-redaqtireba?parent="+mainpagecategory+"&idx="+param["idx"]+"&back="+param["back"];
+				location.href = gotourl; 
+			}			
+			
+		}else{
+			alert("Error: 3001");
+		}
+	});
+});
+/* EDIT end */
+
+
 $(document).on("click",".makemedouble",function(){
 	var doubleid = $(this).attr("data-doubleid"); 
 	var filename = $(this).attr("data-filename"); 

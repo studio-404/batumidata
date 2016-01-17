@@ -19,6 +19,7 @@ class labellists extends connection{
 		$view = ($idx == "") ? Input::method('GET','view') : $idx;
 		$sql = 'SELECT 
 		`studio404_gallery_file`.`idx` AS sgf_idx, 
+		`studio404_gallery_file`.`gallery_idx` AS sgf_gallery_idx, 
 		`studio404_gallery_file`.`file` AS sgf_file 
 		FROM 
 		`studio404_gallery_attachment`, `studio404_gallery_file` 
@@ -39,6 +40,28 @@ class labellists extends connection{
 		));
 		$fetch = $prepare->fetchAll(PDO::FETCH_ASSOC);
 		return $fetch;
+	}
+
+	public function loadpictures_gallery_idx($c){
+		$conn = $this->conn($c);
+		$idx = Input::method('GET','idx');
+		$sql = 'SELECT 
+		`studio404_gallery_attachment`.`idx` AS sga_idx 
+		FROM 
+		`studio404_gallery_attachment`
+		WHERE 
+		`studio404_gallery_attachment`.`connect_idx`=:connect_idx AND 
+		`studio404_gallery_attachment`.`status`!=1 AND 
+		`studio404_gallery_attachment`.`lang`=:lang
+		';
+		$prepare = $conn->prepare($sql); 
+		$prepare->execute(array(
+			":connect_idx"=>$idx, 
+			":lang"=>LANG_ID 
+		));
+		$fetch = $prepare->fetch(PDO::FETCH_ASSOC);
+		$out = $fetch["sga_idx"];
+		return $out;
 	}
 
 }

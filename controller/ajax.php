@@ -122,23 +122,28 @@ class ajax extends connection{
 		}
 
 		if(Input::method("POST","deleteGalleryItem")=="true" && is_numeric(Input::method("POST","i"))){
-			$sql = 'SELECT `idx`,`file` FROM `studio404_gallery_file` WHERE `idx`=:idx';
+			$sql = 'SELECT `file` FROM `studio404_gallery_file` WHERE `idx`=:idx';
 			$prepare = $conn->prepare($sql); 
 			$prepare->execute(array(
 				":idx"=>Input::method("POST","i")
 			));
 			if($prepare->rowCount() > 0){
+				$update = 'UPDATE `studio404_gallery_file` SET `status`=:status WHERE `idx`=:idx';
+				$prepareup = $conn->prepare($update);
+				$prepareup->execute(array(
+					":idx"=>Input::method("POST","i"), 
+					":status"=>1
+				));
+
 				$fecth = $prepare->fetch(PDO::FETCH_ASSOC);
 				$getFile = DIR.$fecth['file']; 
 				if(file_exists($getFile)){
 					@unlink($getFile); 
 				}
-				$update = 'UPDATE `studio404_gallery_file` SET `status`=:status WHERE `idx`=:idx';
-				$prepareup = $conn->prepare($update);
-				$prepareup->execute(array(
-					":idx"=>$fecth['idx'], 
-					":status"=>1
-				));
+
+				$insert_notification = new insert_notification();
+				$insert_notification->insert($c,$_SESSION["batumi_id"],"ფოტოს წაშლა ::".Input::method("POST","i"),"Delete Photo ::".Input::method("POST","i"));
+
 				echo "Done";
 			}
 		}
@@ -150,6 +155,13 @@ class ajax extends connection{
 			$prepare->execute(array(
 				":idx"=>$idx
 			));
+
+			$sql2 = 'UPDATE `studio404_gallery_attachment` SET `status`=1 WHERE `connect_idx`=:idx';
+			$prepare2 = $conn->prepare($sql2); 
+			$prepare2->execute(array(
+				":idx"=>$idx
+			));
+
 			$files = glob(DIR.'_cache/*'); // get all file names
 			foreach($files as $file){ // iterate files
 				if(is_file($file))
@@ -314,6 +326,68 @@ class ajax extends connection{
 			echo $gallery_maxidx;
 			exit();
 		}
+
+
+		/* EDIT start */
+		if(Input::method("POST","editCatalogItem")=="true" && Input::method("POST","editidx")){
+			if(!isset($_SESSION["batumi_id"])){
+				$_SESSION["batumi_id"] = 0;
+			}
+			$editidx = Input::method("POST","editidx");
+			$macat = json_decode(Input::method("POST","macat"),true);
+			$types = json_decode(Input::method("POST","ta"),true);
+			$values = json_decode(Input::method("POST","va"),true);
+			$names = json_decode(Input::method("POST","na"),true);
+			$db_columns = json_decode(Input::method("POST","ca"),true);
+			$checkbox_values = json_decode(Input::method("POST","ca2"),true);
+			$importent = json_decode(Input::method("POST","ia"),true);
+
+		
+			$columns_and_data = '';
+			$xx = 0;
+			foreach($db_columns as $val){
+				if($types[$xx]=="text" || $types[$xx]=="select" || $types[$xx]=="textarea"){
+					$columns_and_data .= '`'.$val.'`="'.$values[$xx].'", ';
+				}else if($types[$xx]=="checkbox"){
+					if($checkbox_values[$xx]=="yes"){
+						$checkboxdata_value[$val][] = $values[$xx];
+					}
+				}else if($types[$xx]=="file"){
+					$columns_and_data .= '`'.$val.'`="'.$values[$xx].'", ';
+				}else if($types[$xx]=="date"){
+					$timestamp = strtotime(str_replace('/', '-', $values[$xx])); 
+					$columns_and_data .= '`'.$val.'`="'.$timestamp.'", ';
+				}
+				$xx++;
+			}
+			
+			if(is_array($checkboxdata_value)){
+				foreach($checkboxdata_value as $key => $value){
+					$columns_and_data .= '`'.$key.'`="'.implode(",",$checkboxdata_value[$key]).'", ';
+				}
+			}
+
+			$update = 'UPDATE `studio404_module_item` SET '.$columns_and_data.' `cataloglist`="'.implode(",",$macat).'" WHERE `idx`=:idx AND `lang`=:lang';
+			$prepare = $conn->prepare($update); 
+			$prepare->execute(array(
+				":lang"=>Input::method("POST","edit_language"), 
+				":idx"=>$editidx 
+			));
+
+			$files = glob(DIR.'_cache/*'); // get all file names
+			foreach($files as $file){ // iterate files
+				if(is_file($file))
+				@unlink($file); // delete file
+			}
+				
+			$insert_notification = new insert_notification();
+			$insert_notification->insert($c,$_SESSION["batumi_id"],"მონაცემის განახლება ::".$editidx,"Edit Data ::".$editidx);
+
+			echo "Done";
+			exit();
+		}
+		/* EDIT end */
+
 
 		if(Input::method("POST","adddatabasecolumn")=="true" && Input::method("POST","a") && Input::method("POST","ct") && Input::method("POST","cn")){
 			$arrayType = array("int","varchar","text","longtext"); 

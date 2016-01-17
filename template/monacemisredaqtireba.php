@@ -41,9 +41,13 @@
                     	<?php
                     	$labellists = new labellists();
 						$data["labellists"] = $labellists->loadlabels($c);
-
+						echo Input::method("POST","galleryidxpost");
                     	?>
                    <form action=""  method="post" enctype="multipart/form-data" name="monacemisdamatebaform" id="monacemisdamatebaform">
+					<?php 
+					$sga_idx = $labellists->loadpictures_gallery_idx($c); 
+					?>
+	               <input type="hidden" name="galleryidxpost" value="<?=$sga_idx?>" /> 
 					<?php if($data["parent_title"]!="" && Input::method("GET","idx")) : ?>
 						<div class="form-group">
 						<label><?=$data["language_data"]["val32"]?>: <font color="red">*</font></label>
@@ -128,6 +132,7 @@
 	                            	?>
 	                            	<label><?=$form["label"]?>: <?=($multiple=="multiple") ? '<a href="javascript:void(0)" class="makemedouble" data-doubleid="form-name-'.$file_count.'" data-filename="file['.$file_count.'][]" data-fileaccept="'.$accept.'"><i class="glyphicon glyphicon-plus-sign"></i></a>' : ''?><?=($form["important"]=="yes") ? '<font color="red">*</font>' : ''?> ( <?=$form["attach_format"]?> )</label> <!-- Fisrname & lastname -->
 	                        		<input type="hidden" name="file" value="true" />
+	                        		
 	                        		<input type="hidden" name="filenumber[<?=$file_count?>]" value="<?=$file_count?>" />
 	                        		<input type="hidden" name="form-name-<?=$file_count?>" value="<?=$form["name"]?>" />
 	                        		<input type="hidden" name="form-attach-<?=$file_count?>" value="<?=$form["attach_column"]?>" />
@@ -144,11 +149,10 @@
 	                        	</div>
 	                        	<?php
 	                        	$files = $labellists->loadpictures($c,$form["name"],Input::method("GET","idx")); 
-		                    	// echo "<pre>"; sgf_idx, sgf_file
-		                    	// print_r($files);
-		                    	// echo "</pre>";
+	                        	
 		                    	$attach_format = explode(",",$form['attach_format']);
 	                        	?>
+	                        	
 	                        	<div class="post">
 					                <ul class="mailbox-attachments clearfix">
 					                	<?php
@@ -161,6 +165,7 @@
 					                	if(in_array("pdf", $attach_format)){
 					                	?>
 										<li>
+											<input type="hidden" name="form-galleryidx-<?=$file_count?>" value="<?=$file["sgf_gallery_idx"]?>" />
 											<span class="mailbox-attachment-icon"><i class="fa fa-file-pdf-o"></i></span>
 
 											<div class="mailbox-attachment-info">
