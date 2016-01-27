@@ -49,10 +49,19 @@
                       $attach_column = explode(" ",$value['attach_column']);
 
                       if($value['type']!="file"){
-                        echo '<tr>';
-                        echo '<th>'.$value["label"].'</th>';
-                        echo '<td>'.$data["fetch"][$attach_column[0]].'</td>';
-                        echo '</tr>';
+                        if($value["type"]=="date"){
+                          echo '<tr>';
+                          echo '<th>'.$value["label"].'</th>';
+                          echo '<td>';
+                          echo date("d/m/Y",$data["fetch"][$attach_column[0]]);
+                          echo '</td>';
+                          echo '</tr>';
+                        }else{
+                          echo '<tr>';
+                          echo '<th>'.$value["label"].'</th>';
+                          echo '<td>'.$data["fetch"][$attach_column[0]].'</td>';
+                          echo '</tr>';
+                        }
                       }else if($value["type"]=="file" && ($value['attach_format']=="png" || $value['attach_format']=="gif" || $value['attach_format']=="jpg")){ 
                         $files = $labellists->loadpictures($c,$value["name"]); 
                         echo '<tr>';

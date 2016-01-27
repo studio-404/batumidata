@@ -30,10 +30,32 @@
           $obj  = new url_controll(); // url controlls
           $slug_second = $obj->url("segment",2);
           $slug_third = $obj->url("segment",2)."/".$obj->url("segment",3);
+
+          if($slug_third=="mailbox/compose" || $slug_third=="mailbox/inbox" || $slug_third=="mailbox/sent" || $slug_third=="mailbox/draft" || $slug_third=="mailbox/trash"){
+            $display ='display:block';
+            $active =' active';
+          }else{
+            $display ='display:none';
+            $active ='';
+          }
           ?>
           <ul class="sidebar-menu">
             <!-- Optionally, you can add icons to the links -->
             <li class="<?=($slug_second=="welcome-system") ? 'active' : ''?>"><a href="<?=WEBSITE.LANG?>/<?=$c["welcome.page.class"]?>"><i class="fa fa-home"></i> <span><?=(LANG=="ge") ? "მთავარი" : "Home"?></span></a></li>
+            <li class="treeview<?=$active?>">
+              <a href="#">
+                <i class="fa fa-envelope"></i>
+                <span><?=$data["language_data"]["val94"]?></span>
+                <i class="fa fa-angle-left pull-right"></i>
+              </a>
+              <ul class="treeview-menu" style="<?=$display?>">
+                <li<?=($slug_third=="mailbox/compose") ? ' class="active"' : ''?>><a href="<?=WEBSITE.LANG?>/mailbox/compose"><?=$data["language_data"]["val99"]?></a></li>
+                <li<?=($slug_third=="mailbox/inbox") ? ' class="active"' : ''?>><a href="<?=WEBSITE.LANG?>/mailbox/inbox"><?=$data["language_data"]["val95"]?></a></li>
+                <li<?=($slug_third=="mailbox/sent") ? ' class="active"' : ''?>><a href="<?=WEBSITE.LANG?>/mailbox/sent"><?=$data["language_data"]["val96"]?></a></li>
+                <li<?=($slug_third=="mailbox/draft") ? ' class="active"' : ''?>><a href="<?=WEBSITE.LANG?>/mailbox/draft"><?=$data["language_data"]["val97"]?></a></li>
+                <li<?=($slug_third=="mailbox/trash") ? ' class="active"' : ''?>><a href="<?=WEBSITE.LANG?>/mailbox/trash"><?=$data["language_data"]["val98"]?></a></li>
+              </ul>
+            </li>
             <?php
             $x = 0;
             foreach ($data["welcomepage_categories"]["item"]["title"] as $val) {

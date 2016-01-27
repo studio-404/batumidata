@@ -38,6 +38,100 @@
 
 		<section class="content">
 			<div class="row">
+
+            <div class="col-md-12">
+              <div class="box box-primary <?=(Input::method("GET","filter") ? '' : 'collapsed-box')?>">
+            <div class="box-header with-border">
+              <h3 class="box-title"><?=$data["language_data"]["val92"]?></h3>
+              <div class="box-tools pull-right">
+                <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="<?=(Input::method("GET","filter") ? 'fa fa-minus' : 'fa fa-plus')?>"></i></button>
+              </div>
+            </div>
+            <!-- /.box-header -->
+            <!-- form start -->
+            <form role="form">
+              <div class="box-body">
+                <?php
+                $select_form = new select_form();
+                $file_count = 0;
+                foreach($data["catalog_form"] as $form){
+                  $at = explode(" ", $form["attach_column"]);
+                  if($form["type"]=="text"){
+                  ?>
+                      <div class="form-group">
+                        <label><?=$form["label"]?>: </label> <!-- Fisrname & lastname -->
+                        <input class="form-control form-input-seach" type="text" placeholder="<?=$form["placeholder"]?>" data-name="<?=$form["name"]?>" data-attach="<?=$form["attach_column"]?>" data-type="text" data-important="<?=$form["important"]?>" value="<?=(Input::method("GET",$at[0]) ? Input::method("GET",$at[0]) : '')?>" />
+                      </div>
+                    <?php
+                    }else if($form["type"]=="select"){
+                      ?>
+                      <div class="form-group">
+                        <label><?=$form["label"]?>: </label> <!-- Fisrname & lastname -->
+                        <select class="form-control form-input-seach" data-name="<?=$form["name"]?>" data-attach="<?=$form["attach_column"]?>" data-important="<?=$form["important"]?>" data-type="select">
+                        <option value=""><?=$data["language_data"]["val93"]?></option>
+                      <?php
+                      $fetchx = $select_form->select_options($c,$form["id"],Input::method("GET","idx"));
+                      foreach ($fetchx as $value) {
+                        if(Input::method("GET",$at[0])==$value["text"]){
+                          $sel = 'selected="selected"';
+                        }else{ $sel = ''; }
+                        echo '<option value="'.htmlentities($value["text"]).'" '.$sel.'>'.$value["text"].'</option>';
+                      }
+                      ?>
+                    </select>
+                        </div>
+                      <?php
+                    }else if($form["type"]=="checkbox"){
+
+                      ?>
+                      <div class="form-group">
+                      <label><?=$form["label"]?>: </label> <!-- Fisrname & lastname -->
+                      <?php
+                      $fetchx = $select_form->select_options($c,$form["id"],Input::method("GET","idx"));
+                      foreach ($fetchx as $value) {
+
+                        if(isset($_GET[$at[0]]) && !empty($_GET[$at[0]]) && in_array($value["text"], $_GET[$at[0]])){
+                          $chk = 'checked="checked"';
+                        }else{ $chk = ''; }
+
+                        echo '<div class="checkbox">';
+                        echo '<label><input type="checkbox" class="form-input-seach" data-name="'.$form["name"].'" data-attach="'.$form["attach_column"].'" data-important="'.$form["important"].'" data-type="checkbox" value="'.htmlentities($value["text"]).'" '.$chk.' />'.$value["text"].'</label>';
+                        echo '</div>';
+                      }
+                      ?>                        
+                      </div>
+                      <?php
+                    }else if($form["type"]=="date"){
+                      if(Input::method("GET",$at[0])){
+                        $v = str_replace("-","/",Input::method("GET",$at[0]));
+                        if(validatedate::val($v,"d/m/Y")){ // date
+                          $va = $v;
+                        }else{
+                          $va = '';
+                        }
+                      }else{
+                        $va = '';
+                      }
+                      ?>
+                      <div class="form-group">
+                          <label><?=$form["label"]?>: </label> <!-- Fisrname & lastname -->
+                        <input type="text" class="form-control form-input-seach" data-inputmask="'alias': 'dd/mm/yyyy'" data-mask="" data-name="<?=$form["name"]?>" data-attach="<?=$form["attach_column"]?>" data-important="<?=$form["important"]?>" data-type="date" value="<?=$va?>" />
+                      </div>
+                      <?php
+                    }
+                  }
+                  ?>
+              </div>
+              <!-- /.box-body -->
+
+              <div class="box-footer">
+                <button type="button" class="btn btn-primary filter-data"><?=$data["language_data"]["val3"]?></button>
+              </div>
+            </form>
+          </div>
+            </div>
+
+
             <div class="col-xs-12">
               <div class="box">
                    <div class="mailbox-controls">

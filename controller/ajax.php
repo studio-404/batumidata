@@ -104,7 +104,7 @@ class ajax extends connection{
             ?>
             <div class="form-group">
 	        <label><?=$form["label"]?>: <?=($form["important"]=="yes") ? '<font color="red">*</font>' : ''?></label> <!-- Fisrname & lastname -->
-	        <input type="text" class="form-control form-input" data-inputmask="'alias': 'dd/mm/yyyy'" data-mask="" data-name="<?=$form["name"]?>" data-attach="<?=$form["attach_column"]?>" data-important="<?=$form["important"]?>" data-type="date" value="" />
+	        <input type="text" class="form-control form-input" data-inputmask="'alias': 'dd/mm/yyyy'" data-mask="" data-name="<?=$form["name"]?>" data-attach="<?=$form["attach_column"]?>" data-important="<?=$form["important"]?>" data-type="date" value="dd/mm/YYYY" />
 	        </div>
             <?php
             }else if($form["type"]=="textarea"){
@@ -145,6 +145,37 @@ class ajax extends connection{
 				$insert_notification->insert($c,$_SESSION["batumi_id"],"ფოტოს წაშლა ::".Input::method("POST","i"),"Delete Photo ::".Input::method("POST","i"));
 
 				echo "Done";
+			}
+		}
+
+		if(Input::method("POST","sendmessage")=="true" && Input::method("POST","u") && Input::method("POST","s") && Input::method("POST","m") && Input::method("POST","a")){
+			$u = json_decode(Input::method("POST","u"),true);
+			$count = count($u);
+			if($count>0){	
+				$attach = (Input::method("POST","a")=="true") ? 1 : 0;
+				$draft = (Input::method("POST","d")=="yes") ? 1 : 0;
+				$sql = 'INSERT INTO `studio404_messages` SET `date`=:date, `ip`=:ip, `fromuser`=:fromuser, `tousers`=:tousers, `subject`=:subject, `text`=:textx, `attchment`=:attchment, `draft`=:draft';
+				$prepare = $conn->prepare($sql);
+				$prepare->execute(array(
+					":date"=>time(), 
+					":ip"=>get_ip::ip(), 
+					":fromuser"=>$_SESSION["batumi_id"], 
+					":tousers"=>implode(",",$u), 
+					":subject"=>Input::method("POST","s"), 
+					":textx"=>Input::method("POST","m"), 
+					":draft"=>$draft, 
+					":attchment"=>$attach
+				));
+
+				$files = glob(DIR.'_cache/*'); // get all file names
+				foreach($files as $file){ // iterate files
+					if(is_file($file))
+					@unlink($file); // delete file
+				}
+
+				echo $conn->lastInsertId();
+			}else{
+				echo "Error";
 			}
 		}
 
@@ -265,9 +296,7 @@ class ajax extends connection{
 				}
 				$xx++;
 			}
-			// echo '<pre>';
-			// print_r($values);
-			// echo '</pre>';
+			
 			if(is_array($checkboxdata_value)){
 				foreach($checkboxdata_value as $key => $value){
 					$columns_and_data .= '`'.$key.'`="'.implode(",",$checkboxdata_value[$key]).'", ';
@@ -278,7 +307,7 @@ class ajax extends connection{
 			foreach ($c['languages.num.array'] as $l) {
 				$insert = 'INSERT INTO `studio404_module_item` SET '.$columns_and_data.' `cataloglist`="'.implode(",",$macat).'", `insert_ip`="'.get_ip::ip().'", `insert_admin`="'.$_SESSION["batumi_id"].'", `position`="'.$maxposition.'", `idx`="'.$maxidx.'", `visibility`=1, `lang`="'.$l.'", `uid`="'.$u.'", `date`="'.time().'", `expiredate`="'.time().'", `module_idx`="25" ';
 				$query = $conn->query($insert);
-
+				
 				// insert gallery
 				$sql_media = 'INSERT INTO `studio404_gallery` SET 
 				`idx`=:idx, 

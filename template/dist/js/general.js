@@ -31,6 +31,49 @@ $(document).on("change",".select-catalog",function(){
 	}
 });
 
+$(document).on("click",".filter-data",function(){
+	var param = urlParamiters();
+	var type = new Array();
+	var val = new Array();
+	var attach = new Array();
+	var att = '';
+	$(".form-input-seach").each(function(){
+		if($(this).attr("data-type")=="text" || $(this).attr("data-type")=="select"){
+			att = $(this).attr("data-attach").split(" ");
+			type.push($(this).attr("data-type"));
+			attach.push(att[0]);
+			val.push($(this).val());
+		}else if($(this).attr("data-type")=="date"){
+			att = $(this).attr("data-attach").split(" ");
+			type.push($(this).attr("data-type"));
+			attach.push(att[0]);
+			var valuex = replaceAll($(this).val(), "/", "-");
+			val.push(valuex);
+		}else if($(this).attr("data-type")=="checkbox"){
+			if($(this).is(':checked')){
+				att = $(this).attr("data-attach").split(" ");
+				type.push($(this).attr("data-type"));
+				attach.push(att[0]);
+				val.push($(this).val());
+			}
+		}
+	});
+	var url = "?idx="+param["idx"]+"&filter=true";
+	for (var i = 0; i < type.length; i++) {
+		if(type[i]=="text" || type[i]=="date" || type[i]=="select"){
+			url += "&"+attach[i]+"=" + encodeURIComponent(val[i]);
+		}else{
+			url += "&"+attach[i]+"[]=" + encodeURIComponent(val[i]);
+		}
+	}
+	console.log(url);
+	location.href = url;	
+});
+
+function replaceAll(str, find, replace) {
+  return str.replace(new RegExp(find, 'g'), replace);
+}
+
 $(document).on("click","#add-catalogue-nouser",function(){
 	var mcat = $("#mcat").val();
 	var mainpagecategory = new Array(); 
@@ -104,6 +147,7 @@ $(document).on("click","#add-catalogue-nouser",function(){
 	}, function(result){
 		$(".overlay-loader").fadeOut("slow");
 		if(result!=""){
+			console.log(result);
 			$(".insert-form").html('<p>მონაცემი წარმატებით დაემატა !</p>');
 			window.scrollTo(0,0);			
 		}else{
@@ -1384,6 +1428,95 @@ $(document).on("click",".gotoUrl",function(){
 	var g = $(this).data("goto");
 	location.href = g;
 });
+
+$(document).on("click",".sendmessage", function(){
+	var LANG = $(this).attr("data-dlang");
+	var selectusers = $("#selectusers").val();
+	var subject = $("#subject").val();
+	var draft = $(this).attr("data-draft");
+	var message = tinyMCE.activeEditor.getContent();
+
+	var attach = ($("#attach").val()=="false") ? "zero" : "true";
+	$(".overlay-loader").fadeIn("slow");	
+	if(selectusers=="" || typeof(selectusers)=="undefined" || selectusers==null){
+		if(LANG=="ge"){
+			$(".messagebodytext").html("<p>გთხოვთ აირჩიოთ მომხმარებელი !</p>");
+		}else{
+			$(".messagebodytext").html("<p>Please choose user !</p>");
+		}
+		$(".overlay-loader").fadeOut("slow");
+		$("#bs-example-xx").modal("show");
+	}else if(subject=="" || typeof(subject)=="undefined" || subject==null){
+		if(LANG=="ge"){
+			$(".messagebodytext").html("<p>სათაურის ველი სავალდებულოა !</p>");
+		}else{
+			$(".messagebodytext").html("<p>Subject field is required !</p>");
+		}
+		$(".overlay-loader").fadeOut("slow");
+		$("#bs-example-xx").modal("show");
+	}else if(message=="" || typeof(message)=="undefined" || message==null){
+		if(LANG=="ge"){
+			$(".messagebodytext").html("<p>შეტყობინების ველი სავალდებულოა !</p>");
+		}else{
+			$(".messagebodytext").html("<p>Message field is required !</p>");
+		}
+		$(".overlay-loader").fadeOut("slow");
+		$("#bs-example-xx").modal("show");
+	}else{
+		$.post(AJAX_REQUEST_URL, { sendmessage:true, u:JSON.stringify(selectusers), s:subject, m:message, a:attach, d:draft }, function(result){
+			if(result=="Error" || result==""){
+				if(LANG=="ge"){
+					$(".messagebodytext").html("<p>გაგზავნისას მოხდა შეცდომა !</p>");
+				}else{
+					$(".messagebodytext").html("<p>Error !</p>");
+				}
+			}else{
+				if(attach=="zero"){
+					if(LANG=="ge"){
+						$(".messagebodytext").html("<p>შეტყობინება წარმატებით გაიგზავნა !</p>");
+					}else{
+						$(".messagebodytext").html("<p>Message sent !</p>");
+					}
+
+					$('#bs-example-xx').on('hidden.bs.modal', function () {
+					 	location.href = PROTOCOL+document.domain+"/"+LANG+"/mailbox/inbox"; 
+					})
+
+					$(".overlay-loader").fadeOut("slow");
+					$("#bs-example-xx").modal("show");
+				}else{
+					$("#insert_id").val(result);
+					$("#fileupload").submit();
+				}
+			}
+		});
+	}
+});
+
+$(document).on("change", "#attachment", function(){
+	var files = $(this).get(0).files;
+	var LANG = ($("#system-language").text=="EN") ? 'ge' : 'en';
+	var xsize = 0;
+	for (i = 0; i < files.length; i++)
+	{
+		xsize += files[i].size;
+	}
+	console.log(xsize); 
+
+	if(xsize > 64000000){
+		if(LANG=="ge"){
+			$(".messagebodytext").html("<p>ფაილის / ფაილების ზომა აღემატება დასაშვებს !</p>");
+		}else{
+			$(".messagebodytext").html("<p>File / Files size is too big  !</p>");
+		}
+		$("#bs-example-xx").modal("show");
+	}else{
+		$("#attach").val("true");	
+	}
+	
+});
+
+
 
 function update_users_profile(type,dlang){
 	var namelname = $("#namelname").val(); 

@@ -50,6 +50,18 @@ class cache extends connection{
 			$cid = Input::method("GET","parent");
 			$select_form = new select_form();
 			$fetch = $select_form->form($c, $cid, LANG_ID); 
+			break;//
+			case "catalog_form":
+			$idx = Input::method("GET","idx");
+			$selectform = 'SELECT * FROM `studio404_forms` WHERE `cid`=:cid AND `filter`=:filter AND `lang`=:lang AND `status`!=:status ORDER BY `id` ASC';
+			$prepare = $conn->prepare($selectform);
+			$prepare->execute(array(
+				":cid"=>$idx, 
+				":filter"=>"yes", 
+				":lang"=>LANG_ID, 
+				":status"=>1 
+			));
+			$fetch = $prepare->fetchAll(PDO::FETCH_ASSOC);
 			break;
 			case "catalog_table_columns":
 			$sql = 'SHOW COLUMNS FROM `studio404_module_item`'; 

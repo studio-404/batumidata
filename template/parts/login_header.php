@@ -10,6 +10,8 @@
     <link rel="stylesheet" href="<?=TEMPLATE?>bootstrap/css/bootstrap.min.css?v=<?=$c['websitevertion']?>">
     <!-- Font Awesome -->
     <link rel="stylesheet" href="<?=TEMPLATE?>dist/css/font-awsome.css?v=<?=$c['websitevertion']?>">
+    <!-- daterange picker -->
+    <link rel="stylesheet" href="<?=TEMPLATE?>plugins/daterangepicker/daterangepicker-bs3.css?v=1.9.3">
     <!-- Ionicons -->
     <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css?v=<?=$c['websitevertion']?>">
     <!-- Theme style -->

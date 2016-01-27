@@ -42,6 +42,61 @@ class catalog extends connection{
 		$catalogitems = $cache->index($c,"catalogitems");
 		$data["catalogitems"] = json_decode($catalogitems,true);
 
+		$catalog_form = $cache->index($c,"catalog_form");
+		$data["catalog_form"] = json_decode($catalog_form,true);
+
+		
+		$already = array();
+		if(Input::method("GET","filter")=="true"){
+			try{
+				$searchKey = ' AND ';
+				$idx = Input::method("GET","idx");
+				foreach ($_GET as $key => $value) {
+					if($key=="idx" || $key=="filter" || $value=="" || empty($value)){ continue; }
+					if(is_array($value)){// checkbox 
+						if(!in_array($key, $already)){
+							$already[] = $key;
+							$s = '( ';
+							foreach($value as $v) {
+								$s .= 'FIND_IN_SET("'.$v.'", `studio404_module_item`.`'.$key.'`) OR ';
+							}
+							$s .= '`studio404_module_item`.`id`=0 ) AND ';
+							$searchKey .= $s;
+						}else{
+							continue;
+						}
+					}else{
+						if(validatedate::val($value,"d-m-Y")){ // date
+							$d = strtotime($value);
+							$searchKey .= '`studio404_module_item`.`'.$key.'`="'.$d.'" AND ';
+						}else{ // text, select
+							$searchKey .= '`studio404_module_item`.`'.$key.'` LIKE "%'.$value.'%" AND ';
+						}
+					}
+				}
+				$searchKey .= '`studio404_module_item`.`id` != "0" ';
+				$offset = (Input::method("GET","pn")) ? Input::method("GET","pn")-1 : 0;
+				$sw = (Input::method("GET","sw") && is_numeric(Input::method("GET","sw"))) ? Input::method("GET","sw") : 10;
+				if(!Input::method("GET","pn") || !is_numeric(Input::method("GET","pn"))){ $offset = 0; }
+				$sql = 'SELECT 
+				`studio404_module_item`.*
+				FROM `studio404_module_item` WHERE 
+				FIND_IN_SET('.Input::method("GET","idx").', `studio404_module_item`.`cataloglist`) AND 
+				`studio404_module_item`.`lang`=:lang AND 
+				`studio404_module_item`.`visibility`!=:visibility AND 
+				`studio404_module_item`.`status`!=:status '.$searchKey.' ORDER BY `studio404_module_item`.`id` DESC LIMIT '.$offset.', '.$sw;	
+				
+				$prepare = $conn->prepare($sql); 
+				$prepare->execute(array(
+					":lang"=>LANG_ID, 
+					":status"=>1, 
+					":visibility"=>1 
+				)); 
+				$data["catalogitems"] = $prepare->fetchAll(PDO::FETCH_ASSOC); 
+			}catch(Exception $e){
+			}
+		}
+
 		$sql2 = 'SELECT 
 		COUNT(`studio404_module_item`.`idx`) AS allitems
 		FROM `studio404_module_item` WHERE 

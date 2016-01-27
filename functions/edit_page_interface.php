@@ -51,7 +51,7 @@ class edit_page_interface extends connection{
 			$this->out[1] .= $this->content_form($fetch);
 			$this->out[1] .= '</div>';
 			$this->out[1] .= '<div id="tabs-3">';
-			$this->out[1] .= $this->content_images($fetch2,$c);
+			$this->out[1] .= $this->content_images($fetch,$c);
 			$this->out[1] .= '</div>';
 			$this->out[1] .= '<div id="tabs-4">';
 			$this->out[1] .= $this->content_files($fetch,$c);

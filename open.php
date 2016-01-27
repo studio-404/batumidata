@@ -64,7 +64,7 @@ function __autoload($class_name){
 
 $actual_link = "$_SERVER[REQUEST_URI]";
 
-$findme   = array('\'','~','!','@','$','^','*','(',')','{','}','[',']','|',';','<','>','\\','..');
+$findme   = array('\'','~','!','@','$','^','*','(',')','{','}','|',';','<','>','\\','..');
 foreach ($findme as $f) {
 	$pos = strpos($actual_link, $f);
 	if ($pos !== false) {

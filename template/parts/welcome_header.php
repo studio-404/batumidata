@@ -26,7 +26,25 @@
 <link rel="stylesheet" href="<?=TEMPLATE?>dist/css/AdminLTE.min.css?v=<?=$c['websitevertion']?>">
 <link rel="stylesheet" href="<?=TEMPLATE?>dist/css/skins/skin-blue.min.css?v=<?=$c['websitevertion']?>">
 <link rel="stylesheet" href="<?=TEMPLATE?>dist/css/general.css?v=<?=$c['websitevertion']?>" />
-
+<script type="text/javascript" src="<?=PLUGINS?>tinymce/js/tinymce/tinymce.min.js"></script>
+<script type="text/javascript" src="<?=PLUGINS?>tinymce/js/tinymce/plugins/placeholder/plugin.js"></script>
+<script type="text/javascript">
+    tinymce.init({
+    selector: ".tinyMce",
+    plugins: [
+      "autolink lists link image hr pagebreak",
+      "wordcount visualblocks",
+      "insertdatetime save table contextmenu directionality",
+      "paste textcolor colorpicker textpattern",
+      "code", "placeholder"
+    ],
+    toolbar1: "insertfile undo redo | styleselect | bold italic | link image | numlist | bullist | table | code | forecolor | backcolor",
+    image_advtab: true, 
+    extended_valid_elements : "iframe[src|width|height|name|align]", 
+    relative_urls : 0, 
+    remove_script_host : 0
+  });
+</script>
 <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
 <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
 <!--[if lt IE 9]>
