@@ -1062,19 +1062,23 @@ class ajax extends connection{
 		if(Input::method("POST","removemessage")=="true" && is_numeric(Input::method("POST","rmi"))){
 			$id = Input::method("POST","rmi");
 			$delete_admin = $_SESSION["batumi_id"];
-			$sql = 'SELECT `draft` FROM `studio404_messages` WHERE `id`=:id';
+			$sql = 'SELECT `status` FROM `studio404_messages` WHERE `id`=:id';
 			$prepare = $conn->prepare($sql); 
 			$prepare->execute(array(
 				":id"=>$id
 			));
 			if($prepare->rowCount() > 0){
 				$fetch = $prepare->fetch(PDO::FETCH_ASSOC);
-				$old_draft = $fetch["draft"]; 
-				$new_draft = $old_draft.",".$delete_admin;
-				$sql2 = 'UPDATE `studio404_messages` SET `draft`=:draft WHERE `id`=:id';
+				$old_status = $fetch["status"]; 
+				if($old_status==0){
+					$new_status = $delete_admin;
+				}else{
+					$new_status = $old_status.",".$delete_admin;	
+				}				
+				$sql2 = 'UPDATE `studio404_messages` SET `status`=:status WHERE `id`=:id';
 				$prepare2 = $conn->prepare($sql2); 
 				$prepare2->execute(array(
-					":draft"=>$new_draft, 
+					":status"=>$new_status, 
 					":id"=>$id 
 				));
 				echo "Done";

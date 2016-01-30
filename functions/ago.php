@@ -22,7 +22,12 @@ class ago{
 	        }
 	        if ($granularity == '0') { break; }
 	    }
-	    return $retval.' წინ';      
+	    if((time() - $date) > 86400){
+	    	$out = date("d-m-Y H:i:s",$date);
+	    }else{
+	    	$out = $retval.' წინ';
+		}
+	    return $out;      
 	}
 }
 ?>

@@ -29,6 +29,25 @@ class sent extends connection{
 			redirect::url(WEBSITE);
 		}
 
+		$sql2 = 'SELECT 
+		`studio404_messages`.*
+		FROM 
+		`studio404_messages`
+		WHERE 
+		`studio404_messages`.`fromuser`=:tousers AND 
+		NOT FIND_IN_SET("'.$_SESSION["batumi_id"].'",`studio404_messages`.`status`) 
+		ORDER BY `studio404_messages`.`date` DESC LIMIT 20';
+		$prepare2 = $conn->prepare($sql2);
+		$prepare2->execute(array(
+			":tousers"=>$_SESSION["batumi_id"]
+		));
+		if($prepare2->rowCount() > 0){
+			$fetch2 = $prepare2->fetchAll(PDO::FETCH_ASSOC);
+			$data["messages"] = $fetch2;
+		}else{
+			$data["messages"] = array();
+		}
+
 		$catalog_general = $cache->index($c,"catalog_general");
 		$data["catalog_general"] = json_decode($catalog_general,true);
 

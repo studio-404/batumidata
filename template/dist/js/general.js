@@ -1549,6 +1549,7 @@ $(document).on("click",".deleteMailboxMessage",function(){
 	$(".dojobbutton").attr("data-dlang",LANG); 
 	$(".bs-example-modal-sm").modal("toggle");
 });
+
 var call = 0;
 $(document).on("click",".reloadprotect",function(){
       $.post(AJAX_REQUEST_URL, { reloadImage:true }, function(result){
@@ -1559,7 +1560,6 @@ $(document).on("click",".reloadprotect",function(){
       });
       call++;
 });
-
 
 function update_users_profile(type,dlang){
 	var namelname = $("#namelname").val(); 

@@ -36,13 +36,11 @@ class inbox extends connection{
 		`studio404_messages`, `studio404_users`
 		WHERE 
 		`studio404_messages`.`fromuser`=`studio404_users`.`id` AND 
-		`studio404_messages`.`tousers`=:tousers AND 
-		NOT FIND_IN_SET("'.$_SESSION["batumi_id"].'",`studio404_messages`.`draft`) AND 
-		`studio404_messages`.`status`=0 LIMIT 20';
+		FIND_IN_SET("'.$_SESSION["batumi_id"].'",`studio404_messages`.`tousers`) AND 
+		NOT FIND_IN_SET("'.$_SESSION["batumi_id"].'",`studio404_messages`.`status`) 
+		ORDER BY `studio404_messages`.`date` DESC LIMIT 20';
 		$prepare2 = $conn->prepare($sql2);
-		$prepare2->execute(array(
-			":tousers"=>$_SESSION["batumi_id"]
-		));
+		$prepare2->execute();
 		if($prepare2->rowCount() > 0){
 			$fetch2 = $prepare2->fetchAll(PDO::FETCH_ASSOC);
 			$data["messages"] = $fetch2;

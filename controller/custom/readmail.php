@@ -37,14 +37,10 @@ class readmail extends connection{
 		`studio404_messages`, `studio404_users`
 		WHERE 
 		`studio404_messages`.`id`=:id AND 
-		`studio404_messages`.`fromuser`=`studio404_users`.`id` AND 
-		`studio404_messages`.`tousers`=:tousers AND 
-		NOT FIND_IN_SET("'.$_SESSION["batumi_id"].'",`studio404_messages`.`draft`) AND 
-		`studio404_messages`.`status`=0';
+		`studio404_messages`.`fromuser`=`studio404_users`.`id`'; 
 		$prepare2 = $conn->prepare($sql2);
 		$prepare2->execute(array(
-			":id"=>Input::method("GET","id"), 
-			":tousers"=>$_SESSION["batumi_id"], 
+			":id"=>Input::method("GET","id") 
 		));
 		if($prepare2->rowCount() > 0){
 			$fetch2 = $prepare2->fetchAll(PDO::FETCH_ASSOC);
@@ -52,14 +48,29 @@ class readmail extends connection{
 		}else{
 			redirect::url(WEBSITE.LANG."/mailbox/inbox");
 		}
-
-		if($data["messages"][0]["read"]=="0"){
-			$readed = 'UPDATE `studio404_messages` SET `read`=:read WHERE `id`=:id';
-			$readed_prepare = $conn->prepare($readed);
-			$readed_prepare->execute(array(
-				":read"=>1, 
+		$explode = explode(",",$data["messages"][0]["read"]);
+		if(!in_array($_SESSION["batumi_id"], $explode)){
+			$sel = 'SELECT `read` FROM `studio404_messages` WHERE `id`=:id';
+			$prel = $conn->prepare($sel); 
+			$prel->execute(array(
 				":id"=>Input::method("GET","id") 
 			));
+			if($prel->rowCount() > 0){
+				$fetl = $prel->fetch(PDO::FETCH_ASSOC); 
+				
+				$old_read = $fetl['read']; 
+				if($old_read!=0){
+					$new_read = $fetl['read'].", ".$_SESSION["batumi_id"];
+				}else{
+					$new_read = $_SESSION["batumi_id"];
+				}
+				$readed = 'UPDATE `studio404_messages` SET `read`=:read WHERE `id`=:id';
+				$readed_prepare = $conn->prepare($readed);
+				$readed_prepare->execute(array(
+					":read"=>$new_read, 
+					":id"=>Input::method("GET","id") 
+				));
+			}
 		}
 
 		 if($data["messages"][0]["attchment"]) : 

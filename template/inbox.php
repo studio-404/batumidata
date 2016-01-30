@@ -38,6 +38,7 @@
                 <table class="table table-hover table-striped">
                   <tbody>
                   <tr>
+                    <th>ID</th>
                     <th><?=$data["language_data"]["val100"]?></th>
                     <th><?=$data["language_data"]["val101"]?></th>
                     <th><?=$data["language_data"]["val102"]?></th>
@@ -46,7 +47,8 @@
                   </tr>
                   <?php
                   foreach ($data["messages"] as $value) {
-                    if($value["read"]==0){
+                    $read = explode(",",$value["read"]);
+                    if(!in_array($_SESSION["batumi_id"], $read)){
                       $bstart = '<b>';
                       $bend = '</b>';
                     }else{
@@ -58,6 +60,7 @@
                     }else{ $att = '&nbsp;'; }
                   ?>
                     <tr>
+                      <td class="mailbox-id"><?=$value["id"]?></td>
                       <td class="mailbox-name"><a href="<?=WEBSITE.LANG?>/mailbox/readmail?id=<?=$value['id']?>"><?=$bstart.$value["fromusername"].$bend?></a></td>
                       <td class="mailbox-subject">
                         <?=$bstart.$value["subject"].$bend?>
