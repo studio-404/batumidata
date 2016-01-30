@@ -39,7 +39,7 @@ class readmail extends connection{
 		`studio404_messages`.`id`=:id AND 
 		`studio404_messages`.`fromuser`=`studio404_users`.`id` AND 
 		`studio404_messages`.`tousers`=:tousers AND 
-		`studio404_messages`.`draft`=0 AND 
+		NOT FIND_IN_SET("'.$_SESSION["batumi_id"].'",`studio404_messages`.`draft`) AND 
 		`studio404_messages`.`status`=0';
 		$prepare2 = $conn->prepare($sql2);
 		$prepare2->execute(array(

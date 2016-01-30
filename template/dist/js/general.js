@@ -842,7 +842,8 @@ $(document).on("click",".dojobbutton",function(){
 	var removecatalogue = $(this).data("removecatalogue");
 	var removeuser = $(this).data("removeuser");
 	var removeformelement = $(this).data("removeformelement");
-	if(removecatalogue){
+	var removemessage= $(this).data("removemessage");
+	if(typeof(removecatalogue) != "undefined" && removecatalogue!="" && removecatalogue!=null){
 		$('.bs-example-modal-sm').modal("hide");
 		$(".overlay-loader").fadeIn("slow");
 		$.post(AJAX_REQUEST_URL, { removeCatalogue:true, cidx:removecatalogue }, function(result){
@@ -853,7 +854,7 @@ $(document).on("click",".dojobbutton",function(){
 				alert("Critical Error ! N1");				
 			}
 		});
-	}else if(removeuser){
+	}else if(typeof(removeuser) != "undefined" && removeuser!="" && removeuser!=null){
 		$('.bs-example-modal-sm').modal("hide");
 		$(".overlay-loader").fadeIn("slow");
 		$.post(AJAX_REQUEST_URL, { removeuserx:true, uid:removeuser }, function(result){
@@ -863,6 +864,25 @@ $(document).on("click",".dojobbutton",function(){
 				$(".overlay-loader").fadeIn("hide");
 				//alert("Critical Error ! N1");
 				console.log("test");
+			}
+		});
+	}else if(typeof(removemessage) != "undefined" && removemessage!="" && removemessage!=null){
+		var dlang = $(this).data("dlang");		
+		$(".bs-example-modal-sm").modal("toggle");
+		$(".overlay-loader").fadeIn("slow");
+
+		$.post(AJAX_REQUEST_URL, { removemessage:true, rmi:removemessage }, function(result){ 
+			$(".overlay-loader").fadeOut("slow");
+			if(result=="Done"){
+				location.href = PROTOCOL+document.domain+"/"+dlang+"/mailbox/inbox";
+			}else{
+				if(dlang=="ge"){
+					$(".modal-body").html("<p>მონაცემის წაშლა ვერ მოხერხდა !</p>");
+				}else{
+					$(".modal-body").html("<p>Could not delete data !</p>");
+				}
+				$(".modal-footer").hide();
+				$(".bs-example-modal-sm").modal("toggle");
 			}
 		});
 	}
@@ -1513,9 +1533,32 @@ $(document).on("change", "#attachment", function(){
 	}else{
 		$("#attach").val("true");	
 	}
-	
 });
 
+$(document).on("click",".deleteMailboxMessage",function(){ 
+	var id = $(this).attr("data-msgid");
+	var LANG = $(this).attr("data-dlang");
+	if(LANG=="ge"){
+		$(".modal-body").html("<p>გნებავთ მონაცემის წაშლა ?</p>");
+		$(".dojobbutton").text("წაშლა");
+	}else{
+		$(".modal-body").html("<p>Would you like ?</p>");
+		$(".dojobbutton").text("Delete");
+	}
+	$(".dojobbutton").attr("data-removemessage",id); 
+	$(".dojobbutton").attr("data-dlang",LANG); 
+	$(".bs-example-modal-sm").modal("toggle");
+});
+var call = 0;
+$(document).on("click",".reloadprotect",function(){
+      $.post(AJAX_REQUEST_URL, { reloadImage:true }, function(result){
+      	if(result=="Done"){
+      		var pro = PROTOCOL+document.domain+"/protect.php?v="+call;
+      		$(".protectimage").attr("src",pro);
+      	}
+      });
+      call++;
+});
 
 
 function update_users_profile(type,dlang){

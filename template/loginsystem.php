@@ -60,6 +60,7 @@
             $_SESSION['protect_x'] = ustring::random(4);
             ?>
             <img src="<?=WEBSITE?>protect.php" alt="" style="float:left; margin-top:15px; border:solid 1px #d2d6de; width:95px; height:35px;" class="protectimage" />
+            <a href="javascript:void(0)" class="reloadprotect" style="float:left; margin:20px 0 0 10px; font-size:18px;"><i class="glyphicon glyphicon-refresh"></i></a>
             <div style="clear:both"></div>
           </div>
           <div class="row">

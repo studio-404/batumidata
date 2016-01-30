@@ -2,17 +2,8 @@
 @include("parts/welcome_header.php");
 @include("parts/leftside.php");
 ?>
-	<!-- Content Wrapper. Contains page content -->
+<!-- Content Wrapper. Contains page content -->
 	<div class="content-wrapper">
-		<!-- <section class="content-header">
-			<h1>
-				<?=$data["text_general"][0]["title"]?>kkkk
-			</h1>
-			<ol class="breadcrumb">
-				<li><a href="#"><i class="fa fa-dashboard"></i> <?=$data["text_general"][0]["title"]?></a></li>
-			</ol>
-		</section> -->
-
 		<section class="content">
 			<div class="box box-default">
             <div class="box-header with-border">
@@ -67,42 +58,6 @@
                   }
                 }
                 ?>
-                <!-- <li>
-                  <span class="mailbox-attachment-icon"><i class="fa fa-file-pdf-o"></i></span>
-
-                  <div class="mailbox-attachment-info">
-                    <a href="#" class="mailbox-attachment-name">
-                      <i class="fa fa-paperclip"></i> Sep2014-report.pdf</a>
-                        <span class="mailbox-attachment-size">
-                          1,245 KB
-                          <a href="#" class="btn btn-default btn-xs pull-right">
-                            <i class="fa fa-cloud-download"></i></a>
-                        </span>
-                  </div>
-                </li> -->
-                <!-- <li>
-                  <span class="mailbox-attachment-icon"><i class="fa fa-file-word-o"></i></span>
-
-                  <div class="mailbox-attachment-info">
-                    <a href="#" class="mailbox-attachment-name"><i class="fa fa-paperclip"></i> App Description.docx</a>
-                        <span class="mailbox-attachment-size">
-                          1,245 KB
-                          <a href="#" class="btn btn-default btn-xs pull-right"><i class="fa fa-cloud-download"></i></a>
-                        </span>
-                  </div>
-                </li> -->
-                <!--  -->
-                <!-- <li>
-                  <span class="mailbox-attachment-icon has-img"><img src="<?=TEMPLATE?>dist/img/photo2.png" alt="Attachment"></span>
-
-                  <div class="mailbox-attachment-info">
-                    <a href="#" class="mailbox-attachment-name"><i class="fa fa-camera"></i> photo2.png</a>
-                        <span class="mailbox-attachment-size">
-                          1.9 MB
-                          <a href="#" class="btn btn-default btn-xs pull-right"><i class="fa fa-cloud-download"></i></a>
-                        </span>
-                  </div>
-                </li> -->
               </ul>
             </div>
             <?php
@@ -111,11 +66,12 @@
 
             <div class="box-footer">
               <div class="pull-right">
-                
                 <button type="button" class="btn btn-default gotoUrl" data-goto="<?=WEBSITE.LANG?>/mailbox/compose?reply=<?=$data["messages"][0]["fromid"]?>&amp;subject=<?=urlencode("Re: ".$data["messages"][0]["subject"])?>"><i class="fa fa-reply"></i> <?=$data["language_data"]["val105"]?></button>
-                <!-- <button type="button" class="btn btn-default"><i class="fa fa-share"></i> <?=$data["language_data"]["val106"]?></button> -->
+                
               </div>
-              <button type="button" class="btn btn-default"><i class="fa fa-trash-o"></i> <?=$data["language_data"]["val73"]?></button>
+
+              <button type="button" class="btn btn-default gotoUrl" data-goto="<?=WEBSITE.LANG?>/mailbox/inbox"><i class="fa fa-times"></i> <?=$data["language_data"]["val55"]?></button>
+              <button type="button" class="btn btn-default deleteMailboxMessage" data-msgid="<?=Input::method("GET","id")?>" data-dlang="<?=LANG?>"><i class="fa fa-trash-o"></i> <?=$data["language_data"]["val73"]?></button>
               <!-- <button type="button" class="btn btn-default"><i class="fa fa-print"></i> <?=$data["language_data"]["val107"]?></button> -->
             </div>
                       
