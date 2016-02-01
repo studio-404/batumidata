@@ -81,6 +81,49 @@
                         </div>
                       </li>
                     <?php
+                  }else if($val["ext"]=="zip" || $val["ext"]=="rar"){
+                    ?>
+                    <li>
+                        <span class="mailbox-attachment-icon"><i class="fa fa-file-archive-o"></i></span>
+
+                        <div class="mailbox-attachment-info">
+                        <!-- <a href="<?=WEBSITE."files/attachments/".$val["file"]?>" class="mailbox-attachment-name"><i class="fa fa-paperclip"></i> <?=$val["file"]?></a> -->
+                        <span class="mailbox-attachment-size">
+                        <?=filesizeconvert::byt($val["size"])?>
+                        <a href="<?=WEBSITE."files/attachments/".$val["file"]?>" target="_blank" class="btn btn-default btn-xs pull-right"><i class="fa fa-cloud-download"></i></a>
+                        </span>
+                        </div>
+                      </li>
+                    <?php
+                  }else if($val["ext"]=="doc" || $val["ext"]=="docx"){
+                    ?>
+                    <li>
+                        <span class="mailbox-attachment-icon"><i class="fa fa-file-word-o"></i></span>
+
+                        <div class="mailbox-attachment-info">
+                        <!-- <a href="<?=WEBSITE."files/attachments/".$val["file"]?>" class="mailbox-attachment-name"><i class="fa fa-paperclip"></i> <?=$val["file"]?></a> -->
+                        <span class="mailbox-attachment-size">
+                        <?=filesizeconvert::byt($val["size"])?>
+                        <a href="<?=WEBSITE."files/attachments/".$val["file"]?>" target="_blank" class="btn btn-default btn-xs pull-right"><i class="fa fa-cloud-download"></i></a>
+                        </span>
+                        </div>
+                      </li>
+                    <?php
+                  }else if($val["ext"]=="xls" || $val["ext"]=="xlsx"){
+                    // 
+                    ?>
+                    <li>
+                        <span class="mailbox-attachment-icon"><i class="fa fa-file-excel-o"></i></span>
+
+                        <div class="mailbox-attachment-info">
+                        <!-- <a href="<?=WEBSITE."files/attachments/".$val["file"]?>" class="mailbox-attachment-name"><i class="fa fa-paperclip"></i> <?=$val["file"]?></a> -->
+                        <span class="mailbox-attachment-size">
+                        <?=filesizeconvert::byt($val["size"])?>
+                        <a href="<?=WEBSITE."files/attachments/".$val["file"]?>" target="_blank" class="btn btn-default btn-xs pull-right"><i class="fa fa-cloud-download"></i></a>
+                        </span>
+                        </div>
+                      </li>
+                    <?php
                   }
                 }
                 ?>
