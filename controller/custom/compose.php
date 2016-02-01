@@ -46,7 +46,7 @@ class compose extends connection{
 				$target_file = $target_dir . $newFilename;
 				
 				// Allow certain file formats
-				if($ext != "jpg" && $ext != "png" && $ext != "jpeg" && $ext != "gif" && $ext != "doc" && $ext != "docx" && $ext != "xls" && $ext != "xlsx" && $ext != "zip" && $ext != "rar") {
+				if($ext != "jpg" && $ext != "png" && $ext != "jpeg" && $ext != "gif" && $ext != "doc" && $ext != "docx" && $ext != "pdf" && $ext != "xls" && $ext != "xlsx" && $ext != "zip" && $ext != "rar") {
 				    $data["upload_status"]["filename"][] = $_FILES["attachment"]["name"][$x]; 
 				    $data["upload_status"]["error"][] = true; 
 				}else{					
@@ -68,6 +68,22 @@ class compose extends connection{
 				}
 				$x++;
 			}
+		}
+
+		if(Input::method("GET","draft_id") && is_numeric(Input::method("GET","draft_id"))){
+			$sql = 'SELECT * FROM `studio404_messages` WHERE `id`=:draft_id AND `fromuser`=:fromuser AND `draft`=1 AND `status`!=1';
+			$prepare = $conn->prepare($sql); 
+			$prepare->execute(array(
+				":draft_id"=>Input::method("GET","draft_id"), 
+				":fromuser"=>$_SESSION["batumi_id"] 
+			));
+			if($prepare->rowCount()){
+				$data["selected_draft"] = $prepare->fetch(PDO::FETCH_ASSOC); 
+			}else{
+				$data["selected_draft"] = false;
+			}
+		}else{
+			$data["selected_draft"] = false;
 		}
 
 		$catalogitemsnovisiable = $cache->index($c,"catalogitemsnovisiable");

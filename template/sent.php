@@ -38,8 +38,9 @@
                 <table class="table table-hover table-striped">
                   <tbody>
                   <tr>
-                    <th><?=$data["language_data"]["val116"]?></th>
+                    <th>ID</th>
                     <th><?=$data["language_data"]["val101"]?></th>
+                    <th><?=$data["language_data"]["val116"]?></th>
                     <th><?=$data["language_data"]["val102"]?></th>
                     <th><?=$data["language_data"]["val103"]?></th>
                     <th><?=$data["language_data"]["val81"]?></th>
@@ -52,17 +53,23 @@
                       $att = '<i class="fa fa-paperclip"></i>'; 
                     }else{ $att = '&nbsp;'; }
                   ?>
+
                     <tr>
-                      <td class="mailbox-name">
-                        <a href="<?=WEBSITE.LANG?>/mailbox/readmail?id=<?=$value['id']?>">
-                          <?=$names?></a>
-                        </td>
+                      <td><?=$value["id"]?></td>
                       <td class="mailbox-subject">
-                        <?=$value["subject"]?>
+                        <a href="<?=WEBSITE.LANG?>/mailbox/readmail?id=<?=$value['id']?>&amp;back=mailbox/sent"><?=$value["subject"]?></a>
+                      </td>
+                      <td class="mailbox-name">
+                        <a href="<?=WEBSITE.LANG?>/mailbox/readmail?id=<?=$value['id']?>&amp;back=mailbox/sent">
+                          <?=$names?></a>
                       </td>
                       <td class="mailbox-attachment"><?=$att?></td>
                       <td class="mailbox-date"><?=ago::time($value["date"],1)?></td>
-                      <td>&nbsp;</td>
+                      <td>
+                        <a href="<?=WEBSITE.LANG?>/mailbox/readmail?id=<?=$value['id']?>&amp;back=mailbox/sent"><i class="glyphicon glyphicon-eye-open"></i></a>
+                        
+                        <a href="javascript:void(0)" style="padding:0 0 0 5px" class="remove-message" data-dlang="<?=LANG?>" data-msgid="<?=$value["id"]?>" data-retrn="sent"><i class="glyphicon glyphicon-remove"></i></a>
+                      </td>
                     </tr>
                   <?php
                   }

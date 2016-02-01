@@ -39,8 +39,8 @@
                   <tbody>
                   <tr>
                     <th>ID</th>
-                    <th><?=$data["language_data"]["val100"]?></th>
                     <th><?=$data["language_data"]["val101"]?></th>
+                    <th><?=$data["language_data"]["val100"]?></th>                    
                     <th><?=$data["language_data"]["val102"]?></th>
                     <th><?=$data["language_data"]["val103"]?></th>
                     <th><?=$data["language_data"]["val81"]?></th>
@@ -61,13 +61,16 @@
                   ?>
                     <tr>
                       <td class="mailbox-id"><?=$value["id"]?></td>
-                      <td class="mailbox-name"><a href="<?=WEBSITE.LANG?>/mailbox/readmail?id=<?=$value['id']?>"><?=$bstart.$value["fromusername"].$bend?></a></td>
                       <td class="mailbox-subject">
-                        <?=$bstart.$value["subject"].$bend?>
+                        <a href="<?=WEBSITE.LANG?>/mailbox/readmail?id=<?=$value['id']?>&amp;back=mailbox/inbox"><?=$bstart.$value["subject"].$bend?></a>
                       </td>
+                      <td class="mailbox-name"><a href="<?=WEBSITE.LANG?>/mailbox/readmail?id=<?=$value['id']?>&amp;back=mailbox/inbox"><?=$bstart.$value["fromusername"].$bend?></a></td>
                       <td class="mailbox-attachment"><?=$att?></td>
                       <td class="mailbox-date"><?=ago::time($value["date"],1)?></td>
-                      <td>&nbsp;</td>
+                      <td>
+                          <a href="<?=WEBSITE.LANG?>/mailbox/readmail?id=<?=$value['id']?>&amp;back=mailbox/inbox"><i class="glyphicon glyphicon-eye-open"></i></a>
+                          <a href="javascript:void(0)" style="padding:0 0 0 5px" class="remove-message" data-dlang="<?=LANG?>" data-msgid="<?=$value["id"]?>"><i class="glyphicon glyphicon-remove"></i></a>
+                      </td>
                     </tr>
                   <?php
                   }

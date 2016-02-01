@@ -1,6 +1,6 @@
 <?php 
 session_start();
-ini_set('display_errors', 1);
+ini_set('display_errors', 1); 
 /*check last activity*/
 if (!isset($_SESSION['CREATED'])) {
     $_SESSION['CREATED'] = time();

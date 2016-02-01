@@ -29,11 +29,32 @@ class trash extends connection{
 			redirect::url(WEBSITE);
 		}
 
+		$sql2 = 'SELECT 
+		`studio404_messages`.*, 
+		`studio404_users`.`namelname` AS fromusername 
+		FROM 
+		`studio404_messages`, `studio404_users`
+		WHERE 
+		(`studio404_messages`.`fromuser`="'.$_SESSION["batumi_id"].'"  OR FIND_IN_SET("'.$_SESSION["batumi_id"].'",`studio404_messages`.`tousers`)) AND
+		FIND_IN_SET("'.$_SESSION["batumi_id"].'",`studio404_messages`.`status`) AND 
+		`studio404_messages`.`tousers`=`studio404_users`.`id` 
+		ORDER BY `studio404_messages`.`date` DESC LIMIT 20';
+		// echo $sql2;
+		$prepare2 = $conn->prepare($sql2);
+		$prepare2->execute();
+		if($prepare2->rowCount() > 0){
+			$fetch2 = $prepare2->fetchAll(PDO::FETCH_ASSOC);
+			$data["messages"] = $fetch2;
+		}else{
+			$data["messages"] = array();
+		}
+
 		$catalog_general = $cache->index($c,"catalog_general");
 		$data["catalog_general"] = json_decode($catalog_general,true);
 
 		$catalogitemsnovisiable = $cache->index($c,"catalogitemsnovisiable");
 		$data["catalogitems"] = json_decode($catalogitemsnovisiable,true);
+
 		$include = WEB_DIR."/trash.php";
 		if(file_exists($include)){
 			@include($include);

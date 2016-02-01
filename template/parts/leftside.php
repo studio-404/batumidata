@@ -52,7 +52,7 @@
                 <li<?=($slug_third=="mailbox/compose") ? ' class="active"' : ''?>><a href="<?=WEBSITE.LANG?>/mailbox/compose"><?=$data["language_data"]["val99"]?></a></li>
                 <li<?=($slug_third=="mailbox/inbox") ? ' class="active"' : ''?>><a href="<?=WEBSITE.LANG?>/mailbox/inbox"><?=$data["language_data"]["val95"]?></a></li>
                 <li<?=($slug_third=="mailbox/sent") ? ' class="active"' : ''?>><a href="<?=WEBSITE.LANG?>/mailbox/sent"><?=$data["language_data"]["val96"]?></a></li>
-                <li<?=($slug_third=="mailbox/draft") ? ' class="active"' : ''?>><a href="<?=WEBSITE.LANG?>/mailbox/draft"><?=$data["language_data"]["val97"]?></a></li>
+                <!-- <li<?=($slug_third=="mailbox/draft") ? ' class="active"' : ''?>><a href="<?=WEBSITE.LANG?>/mailbox/draft"><?=$data["language_data"]["val97"]?></a></li> -->
                 <li<?=($slug_third=="mailbox/trash") ? ' class="active"' : ''?>><a href="<?=WEBSITE.LANG?>/mailbox/trash"><?=$data["language_data"]["val98"]?></a></li>
               </ul>
             </li>

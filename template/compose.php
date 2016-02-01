@@ -39,7 +39,7 @@
             <!-- /.box-header -->
             <div class="box-body">
              <?php
-             if(!empty($data["upload_status"])){
+              if(!empty($data["upload_status"])){
                 $x = 0;
                 $anyError = "";
                 foreach ($data["upload_status"] as $value) {
@@ -50,9 +50,9 @@
                 }
                 if($anyError!=""){
                   echo $anyError;
-                  echo "<font style='font-size:16px; padding:10px 0px; margin:10px 0; color:green'>".$data["language_data"]["val114"]."</font><br />"; 
+                  echo "<font style='font-size:16px; padding:10px 0px; margin:10px 0; color:green'>".$data["language_data"]["val119"]."</font><br />"; 
                 }else{
-                  echo "<font style='font-size:16px; padding:10px 0px; margin:10px 0; color:green'>".$data["language_data"]["val114"]."</font><br />";
+                  echo "<font style='font-size:16px; padding:10px 0px; margin:10px 0; color:green'>".$data["language_data"]["val119"]."</font><br />";
                 }
                 echo "<br />";
              }
@@ -66,22 +66,36 @@
                   if($_SESSION["batumi_id"]==$value['id']){ continue; }
                   if(Input::method("GET","reply")==$value['id']){ $selected = 'selected="selected"'; }
                   else{ $selected = ''; }
+                  
+                  if($data["selected_draft"]){
+                    $usersslected = explode(",",$data["selected_draft"]["tousers"]); 
+                    if(in_array($value['id'], $usersslected)){ $selected = 'selected="selected"'; }
+                  }
+
                   echo '<option value="'.$value['id'].'" '.$selected.'>'.$value['namelname'].'</option>';
                 }
                 ?>
                 </select>
               </div>
               <div class="form-group">
-                <input class="form-control" id="subject" placeholder="<?=$data["language_data"]["val109"]?>:" value="<?=(Input::method("GET","subject")) ? urldecode(Input::method("GET","subject")) : ''?>" />
+                <?php
+                $subject = (Input::method("GET","subject")) ? urldecode(Input::method("GET","subject")) : ''; 
+                $subject .= ($data["selected_draft"]["subject"]) ? $data["selected_draft"]["subject"] : ''; 
+                ?>
+                <input class="form-control" id="subject" placeholder="<?=$data["language_data"]["val109"]?>:" value="<?=$subject?>" />
               </div>
               <div class="form-group">
-                    <textarea class="form-control tinyMce" id="message" style="height: 300px" placeholder="<?=$data["language_data"]["val38"]?>"></textarea>
-                  </div>
+                <?php
+                $text = ($data["selected_draft"]["text"]) ? $data["selected_draft"]["text"] : ''; 
+                ?>
+                <textarea class="form-control tinyMce" id="message" style="height: 300px" placeholder="<?=$data["language_data"]["val38"]?>"><?=$text?></textarea>
+              </div>
               <div class="form-group">
                 <form action="" method="post" id="fileupload" enctype="multipart/form-data">
                 <div class="btn btn-default btn-file">
                   <i class="fa fa-paperclip"></i> <?=$data["language_data"]["val110"]?>
                   
+                    <input type="hidden" name="ifdruft" id="ifdruft" value="false" />
                     <input type="hidden" name="attach" id="attach" value="false" />
                     <input type="hidden" name="insert_id" id="insert_id" value="0" />
                     <input type="file" name="attachment[]" id="attachment" multiple />
@@ -94,7 +108,6 @@
             <!-- /.box-body -->
             <div class="box-footer">
               <div class="pull-right">
-                <button type="button" class="btn btn-default sendmessage" data-draft="yes" data-dlang="<?=LANG?>"><i class="fa fa-pencil"></i> &nbsp;<?=$data["language_data"]["val112"]?></button>
                 <button type="submit" class="btn btn-primary sendmessage" data-draft="no" data-dlang="<?=LANG?>"><i class="fa fa-envelope-o"></i> &nbsp;<?=$data["language_data"]["val111"]?></button>
               </div>
               <button type="reset" class="btn btn-default gotoUrl" data-goto="<?=WEBSITE.LANG?>/mailbox/inbox"><i class="fa fa-times"></i> &nbsp;<?=$data["language_data"]["val55"]?></button>

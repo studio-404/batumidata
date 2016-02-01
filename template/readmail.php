@@ -11,12 +11,27 @@
             </div>
             
             <div class="box-body no-padding">
+
               <div class="mailbox-read-info">
                   <h5>
-                    <b><?=$data["language_data"]["val100"]?></b>: &nbsp;<a href=""><?=$data["messages"][0]["fromusername"]?></a>
-                    <span class="mailbox-read-time pull-right">
-                      <?=$data["language_data"]["val103"]?>: <?=date("d-m-Y H:m:s",$data["messages"][0]["date"])?>
-                    </span>
+                    <b><?=$data["language_data"]["val103"]?></b>: &nbsp;
+                    <a href=""><?=ago::time($data["messages"][0]["date"],1)?></a>
+                  </h5>
+              </div>
+
+              <div class="mailbox-read-info">
+                  <h5>
+                    <b><?=$data["language_data"]["val118"]?></b>: &nbsp;<a href=""><?=$data["messages"][0]["fromusername"]?></a>
+                  </h5>
+              </div>
+
+              <div class="mailbox-read-info">
+                  <h5>
+                    <?php
+                    $receiver = new receiver();
+                    $names = $receiver->names($c,$data["messages"][0]["tousers"]);
+                    ?>
+                    <b><?=$data["language_data"]["val116"]?></b>: &nbsp;<a href=""><?=$names?></a>
                   </h5>
               </div>
              
@@ -30,9 +45,6 @@
 
             <?php
             if($data["messages"][0]["attchment"]) : 
-              // echo "<pre>";
-              // print_r($data["messages_attachs"]);
-              // echo "</pre>";
             ?>
             <div class="box-footer">
               <label><?=$data["language_data"]["val115"]?>: </label><br />
@@ -47,10 +59,24 @@
                           <img src="<?=WEBSITE."files/attachments/".$val["file"]?>" alt="Attachment"></span>
 
                         <div class="mailbox-attachment-info">
-                        <a href="#" class="mailbox-attachment-name"><i class="fa fa-camera"></i></a>
+                        <!-- <a href="#" class="mailbox-attachment-name"><i class="fa fa-camera"></i></a> -->
                         <span class="mailbox-attachment-size">
                         <?=filesizeconvert::byt($val["size"])?>
-                        <a href="#" class="btn btn-default btn-xs pull-right"><i class="fa fa-cloud-download"></i></a>
+                        <a href="<?=WEBSITE."files/attachments/".$val["file"]?>" target="blank" class="btn btn-default btn-xs pull-right"><i class="fa fa-cloud-download"></i></a>
+                        </span>
+                        </div>
+                      </li>
+                    <?php
+                  }else if($val["ext"]=="pdf"){
+                    ?>
+                      <li>
+                        <span class="mailbox-attachment-icon"><i class="fa fa-file-pdf-o"></i></span>
+
+                        <div class="mailbox-attachment-info">
+                        <!-- <a href="<?=WEBSITE."files/attachments/".$val["file"]?>" class="mailbox-attachment-name"><i class="fa fa-paperclip"></i> <?=$val["file"]?></a> -->
+                        <span class="mailbox-attachment-size">
+                        <?=filesizeconvert::byt($val["size"])?>
+                        <a href="<?=WEBSITE."files/attachments/".$val["file"]?>" target="_blank" class="btn btn-default btn-xs pull-right"><i class="fa fa-cloud-download"></i></a>
                         </span>
                         </div>
                       </li>
@@ -65,14 +91,22 @@
             ?>
 
             <div class="box-footer">
+              <?php 
+              if($data["messages"][0]["fromuser"]!=$_SESSION["batumi_id"]) : ?>
               <div class="pull-right">
                 <button type="button" class="btn btn-default gotoUrl" data-goto="<?=WEBSITE.LANG?>/mailbox/compose?reply=<?=$data["messages"][0]["fromid"]?>&amp;subject=<?=urlencode("Re: ".$data["messages"][0]["subject"])?>"><i class="fa fa-reply"></i> <?=$data["language_data"]["val105"]?></button>
-                
               </div>
-
-              <button type="button" class="btn btn-default gotoUrl" data-goto="<?=WEBSITE.LANG?>/mailbox/inbox"><i class="fa fa-times"></i> <?=$data["language_data"]["val55"]?></button>
+              <?php
+              endif;
+              if(Input::method("GET","back")){
+                $b = Input::method("GET","back");
+              }else{
+                $b = 'mailbox/inbox';
+              }
+              ?>
+              <button type="button" class="btn btn-default gotoUrl" data-goto="<?=WEBSITE.LANG?>/<?=$b?>"><i class="fa fa-times"></i> <?=$data["language_data"]["val55"]?></button>
               <button type="button" class="btn btn-default deleteMailboxMessage" data-msgid="<?=Input::method("GET","id")?>" data-dlang="<?=LANG?>"><i class="fa fa-trash-o"></i> <?=$data["language_data"]["val73"]?></button>
-              <!-- <button type="button" class="btn btn-default"><i class="fa fa-print"></i> <?=$data["language_data"]["val107"]?></button> -->
+             
             </div>
                       
           </div>

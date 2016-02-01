@@ -843,6 +843,8 @@ $(document).on("click",".dojobbutton",function(){
 	var removeuser = $(this).data("removeuser");
 	var removeformelement = $(this).data("removeformelement");
 	var removemessage= $(this).data("removemessage");
+	var msgid= $(this).data("msgid");
+	var retrn = $(this).data("retrn"); 
 	if(typeof(removecatalogue) != "undefined" && removecatalogue!="" && removecatalogue!=null){
 		$('.bs-example-modal-sm').modal("hide");
 		$(".overlay-loader").fadeIn("slow");
@@ -875,6 +877,29 @@ $(document).on("click",".dojobbutton",function(){
 			$(".overlay-loader").fadeOut("slow");
 			if(result=="Done"){
 				location.href = PROTOCOL+document.domain+"/"+dlang+"/mailbox/inbox";
+			}else{
+				if(dlang=="ge"){
+					$(".modal-body").html("<p>მონაცემის წაშლა ვერ მოხერხდა !</p>");
+				}else{
+					$(".modal-body").html("<p>Could not delete data !</p>");
+				}
+				$(".modal-footer").hide();
+				$(".bs-example-modal-sm").modal("toggle");
+			}
+		});
+	}else if(typeof(msgid) != "undefined" && msgid!="" && msgid!=null){
+		var dlang = $(this).data("dlang");		
+		$(".bs-example-modal-sm").modal("toggle");
+		$(".overlay-loader").fadeIn("slow");
+
+		$.post(AJAX_REQUEST_URL, { removemessage:true, rmi:msgid }, function(result){ 
+			$(".overlay-loader").fadeOut("slow");
+			if(result=="Done"){
+				if(typeof(retrn)!="undefined" && retrn!="" && retrn!=null){
+					location.href = PROTOCOL+document.domain+"/"+dlang+"/mailbox/sent";
+				}else{
+					location.href = PROTOCOL+document.domain+"/"+dlang+"/mailbox/inbox";
+				}
 			}else{
 				if(dlang=="ge"){
 					$(".modal-body").html("<p>მონაცემის წაშლა ვერ მოხერხდა !</p>");
@@ -1492,25 +1517,57 @@ $(document).on("click",".sendmessage", function(){
 				}
 			}else{
 				if(attach=="zero"){
-					if(LANG=="ge"){
-						$(".messagebodytext").html("<p>შეტყობინება წარმატებით გაიგზავნა !</p>");
+					if(draft!="yes"){
+						if(LANG=="ge"){
+							$(".messagebodytext").html("<p>შეტყობინება წარმატებით გაიგზავნა !</p>");
+						}else{
+							$(".messagebodytext").html("<p>Message sent !</p>");
+						}
+						var goafterdone = PROTOCOL+document.domain+"/"+LANG+"/mailbox/sent";
 					}else{
-						$(".messagebodytext").html("<p>Message sent !</p>");
+						if(LANG=="ge"){
+							$(".messagebodytext").html("<p>შეტყობინება წარმატებით შეინახა მონახაზში !</p>");
+						}else{
+							$(".messagebodytext").html("<p>Message saved in draft !</p>");
+						}
+						var goafterdone = PROTOCOL+document.domain+"/"+LANG+"/mailbox/draft";
 					}
 
 					$('#bs-example-xx').on('hidden.bs.modal', function () {
-					 	location.href = PROTOCOL+document.domain+"/"+LANG+"/mailbox/inbox"; 
-					})
+					 	location.href = goafterdone; 
+					});
 
 					$(".overlay-loader").fadeOut("slow");
 					$("#bs-example-xx").modal("show");
 				}else{
 					$("#insert_id").val(result);
+					if(draft=="yes"){
+						$("#ifdruft").val("true");
+					}
 					$("#fileupload").submit();
 				}
 			}
 		});
 	}
+});
+
+$(document).on("click",".remove-message",function(){
+	var l = $(this).attr("data-dlang");
+	var i = $(this).attr("data-msgid");
+	var r = $(this).attr("data-retrn");
+	//var id = $(this).attr("data-id");
+	
+	$(".dojobbutton").attr("data-msgid",i);
+	$(".dojobbutton").attr("data-dlang",l);	
+	$(".dojobbutton").attr("data-retrn",r);	
+	if(l=="ge"){
+		$(".this-ismessage").html("<p>გნებავთ წაშალოთ მონაცემი ?</p>");
+		$(".dojobbutton").text("წაშლა");
+	}else{
+		$(".this-ismessage").html("<p>Would you like delete item ?</p>");
+		$(".dojobbutton").text("Delete");
+	}
+	$(".bs-example-modal-sm").modal("show");
 });
 
 $(document).on("change", "#attachment", function(){
