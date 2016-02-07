@@ -21,6 +21,43 @@ class ajax extends connection{
 		// #add-catalogue-item
 		$conn = $this->conn($c); 
 
+		if(Input::method("POST","checknotification")=="true" && $_SESSION["batumi_id"]){
+			$cachfile = "_cache/notifications_".$_SESSION["batumi_id"].".json"; 
+			if(file_exists($cachfile)){
+				echo file_get_contents($cachfile); 
+			}else{
+				$session_id = $_SESSION['batumi_id'];
+				$select = 'SELECT 
+				`studio404_notifications`.*, 
+				(SELECT `studio404_users`.`namelname` FROM `studio404_users` WHERE `studio404_users`.`id`=`studio404_notifications`.`actionuserid`) AS usersnamelname,  
+				(SELECT `studio404_users`.`picture` FROM `studio404_users` WHERE `studio404_users`.`id`=`studio404_notifications`.`actionuserid`) AS userspicture 
+				FROM 
+				`studio404_notifications` 
+				WHERE 
+				NOT FIND_IN_SET('.$session_id.',`studio404_notifications`.`seen`) AND 
+				`studio404_notifications`.`actionuserid`!=:actionuserid AND 
+				(`studio404_notifications`.`touserids`="nope" || FIND_IN_SET('.$session_id.',`studio404_notifications`.`touserids`)) 
+				ORDER BY `studio404_notifications`.`id` ASC 
+				';
+				$prepare = $conn->prepare($select); 
+				$prepare->execute(array(
+					":actionuserid"=>$session_id
+				)); 
+
+				if($prepare->rowCount() > 0){
+					$fetch = $prepare->fetchAll(PDO::FETCH_ASSOC);
+
+					$fh = @fopen($cachfile, 'w') or die("Error opening output file");
+					@fwrite($fh, json_encode($fetch,JSON_UNESCAPED_UNICODE));
+					@fclose($fh);
+					echo file_get_contents($cachfile); 
+				}else{
+					echo "Error"; 
+				}
+			}
+			exit();
+		}
+
 		if(Input::method("POST","loadcatalogform")=="true" && Input::method("POST","v")){
 			$sql = 'SELECT * FROM `studio404_forms` WHERE `cid`=:cid AND `lang`=:lang ORDER BY `id` ASC';
 			$prepare = $conn->prepare($sql); 
@@ -154,31 +191,65 @@ class ajax extends connection{
 			if($count>0){	
 				$attach = (Input::method("POST","a")=="true") ? 1 : 0;
 				$draft = (Input::method("POST","d")=="yes") ? 1 : 0;
-
+				$tousers = implode(",",$u);
 				$sql = 'INSERT INTO `studio404_messages` SET `date`=:date, `ip`=:ip, `fromuser`=:fromuser, `tousers`=:tousers, `subject`=:subject, `text`=:textx, `attchment`=:attchment, `draft`=:draft';
 				$prepare = $conn->prepare($sql);
 				$prepare->execute(array(
 					":date"=>time(), 
 					":ip"=>get_ip::ip(), 
 					":fromuser"=>$_SESSION["batumi_id"], 
-					":tousers"=>implode(",",$u), 
+					":tousers"=>$tousers, 
 					":subject"=>Input::method("POST","s"), 
 					":textx"=>Input::method("POST","m"), 
 					":draft"=>$draft, 
 					":attchment"=>$attach
 				));
-
+				$lastInsertId = $conn->lastInsertId();
 				$files = glob(DIR.'_cache/*'); // get all file names
 				foreach($files as $file){ // iterate files
 					if(is_file($file))
 					@unlink($file); // delete file
 				}
+				
+				$url = WEBSITE.'ge/mailbox/readmail?id='.$lastInsertId.'&back=mailbox/inbox::';
+				$url .= WEBSITE.'en/mailbox/readmail?id='.$lastInsertId.'&back=mailbox/inbox';
+
+				$insert_notification = new insert_notification();
+				$insert_notification->insert($c,$_SESSION["batumi_id"],Input::method("POST","s"),Input::method("POST","s"),$url,"message",$tousers);
 
 				echo $conn->lastInsertId();
 			}else{
 				echo "Error";
 			}
 		}
+
+		if(Input::method("POST","messageseen")=="true"){
+			$session_id = $_SESSION["batumi_id"]; 
+			$sql = 'UPDATE `studio404_notifications` SET `seen` = CONCAT(`seen`, "'.$session_id.',") WHERE `type`="message" AND FIND_IN_SET("'.$session_id.'", `touserids`) AND NOT FIND_IN_SET("'.$session_id.'", `seen`)';
+			$prepare = $conn->prepare($sql); 
+			$prepare->execute(); 
+			$files = glob(DIR.'_cache/*'); // get all file names
+			foreach($files as $file){ // iterate files
+				if(is_file($file))
+				@unlink($file); // delete file
+			}
+			echo "Done";
+		}
+
+		//
+		if(Input::method("POST","notification_count")=="true"){
+			$session_id = $_SESSION["batumi_id"]; 
+			$sql = 'UPDATE `studio404_notifications` SET `seen` = CONCAT(`seen`, "'.$session_id.',") WHERE `type`="notification" AND NOT FIND_IN_SET("'.$session_id.'", `seen`)';
+			$prepare = $conn->prepare($sql); 
+			$prepare->execute(); 
+			$files = glob(DIR.'_cache/*'); // get all file names
+			foreach($files as $file){ // iterate files
+				if(is_file($file))
+				@unlink($file); // delete file
+			}
+			echo "Done";
+		}
+
 
 		if(Input::method("POST","removeUnpublished")=="true" && Input::method("POST","i")){
 			$sql = 'UPDATE `studio404_module_item` SET `status`=1 WHERE `idx`=:idx';
@@ -201,24 +272,21 @@ class ajax extends connection{
 			}
 				
 			$insert_notification = new insert_notification();
-			$insert_notification->insert($c,$_SESSION["batumi_id"],"მონაცემის წაშლა ::".$idx,"Delete Item ::".$idx);
+			$insert_notification->insert($c,$_SESSION["batumi_id"],"წაშალა მონაცემი ს.კ: N".$idx,"Deleted Item ID: N".$idx);
 
 			echo "Done";
 		}
 
 		if(Input::method("POST","givepermision")=="true"){
 			$idx = (Input::method("POST","p") && is_numeric(Input::method("POST","p"))) ? Input::method("POST","p") : 0;
-			$sql = 'UPDATE `studio404_module_item` SET `visibility`=2 WHERE `idx`='.$idx;
+			$sql = 'UPDATE `studio404_module_item` SET `visibility`=2 WHERE `idx`='.$idx.' AND `status`!=1';
 			$conn->query($sql);
-
+			
 			$files = glob(DIR.'_cache/*'); // get all file names
 			foreach($files as $file){ // iterate files
 				if(is_file($file))
 				@unlink($file); // delete file
 			}
-				
-			$insert_notification = new insert_notification();
-			$insert_notification->insert($c,$_SESSION["batumi_id"],"ნებართვის მიცემა ::".$idx,"Give Permision ::".$idx);
 
 			echo "Done";
 			exit();
@@ -258,8 +326,7 @@ class ajax extends connection{
 			MAX(`idx`) AS maxidx, 
 			(SELECT MAX(`position`) FROM `studio404_module_item` WHERE `status`!=1 ) AS maxposition
 			FROM 
-			`studio404_module_item`
-			WHERE `status`!=1';
+			`studio404_module_item`';
 			$prepare = $conn->prepare($sql); 
 			$prepare->execute();
 			if($prepare->rowCount() > 0){
@@ -305,9 +372,22 @@ class ajax extends connection{
 			}
 			$uid = new uid();
 			$u = $uid->generate(9);
+			$url = '';
 			foreach ($c['languages.num.array'] as $l) {
 				$insert = 'INSERT INTO `studio404_module_item` SET '.$columns_and_data.' `cataloglist`="'.implode(",",$macat).'", `insert_ip`="'.get_ip::ip().'", `insert_admin`="'.$_SESSION["batumi_id"].'", `position`="'.$maxposition.'", `idx`="'.$maxidx.'", `visibility`=1, `lang`="'.$l.'", `uid`="'.$u.'", `date`="'.time().'", `expiredate`="'.time().'", `module_idx`="25" ';
 				$query = $conn->query($insert);
+				$insertId = $conn->lastInsertId();
+
+				$s = 'SELECT `idx` FROM studio404_module_item WHERE `id`=:id';
+				$p = $conn->prepare($s);
+				$p->execute(array(
+					":id"=>$insertId
+				));	
+				if($p->rowCount() > 0){
+					$f = $p->fetch(PDO::FETCH_ASSOC);
+					$p = Input::method("POST","p");
+					$url .= WEBSITE.'ge/monacemis-redaqtireba?parent='.$p.'&idx='.$f['idx'].'&back=http://batumi.404.ge/ge/Cemi-galerea?idx='.$p.'::';
+				}
 				
 				// insert gallery
 				$sql_media = 'INSERT INTO `studio404_gallery` SET 
@@ -349,9 +429,19 @@ class ajax extends connection{
 				if(is_file($file))
 				@unlink($file); // delete file
 			}
-				
+			
+			$selectCatName = 'SELECT `title` FROM `studio404_pages` WHERE `lang`=1 AND `idx` IN ('.implode(",",$macat).')'; 
+			$prepareCatName = $conn->prepare($selectCatName);
+			$prepareCatName->execute();
+			$fetchCatName = $prepareCatName->fetchAll(PDO::FETCH_ASSOC);
+
+			$selectCatName2 = 'SELECT `title` FROM `studio404_pages` WHERE `lang`=2 AND `idx` IN ('.implode(",",$macat).')'; 
+			$prepareCatName2 = $conn->prepare($selectCatName2);
+			$prepareCatName2->execute();
+			$fetchCatName2 = $prepareCatName2->fetchAll(PDO::FETCH_ASSOC);	
+
 			$insert_notification = new insert_notification();
-			$insert_notification->insert($c,$_SESSION["batumi_id"],"მონაცემის დამატება ::".$maxidx,"Add Data ::".$maxidx);
+			$insert_notification->insert($c,$_SESSION["batumi_id"],"დაამატა მონაცემი","Added data",$url);
 
 			echo $gallery_maxidx;
 			exit();
@@ -397,10 +487,20 @@ class ajax extends connection{
 				}
 			}
 
-			$update = 'UPDATE `studio404_module_item` SET '.$columns_and_data.' `cataloglist`="'.implode(",",$macat).'" WHERE `idx`=:idx AND `lang`=:lang';
+			$selectEditAdmins = 'SELECT `edit_admin` FROM `studio404_module_item` WHERE `idx`=:idx AND `lang`=:lang';
+			$prp = $conn->prepare($selectEditAdmins); 
+			$prp->execute(array(
+				":lang"=>Input::method("POST","edit_language"), 
+				":idx"=>$editidx 
+			));	
+			$ftc = $prp->fetch(PDO::FETCH_ASSOC);
+			$edit_admin = $ftc['edit_admin'].",".$_SESSION["batumi_id"]; 
+
+			$update = 'UPDATE `studio404_module_item` SET '.$columns_and_data.' `cataloglist`="'.implode(",",$macat).'", `edit_admin`=:edit_admin WHERE `idx`=:idx AND `lang`=:lang';
 			$prepare = $conn->prepare($update); 
 			$prepare->execute(array(
 				":lang"=>Input::method("POST","edit_language"), 
+				":edit_admin"=>$edit_admin, 
 				":idx"=>$editidx 
 			));
 
@@ -409,9 +509,14 @@ class ajax extends connection{
 				if(is_file($file))
 				@unlink($file); // delete file
 			}
-				
+			$url = '';			
+			$p = Input::method("POST","p");
+			$url .= WEBSITE.'ge/monacemis-redaqtireba?parent='.$p.'&idx='.$editidx.'&back=http://batumi.404.ge/ge/Cemi-galerea?idx='.$p.'::';
+			$url .= WEBSITE.'en/monacemis-redaqtireba?parent='.$p.'&idx='.$editidx.'&back=http://batumi.404.ge/en/Cemi-galerea?idx='.$p;
+			
+
 			$insert_notification = new insert_notification();
-			$insert_notification->insert($c,$_SESSION["batumi_id"],"მონაცემის განახლება ::".$editidx,"Edit Data ::".$editidx);
+			$insert_notification->insert($c,$_SESSION["batumi_id"],"დაარედაქტირა მონაცემი ","Edited Data",$url);
 
 			echo "Done";
 			exit();
@@ -630,9 +735,7 @@ class ajax extends connection{
 				if(is_file($file))
 				@unlink($file); // delete file
 			}
-			$insert_notification = new insert_notification();
-			$insert_notification->insert($c,$_SESSION["batumi_id"],"წაიშალა მომხმარებელი: ID ".Input::method("POST","uid"),"User Deleted: ID ".Input::method("POST","uid"));
-
+			
 			echo "Done"; 
 			exit();
 		}
@@ -657,8 +760,6 @@ class ajax extends connection{
 				":id"=>$_SESSION["batumi_id"]
 			));
 			
-			$insert_notification = new insert_notification();
-			$insert_notification->insert($c,$_SESSION["batumi_id"],"პროფილი განაახლა","Profile Updated");
 			if(Input::method("POST","lang")=="en"){
 				echo "Profile Updated !";
 			}else{
@@ -970,20 +1071,15 @@ class ajax extends connection{
 				":address"=>$address 
 			));
 
+			$insert_notification = new insert_notification();
+			$insert_notification->insert($c,$_SESSION["batumi_id"],"დაამატა მომხმარებელი -> ".$namelname,"Added New User -> ".$namelname);
+
 			if($prepare->rowCount() > 0){ 
 				$files = glob(DIR.'_cache/*'); // get all file names
 				foreach($files as $file){ // iterate files
 					if(is_file($file))
 					@unlink($file); // delete file
-				}
-				
-				$insert_notification = new insert_notification();
-				$insert_notification->insert($c,$_SESSION["batumi_id"],"მომხმარებლის დამატება","Add User");
-				if($image=="true"){
-					echo $conn->lastInsertId();
-				}else{
-					echo "Done"; 
-				}				
+				}			
 			}else{
 				echo "Error"; 
 			}
@@ -1039,15 +1135,7 @@ class ajax extends connection{
 				foreach($files as $file){ // iterate files
 					if(is_file($file))
 					@unlink($file); // delete file
-				}
-				
-				$insert_notification = new insert_notification();
-				$insert_notification->insert($c,$_SESSION["batumi_id"],"მომხმარებლის რედაქტირება","Edit User");
-				if($image=="true"){
-					echo $conn->lastInsertId();
-				}else{
-					echo "Done"; 
-				}				
+				}	
 			}else{
 				echo "Error"; 
 			}

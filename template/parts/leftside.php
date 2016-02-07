@@ -42,6 +42,9 @@
           <ul class="sidebar-menu">
             <!-- Optionally, you can add icons to the links -->
             <li class="<?=($slug_second=="welcome-system") ? 'active' : ''?>"><a href="<?=WEBSITE.LANG?>/<?=$c["welcome.page.class"]?>"><i class="fa fa-home"></i> <span><?=(LANG=="ge") ? "მთავარი" : "Home"?></span></a></li>
+            <?php
+            if($_SESSION["batumi_user_type"]=="website_manager" || $_SESSION["batumi_user_type"]=="editor"):
+            ?>
             <li class="treeview<?=$active?>">
               <a href="#">
                 <i class="fa fa-envelope"></i>
@@ -57,6 +60,7 @@
               </ul>
             </li>
             <?php
+            endif;
             $x = 0;
             foreach ($data["welcomepage_categories"]["item"]["title"] as $val) {
               // echo $data["welcomepage_categories"]["item"]['idx'][$x]."--test--";
@@ -83,6 +87,8 @@
               $x++;
             }
             $select_disallowed_items = new select_disallowed_items(); 
+
+            if($_SESSION["batumi_user_type"]=="website_manager"):
             ?>
             <li class="<?=($slug_second=="nebarTvis-micema") ? 'active' : ''?>">
               <a href="<?=WEBSITE.LANG?>/nebarTvis-micema"><i class="fa fa-minus-circle"></i> <span><?=(LANG=="ge") ? "ნებართვის მიცემა" : "Allow"?></span> <small class="label pull-right bg-red"><?=$select_disallowed_items->cc($c)?></small></a>
@@ -91,6 +97,7 @@
               <a href="<?=WEBSITE.LANG?>/katalogis-marTva"><i class="fa fa-wrench"></i> <span><?=(LANG=="ge") ? "კატალოგის მართვა" : "Manage catalog"?></span></a>
             </li>
             <li class="<?=($slug_second=="momxmareblis-marTva") ? 'active' : ''?>"><a href="<?=WEBSITE.LANG?>/momxmareblis-marTva"><i class="fa fa-users"></i> <span><?=$data['language_data']["val40"]?></span></a></li>
+            <?php endif; ?>
             <li class="<?=($slug_second=="profilis-redaqtireba") ? 'active' : ''?>"><a href="<?=WEBSITE.LANG?>/profilis-redaqtireba"><i class="fa fa-user-secret"></i> <span><?=$data['language_data']["val39"]?></span></a></li>
            
          </ul><!-- /.sidebar-menu -->

@@ -37,13 +37,22 @@
            <div class="box-body">
                 <div class="row">
                 	<div class="col-md-12 form-message-output" style="display:none"><p></p></div> 
-                    <div class="col-md-12 catalog-add-form-data">
+                    <div class="col-md-9 catalog-add-form-data">
                     	<?php
                     	$labellists = new labellists();
 						$data["labellists"] = $labellists->loadlabels($c);
-						echo Input::method("POST","galleryidxpost");
-                    	?>
+						?>
                    <form action=""  method="post" enctype="multipart/form-data" name="monacemisdamatebaform" id="monacemisdamatebaform">
+					<?php
+					if($data["fetch"]["visibility"]==1) :
+					?>
+                   	<div class="alert alert-danger alert-dismissible">
+		                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+		                <h4><i class="icon fa fa-ban"></i> <?=$data["language_data"]["val94"]?></h4>
+		                <?=$data["language_data"]["val121"]?>
+		            </div>
+		        	<?php endif; ?>
+
 					<?php 
 					$sga_idx = $labellists->loadpictures_gallery_idx($c); 
 					?>
@@ -234,9 +243,80 @@
                         	}
 
                       	}
-                        ?>
+                    	
+						if($_SESSION["batumi_user_type"]=="website_manager"):
+						?>     
+							<div class="form-group">
+								<label style="width:100%"><?=$data["language_data"]["val87"]?></label>
+								<?php
+								if($data["fetch"]["visibility"]==1){
+									echo '<span class="label label-success give-permision" style="cursor:pointer" data-dlang="'.LANG.'">'.$data["language_data"]["val88"].'</span>'; 
+								}else{
+									echo '<span class="label label-danger remove-permision" style="cursor:pointer" data-dlang="'.LANG.'">'.$data["language_data"]["val89"].'</span>';
+								}
+								?>
+							</div> 
+						<?php
+						endif;
+						?>
+                    </form>
                     </div>
-                	</form>
+                    <?php
+                	$grabusersdata = new grabusersdata(); 
+                	$user = $grabusersdata->usersdata($c, $data["fetch"]["insert_admin"]);
+                	$e = explode(",", $data["fetch"]["edit_admin"]); 
+                	$e = array_filter($e);
+                	$user_edited = $grabusersdata->usersdata($c, $e);
+                	$picture = ($user["picture"]!="") ? WEBSITE."files/usersimage/".$user["picture"] : TEMPLATE.'dist/img/avatar04.png'; 
+                	?>
+                    <div class="col-md-3">
+                    	
+                    	<div class="col-md-12">
+							<div class="box box-danger">
+								<div class="box-header with-border">
+									<h3 class="box-title"><?=$data["language_data"]["val122"]?></h3>
+								</div>
+								<!-- /.box-header -->
+								<div class="box-body no-padding">
+									<ul class="users-list clearfix">
+										<li style="width:100%;">
+											<img src="<?=$picture?>" alt="User Image">
+											<a class="users-list-name" href="#"><?=$user["namelname"]?></a>
+										</li>		                    
+									</ul>
+								</div>
+							</div>
+						</div>
+
+						<div class="col-md-12">
+							<div class="box box-danger">
+								<div class="box-header with-border">
+									<h3 class="box-title"><?=$data["language_data"]["val123"]?></h3>
+								</div>
+								<!-- /.box-header -->
+								<div class="box-body no-padding">
+									<?php
+									// echo "<pre>";
+									// print_r($user_edited); 
+									// echo "</pre>";
+									?>
+									<ul class="users-list clearfix">
+										<?php
+										foreach ($user_edited as $value) : 
+											$picture = ($value["picture"]!="") ? WEBSITE."files/usersimage/".$value["picture"] : TEMPLATE.'dist/img/avatar04.png'; 
+										?>
+										<li style="width:50%;">
+											<img src="<?=$picture?>" alt="User Image">
+											<a class="users-list-name" href="#"><?=$value["namelname"]?></a>
+										</li>	
+										<?php endforeach; ?>	                    
+									</ul>
+								</div>
+							</div>
+						</div>
+
+            		</div>
+                	
                 </div>
 	          </div>
 	          <div class="box-footer">

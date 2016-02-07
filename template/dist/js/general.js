@@ -15,6 +15,157 @@ var MESSAGE_OPERATION_DONE_GE = "ოპერაცია წარმატე�
 var MESSAGE_OPERATION_ERROR_EN = "Error !";
 var MESSAGE_OPERATION_ERROR_GE = "მოხდა შეცდომა !";
 
+var interval = setInterval(function(){
+	$.post(AJAX_REQUEST_URL, { checknotification:true }, function(r){
+		if(r!="Error" && /^[\],:{}\s]*$/.test(r.replace(/\\["\\\/bfnrtu]/g, '@').
+replace(/"[^"\\\n\r]*"|true|false|null|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?/g, ']').
+replace(/(?:^|:|,)(?:\s*\[)+/g, '')))
+		{
+			var obj = JSON.parse(r); 
+			var notification_count = parseInt($("#notification_count").text());
+			var message_count = parseInt($("#message_count").text());
+			var cobject = obj.length;
+			if(cobject>0 && $("#message_count").length && $("#notification_count").length){
+				var type = ""; 
+				var newN = 0;
+				var newM = 0;
+				var notification_html = '';
+				var message_html = '';
+				/*
+				
+				*/
+				var l = $("#system-language").text();
+				var x = 0;
+				for (var i = obj.length - 1; i >= 0; i--) {
+					type = obj[i].type;
+					//console.log(type);
+					if(type=="notification"){
+						var go = '';
+						if(obj[i].url!="" && typeof(obj[i].url)!="undefined" && obj[i].url!=null){
+							var sp = obj[i].url.split("::"); 
+							if(l=="EN"){
+								go = sp[0];
+							}else{
+								go = sp[1];
+							}
+						}
+						newN++; // 2
+						notification_html += '<li>';
+						notification_html += '<ul class="menu">';
+						notification_html += '<li>';
+						notification_html += '<a href="'+go+'">';
+						notification_html += '<div class="pull-left">';
+						if(obj[i].userspicture==""){
+							notification_html += '<img src="/template/dist/img/avatar04.png" class="img-circle" alt="User Image" width="40" height="40" />';
+						}else{
+							notification_html += '<img src="/files/usersimage/'+obj[i].userspicture+'" class="img-circle" alt="User Image" width="40" height="40" />';	
+						}						
+						notification_html += '</div>';
+						
+						notification_html += "<h4>"+obj[i].usersnamelname+"</h4>";
+						if(l=="EN"){
+							notification_html += "<p>"+obj[i].description_ge+"</p>";
+						}else{
+							notification_html += "<p>"+obj[i].description_en+"</p>";
+						}					
+						notification_html += '</a>';
+						notification_html += '</li>';
+						notification_html += '</ul>';
+						notification_html += '</li>';
+					}else{
+						var go = '';
+						if(obj[i].url!="" && typeof(obj[i].url)!="undefined" && obj[i].url!=null){
+							var sp = obj[i].url.split("::"); 
+							if(l=="EN"){
+								go = sp[0];
+							}else{
+								go = sp[1];
+							}
+						}
+						if(x==0){
+							message_html += '<li><ul class="menu">';
+						}
+						message_html += '<li>';
+						message_html += '<a href="'+go+'">';
+						message_html += '<div class="pull-left">';
+						if(obj[i].userspicture==""){
+							message_html += '<img src="/template/dist/img/avatar04.png" class="img-circle" alt="User Image" width="40" height="40" />';
+						}else{
+							message_html += '<img src="/files/usersimage/'+obj[i].userspicture+'" class="img-circle" alt="User Image" width="40" height="40" />';	
+						}	
+						//message_html += '<img src="" class="img-circle" alt="User Image">';
+						
+						message_html += '</div>';
+						message_html += '<h4>';
+						message_html += obj[i].usersnamelname;
+						message_html += '</h4>';
+
+						if(l=="EN"){
+							message_html += "<p>"+obj[i].description_ge+"</p>";
+						}else{
+							message_html += "<p>"+obj[i].description_en+"</p>";
+						}
+						// message_html += ' <p>Why not buy a new awesome theme?</p>';
+
+						message_html += '</a>';
+						message_html += '</li>'; 
+						if(x==0){
+							message_html += '</ul></li>'; 
+						}
+						newM++; // 1
+						x++;
+					}
+				};
+
+				if(l=="EN"){
+					notification_html += '<li class="footer"><a href="#">ნახე მეტი</a></li>'; 
+					message_html += '<li class="footer"><a href="'+SYSTEM_WELCOME_PAGE+'/ge/mailbox/inbox">ნახე მეტი</a></li>'; 
+				}else{
+					notification_html += '<li class="footer"><a href="#">Read more</a></li>'; 
+					message_html += '<li class="footer"><a href="'+SYSTEM_WELCOME_PAGE+'/en/mailbox/inbox">Read more</a></li>'; 
+				}
+				if(newN!=notification_count){
+					$("#notification_count").text(newN); 
+					var audio = new Audio('/files/audio/glass.mp3');
+					audio.play();
+					$(".notification_html").html(notification_html);
+				}
+
+				if(newM!=message_count){
+					$("#message_count").text(newM); 
+					var audio2 = new Audio('/files/audio/glass5.mp3');
+					audio2.play();
+					$(".message_html").html(message_html);
+				}
+
+			}
+		}
+	});
+	
+}, 1000);
+
+$(document).on("click",".messageseen",function(){
+	var m = $("#message_count").text(); 
+	if(m!="0"){
+		$.post(AJAX_REQUEST_URL, { messageseen:true }, function(result){
+			if(result=="Done"){
+				$("#message_count").text("0");
+			}
+		});
+	}
+});
+
+$(document).on("click","#notificationseen",function(){
+	var m = $("#notification_count").text(); 
+	if(m!="0"){
+		$.post(AJAX_REQUEST_URL, { notification_count:true }, function(result){
+			if(result=="Done"){
+				$("#notification_count").text("0");
+			}
+		});
+	}
+});
+
 /*
 typeof(valuex) == "undefined" || valuex==null
 */
@@ -259,6 +410,8 @@ $(document).on("click","#add-catalogue-item",function(){
 	var checkedArray = new Array();
 	var importantArray = new Array();
 	var mainpagecategory = $("#mainpagecategory").val();
+	var param = urlParamiters(); 
+	var parent = param['parent'];
 
 	$(".catalog-add-form-data .form-input").each(function(){
 		$(".overlay-loader").fadeIn("slow");
@@ -320,7 +473,8 @@ $(document).on("click","#add-catalogue-item",function(){
 		ca:JSON.stringify(columnArray), 
 		ca2:JSON.stringify(checkedArray), 
 		ia:JSON.stringify(importantArray), 
-		macat:JSON.stringify(mainpagecategory) 
+		macat:JSON.stringify(mainpagecategory), 
+		p:parent 
 	}, function(result){
 		$(".overlay-loader").fadeOut("slow");
 		if(result!=""){
@@ -359,6 +513,8 @@ $(document).on("click","#add-catalogue-item-close",function(){
 	var checkedArray = new Array();
 	var importantArray = new Array();
 	var mainpagecategory = $("#mainpagecategory").val();
+	var param = urlParamiters(); 
+	var parent = param['parent'];
 
 	$(".catalog-add-form-data .form-input").each(function(){
 		$(".overlay-loader").fadeIn("slow");
@@ -420,7 +576,8 @@ $(document).on("click","#add-catalogue-item-close",function(){
 		ca:JSON.stringify(columnArray), 
 		ca2:JSON.stringify(checkedArray), 
 		ia:JSON.stringify(importantArray), 
-		macat:JSON.stringify(mainpagecategory) 
+		macat:JSON.stringify(mainpagecategory), 
+		p:parent 
 	}, function(result){
 		$(".overlay-loader").fadeOut("slow");
 		if(result!=""){
@@ -462,6 +619,8 @@ $(document).on("click","#edit-catalogue-item",function(){
 	var checkedArray = new Array();
 	var importantArray = new Array();
 	var mainpagecategory = $("#mainpagecategory").val();
+	var param = urlParamiters(); 
+	var parent = param["parent"]; 
 
 	$(".catalog-add-form-data .form-input").each(function(){
 		$(".overlay-loader").fadeIn("slow");
@@ -528,7 +687,8 @@ $(document).on("click","#edit-catalogue-item",function(){
 		ca:JSON.stringify(columnArray), 
 		ca2:JSON.stringify(checkedArray), 
 		ia:JSON.stringify(importantArray), 
-		macat:JSON.stringify(mainpagecategory) 
+		macat:JSON.stringify(mainpagecategory), 
+		p:parent 
 	}, function(result){
 		$(".overlay-loader").fadeOut("slow");
 		if(result=="Done"){
@@ -1422,7 +1582,6 @@ $(document).on("click",".give-permision",function(){
 });
 
 $(document).on("click",".give-permision-table",function(){
-	var param = urlParamiters();
 	var dlang = $(this).attr("data-dlang");
 	var view = $(this).attr("data-view");
 	$.post(AJAX_REQUEST_URL, { givepermision:true, p:view }, function(result){

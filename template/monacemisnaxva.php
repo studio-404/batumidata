@@ -87,7 +87,10 @@
                       }
                     
                     }
-                    ?>         
+                    ?>    
+                    <?php
+                    if($_SESSION["batumi_user_type"]=="website_manager"):
+                    ?>     
                     <tr>
                       <th><?=$data["language_data"]["val87"]?></th>
                       <td><?php
@@ -98,6 +101,9 @@
                       }
                       ?></td>
                     </tr> 
+                    <?php
+                    endif;
+                    ?>
                   </table>
                 </div><!-- /.box-body -->
 

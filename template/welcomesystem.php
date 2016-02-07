@@ -91,9 +91,15 @@
                   <!-- /.users-list -->
                 </div>
                 <!-- /.box-body -->
+                <?php
+                if($_SESSION["batumi_user_type"]=="website_manager" || $_SESSION["batumi_user_type"]=="editor"):
+                ?>
                 <div class="box-footer text-center">
                   <a href="<?=WEBSITE.LANG?>/momxmareblis-marTva" class="uppercase"><?=$data["language_data"]["val58"]?></a>
                 </div>
+                <?php
+                endif;
+                ?>
                 <!-- /.box-footer -->
               </div>
              </div>

@@ -134,11 +134,17 @@
 
             <div class="col-xs-12">
               <div class="box">
+
                    <div class="mailbox-controls">
                       <div class="btn-group" style="width:100%">
+                        <?php
+                        if($_SESSION["batumi_user_type"]=="website_manager" || $_SESSION["batumi_user_type"]=="editor"):
+                        ?>
                         <button type="button" class="btn btn-default btn-sm gotoUrl" data-goto="<?=WEBSITE.LANG?>/monacemis-damateba?parent=<?=Input::method("GET","idx")?>&amp;back=<?=$data["catalog_general"][0]["slug"]?>" style="float:left"><i class="glyphicon glyphicon-plus"></i>&nbsp;&nbsp;<?=$data["language_data"]["val24"]?></button>
                         <button type="button" class="btn btn-default btn-sm reloadMe" style="float:left; margin-left:5px;"><i class="fa fa-refresh"></i>&nbsp;&nbsp;<?=$data["language_data"]["val25"]?></button>
-                        
+                        <?php
+                        endif;
+                        ?>                        
                         <label style="float:right; width:135px;">
                         <span style="line-height:30px;"><?=$data["language_data"]["val79"]?>: &nbsp;&nbsp;</span> 
                         <select name="show"  id="showitems" class="form-control input-sm" style="float:right; width:70px;">
@@ -182,8 +188,14 @@
                         <td><a href=""><?=$getusername->names($c,$val['insert_admin'])?></a></td>
                         <td>
                           <a href="<?=WEBSITE.LANG."/monacemis-naxva?view=".$val['idx']?>&amp;cataloglist=<?=$val['cataloglist']?>" target="_blank" style="padding:0 0 0 5px"><i class="glyphicon glyphicon-new-window"></i></a>
+                          <?php
+                          if($_SESSION["batumi_user_type"]=="website_manager" || $_SESSION["batumi_user_type"]=="editor"):
+                          ?>
                           <a href="<?=WEBSITE.LANG?>/monacemis-redaqtireba?parent=<?=$val['cataloglist']?>&amp;idx=<?=$val['idx']?>&amp;back=<?=$actual_link?>" style="padding:0 0 0 5px"><i class="glyphicon glyphicon-edit"></i></a>
                           <a href="javascript:void(0)" style="padding:0 0 0 5px" class="deleteUnpublishData" data-dlang="<?=LANG?>" data-id="<?=$val['idx']?>"><i class="glyphicon glyphicon-remove"></i></a>
+                          <?php
+                          endif;
+                          ?>
                         </td>
                       </tr> 
                     <?php

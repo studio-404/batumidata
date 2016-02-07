@@ -135,7 +135,7 @@ class model_admin_gallery extends connection{
 		$conn = $this->conn($c);
 		$rmidx = $_GET['rmidx'];
 		// select current item position
-		$sqlp = 'SELECT `media_idx`,`position` FROM `studio404_media_item` WHERE `idx`=:idx AND `lang`=:lang AND `status`!=:status'; 
+		$sqlp = 'SELECT `idx`, `media_idx`,`position` FROM `studio404_media_item` WHERE `idx`=:idx AND `lang`=:lang AND `status`!=:status'; 
 		$preparep = $conn->prepare($sqlp);
 		$preparep->execute(array(
 			":idx"=>$rmidx, 
@@ -145,6 +145,16 @@ class model_admin_gallery extends connection{
 		$fetch = $preparep->fetch(PDO::FETCH_ASSOC);
 		$media_idx = $fetch["media_idx"];
 		$position = $fetch["position"];
+		$midx = $fetch["idx"];
+		$mpage_type = "photogallerypage";
+
+		// gallery attachment change status 
+		$sg = 'UPDATE `studio404_gallery_attachment` SET `status`=1 WHERE `connect_idx`=:connect_idx AND `pagetype`=:pagetype';
+		$preparesg = $conn->prepare($sg);
+		$preparesg->execute(array(
+			":connect_idx"=>$midx, 
+			":pagetype"=>$mpage_type
+		));
 
 		// minus one position in every item which is greater then current position
 		$sqlm = 'UPDATE `studio404_media_item` SET `position`=`position`-1 WHERE `media_idx`=:media_idx AND `position`>:current_position AND `status`!=:status';
