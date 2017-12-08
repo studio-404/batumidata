@@ -14,6 +14,19 @@ class labellists extends connection{
 		return $fetch;
 	}
 
+	public function loadlabels2($c){
+		$cataloglist = Input::method("POST","cataloglist");
+		$conn = $this->conn($c);
+		$sql = 'SELECT * FROM `studio404_forms` WHERE `cid`=:cid AND `lang`=:lang ORDER BY `id` ASC';
+		$prepare = $conn->prepare($sql); 
+		$prepare->execute(array(
+			":cid"=>$cataloglist, 
+			":lang"=>Input::method("POST","lang_id") 
+		));
+		$fetch = $prepare->fetchAll(PDO::FETCH_ASSOC);
+		return $fetch;
+	}
+
 	public function loadpictures($c,$name,$idx = ""){
 		$conn = $this->conn($c);
 		$view = ($idx == "") ? Input::method('GET','view') : $idx;

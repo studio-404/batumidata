@@ -45,7 +45,7 @@ class formismarTva extends connection{
 		}
 
 		if(Input::method("GET","parent")!=""){
-			$parent = 'SELECT `idx`,`title` FROM `studio404_pages` WHERE `idx`=:idx AND `cid`=4 AND `status`!=1 AND `lang`=:lang';
+			$parent = 'SELECT `idx`,`title` FROM `studio404_pages` WHERE `idx`=:idx AND `status`!=1 AND `lang`=:lang';
 			$prepareParent = $conn->prepare($parent);
 			$prepareParent->execute(array(
 				":idx"=>Input::method("GET","parent"), 

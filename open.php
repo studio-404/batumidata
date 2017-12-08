@@ -1,16 +1,16 @@
 <?php 
 session_start();
-ini_set('display_errors', 1); 
+session_name("batumidatabase");
 /*check last activity*/
 if (!isset($_SESSION['CREATED'])) {
     $_SESSION['CREATED'] = time();
-} else if (time() - $_SESSION['CREATED'] > 1800) {
+} else if (time() - $_SESSION['CREATED'] > 5800) {
     // session started more than 30 minutes ago
     session_regenerate_id(true);    // change session ID for the current session and invalidate old session ID
     $_SESSION['CREATED'] = time();  // update creation time
-}
- 
-// try{
+} 
+error_reporting(E_ALL); 
+ini_set("display_errors", 1);
 header('X-Frame-Options: DENY');
 header("Content-type: text/html; charset=utf-8");
 
@@ -21,6 +21,7 @@ define("WEBSITE_","http://batumi.404.ge");
 define('START_TIME', microtime(TRUE));
 define('START_MEMORY', memory_get_usage());
 define('PLUGINS', WEBSITE.'_plugins/');
+define('PLUGINS_FOLDER', '_plugins/');
 define('FILES', WEBSITE.'files/');
 define('INVOICE', DIR.'files/invoices/');
 define('FLASH', WEBSITE.'flash/');
@@ -83,6 +84,7 @@ $obj  = new url_controll(); // url controlls
 ** important variables if more language edit this line 
 */
 $LANG = $obj->url("segment",$c['site.language.slash.position']);
+$_SESSION['SLUG.AFTER.LANG'] = $obj->url("segment",($c['site.language.slash.position']+1));
 // if($LANG==$c['admin.slug']){
 // 	redirect::url(WEBSITE.$c['main.language']."/".$c['admin.slug']);
 // }
@@ -106,6 +108,8 @@ if(empty($LANG)){ // just domain name
 	$redirect = new redirect();
 	$redirect->go(WEBSITE.$c['main.language']."/".$c["welcome.page.slug"]);
 }
+
+
 /*
 insert log
 */
@@ -133,7 +137,7 @@ define('ADMIN_SLUG',$c['admin.slug']);
 ob_start(); 
 $controller = new controller($c);
 $controller->loadpage($obj,$c);
-// }catch(Exception $e){
+// try{}catch(Exception $e){
 // 	echo "Critical error !";
 // }
 ?>

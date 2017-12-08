@@ -1,5 +1,5 @@
 <?php if(!defined("DIR")){ exit(); }
-class controller
+class controller extends connection
 {//constractor
 	function __construct($c){
 		if(isset($_SESSION["expired_sessioned_time"]) && !empty($_SESSION["expired_sessioned_time"])){
@@ -17,9 +17,23 @@ class controller
 	}
 
 	public function loadpage($obj,$c)
-	{// load constructor
+	{	
+		$conn = $this->conn($c);
+		// load constructor
 		$s2 = $obj->url("segment",2); 
 		$file = $obj->url_last(); 
+
+		if($file!="lockscreen"){
+			$b = 'SELECT `id` FROM `studio404_blocked_ips` WHERE `ip`=:ip';
+			$p = $conn->prepare($b); 
+			$p->execute(array(
+				":ip"=>get_ip::ip()
+			));
+			if($p->rowCount() > 0){
+				redirect::url(WEBSITE.LANG."/lockscreen");
+				exit();
+			}
+		}
 
 		// select page types
 		$type_obj = new page_type();
@@ -119,6 +133,11 @@ class controller
 			$controller_image = 'controller/image.php';
 			if(file_exists($controller_image)){
 				$controller = new image();
+			}
+		}else if($file=="ex"){ // exel csv file --> database
+			$controller_image = 'controller/ex.php';
+			if(file_exists($controller_image)){
+				$controller = new ex($c);
 			}
 		}else{
 

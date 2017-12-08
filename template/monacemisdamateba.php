@@ -26,13 +26,29 @@
 					<div class="form-group">
                     <label><?=$data["language_data"]["val75"]?> <font color="red">*</font></label>
                     <select class="form-control select2" id="mainpagecategory" multiple="multiple" data-placeholder="Select a State" style="width: 100%;">
+                     
                       <?php
                       $x = 0;
+                      $subcategory = new subcategory();
                       foreach ($data["welcomepage_categories"]["item"]["idx"] as $value) {
-                      	if($data["welcomepage_categories"]["item"]["idx"][$x]==Input::method("GET","parent")){
-                      		echo '<option value="'.$data["welcomepage_categories"]["item"]['idx'][$x].'" selected="selected">'.$data["welcomepage_categories"]["item"]['title'][$x].'</option>';
+                      	$countsub = $subcategory->counts($c,$data["welcomepage_categories"]["item"]["idx"][$x]);
+                      	if($countsub>0){
+                      		echo '<optgroup label="'.$data["welcomepage_categories"]["item"]['title'][$x].'">';
+                      		$fetch2 = $subcategory->select($c,$data["welcomepage_categories"]["item"]["idx"][$x]);
+                      		foreach ($fetch2 as $value2) {
+                      			if($value2['idx']==Input::method("GET","parent")){
+	                      		echo '<option value="'.$value2['idx'].'" selected="selected">'.$value2['title'].'</option>';
+		                      	}else{
+		                      		echo '<option value="'.$value2['idx'].'">'.$value2['title'].'</option>';
+		                      	}
+                      		}
+                      		echo '</optgroup>';
                       	}else{
-                      		echo '<option value="'.$data["welcomepage_categories"]["item"]['idx'][$x].'">'.$data["welcomepage_categories"]["item"]['title'][$x].'</option>';
+	                      	if($data["welcomepage_categories"]["item"]["idx"][$x]==Input::method("GET","parent")){
+	                      		echo '<option value="'.$data["welcomepage_categories"]["item"]['idx'][$x].'" selected="selected">'.$data["welcomepage_categories"]["item"]['title'][$x].'</option>';
+	                      	}else{
+	                      		echo '<option value="'.$data["welcomepage_categories"]["item"]['idx'][$x].'">'.$data["welcomepage_categories"]["item"]['title'][$x].'</option>';
+	                      	}
                       	}
                       	$x++;
                       }

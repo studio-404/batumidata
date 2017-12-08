@@ -1,12 +1,12 @@
  <!-- Main Footer -->
-      <footer class="main-footer">
-        <!-- To the right -->
-        <div class="pull-right hidden-xs">
-          IntraNet <?=$c['websitevertion']?>
-        </div>
-        <!-- Default to the left -->
-        <strong>Copyright &copy; 2015 <a href="http://404.ge" target="_blank">Studio 404</a>.</strong> All rights reserved.
-      </footer>
+  <footer class="main-footer">
+    <!-- To the right -->
+    <div class="pull-right hidden-xs">
+      IntraNet <?=$c['websitevertion']?>
+    </div>
+    <!-- Default to the left -->
+    <strong>Copyright &copy; 2015 <a href="http://404.ge" target="_blank">Studio 404</a>.</strong> All rights reserved.
+  </footer>
 
     </div><!-- ./wrapper -->
 
@@ -24,6 +24,8 @@
     <script src="<?=TEMPLATE?>plugins/input-mask/jquery.inputmask.extensions.js?v=<?=$c['websitevertion']?>"></script>
     <!-- date-range-picker -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.2/moment.min.js?v=<?=$c['websitevertion']?>"></script>
+    <script src="<?=TEMPLATE?>plugins/fullcalendar/fullcalendar.min.js"></script>
+
     <script src="<?=TEMPLATE?>plugins/daterangepicker/daterangepicker.js?v=<?=$c['websitevertion']?>"></script>
     <!-- bootstrap color picker -->
     <script src="<?=TEMPLATE?>plugins/colorpicker/bootstrap-colorpicker.min.js?v=<?=$c['websitevertion']?>"></script>
@@ -40,6 +42,10 @@
     <!-- AdminLTE for demo purposes -->
     <script src="<?=TEMPLATE?>dist/js/demo.js"></script>
     <script src="<?=TEMPLATE?>dist/js/general.js"></script>
+
+    <!-- bootstrap datepicker -->
+    <script src="<?=TEMPLATE?>plugins/datepicker/bootstrap-datepicker.js"></script>
+
     <!-- Page script -->
     <script>
       $(function () {
@@ -75,6 +81,11 @@
           $('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
         }
         );
+
+        $('.datepicker').datepicker({
+          autoclose: true,
+          format: 'dd/mm/yyyy'
+        });
 
         //iCheck for checkbox and radio inputs
         $('input[type="checkbox"].minimal, input[type="radio"].minimal').iCheck({

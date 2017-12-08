@@ -22,12 +22,21 @@
 <link rel="stylesheet" href="<?=TEMPLATE?>plugins/timepicker/bootstrap-timepicker.min.css?v=<?=$c['websitevertion']?>">   
 <!-- Select2 -->
 <link rel="stylesheet" href="<?=TEMPLATE?>plugins/select2/select2.min.css?v=<?=$c['websitevertion']?>">
+
+<link rel="stylesheet" href="<?=TEMPLATE?>plugins/fullcalendar/fullcalendar.min.css">
+  <link rel="stylesheet" href="<?=TEMPLATE?>plugins/fullcalendar/fullcalendar.print.css" media="print">
+
 <!-- Theme style -->
 <link rel="stylesheet" href="<?=TEMPLATE?>dist/css/AdminLTE.min.css?v=<?=$c['websitevertion']?>">
 <link rel="stylesheet" href="<?=TEMPLATE?>dist/css/skins/skin-blue.min.css?v=<?=$c['websitevertion']?>">
 <link rel="stylesheet" href="<?=TEMPLATE?>dist/css/general.css?v=<?=$c['websitevertion']?>" />
 <script type="text/javascript" src="<?=PLUGINS?>tinymce/js/tinymce/tinymce.min.js"></script>
 <script type="text/javascript" src="<?=PLUGINS?>tinymce/js/tinymce/plugins/placeholder/plugin.js"></script>
+
+<!-- bootstrap datepicker -->
+<link rel="stylesheet" href="<?=TEMPLATE?>plugins/datepicker/datepicker3.css">
+
+
 <script type="text/javascript">
     tinymce.init({
     selector: ".tinyMce",

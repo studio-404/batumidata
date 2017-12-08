@@ -24,6 +24,10 @@ class welcomesystem extends connection{
 		$userlist = $cache->index($c,"userlist");
 		$data["userlist"] = json_decode($userlist,true);
 
+		/* last 10 products */
+		$lastproducts = $cache->index($c,"lastproducts");
+		$data["lastproducts"] = json_decode($lastproducts,true);
+
 
 		$sql = 'SELECT `namelname`,`picture` FROM `studio404_users` WHERE `id`=:id';
 		$prepare = $conn->prepare($sql);
@@ -35,6 +39,20 @@ class welcomesystem extends connection{
 			$data["userdata"] = $fetch;
 		}else{
 			redirect::url(WEBSITE);
+		}
+
+
+		$parent = 'SELECT `idx`, `title`,`background`,`slug` FROM `studio404_pages` WHERE `cid`=:cid AND `page_type`=:page_type AND `showwelcome`=1 AND `status`!=1 AND `lang`=:lang ORDER BY `position` ASC';
+		$prepareParent = $conn->prepare($parent);
+		$prepareParent->execute(array(
+			":page_type"=>'catalogpage', 
+			":cid"=>4, 
+			":lang"=>LANG_ID
+		));
+		if($prepareParent->rowCount() > 0){
+			$data["categories_list_items"] = $prepareParent->fetchAll(PDO::FETCH_ASSOC);
+		}else{
+			$data["categories_list_items"] = array();
 		}
 
 		$include = WEB_DIR."/welcomesystem.php";

@@ -7,9 +7,10 @@ class catalog extends connection{
 	public function template($c){
 		$conn = $this->conn($c); // connection
 
-		if(empty(Input::method("GET","idx"))){
+		if(!Input::method("GET","idx")){
 			redirect::url(WEBSITE.LANG."/welcomesystem");
 		}
+
 
 		$cache = new cache();
 		$welcomepage_categories = $cache->index($c,"welcomepage_categories");
@@ -100,7 +101,7 @@ class catalog extends connection{
 		$sql2 = 'SELECT 
 		COUNT(`studio404_module_item`.`idx`) AS allitems
 		FROM `studio404_module_item` WHERE 
-		FIND_IN_SET('.Input::method("GET","idx").', `studio404_module_item`.`cataloglist`) AND 
+		FIND_IN_SET('.(int)Input::method("GET","idx").', `studio404_module_item`.`cataloglist`) AND 
 		`studio404_module_item`.`lang`=:lang AND 
 		`studio404_module_item`.`visibility`!=:visibility AND 
 		`studio404_module_item`.`status`!=:status';	

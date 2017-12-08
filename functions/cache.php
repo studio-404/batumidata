@@ -20,7 +20,17 @@ class cache extends connection{
 			$sw = "sw".Input::method("GET","sw");
 		}else{ $sw = ""; }
 
-		$cache_file = "_cache/".$type.$proin.$partner.$slug_.$pn.$sw.LANG_ID.".json"; 
+		if(Input::method("GET","print")){
+			$print = "print".Input::method("GET","print");
+		}else{ $print = ""; }
+		//
+		if(Input::method("GET","order") && Input::method("GET","orderType") && (Input::method("GET","orderType")=="ASC" || Input::method("GET","orderType")=="DESC")){
+			$oo = Input::method("GET","order").Input::method("GET","orderType");
+		}else{
+			$oo = "";
+		}
+
+		$cache_file = "_cache/".$type.$proin.$partner.$slug_.$pn.$sw.$print.$oo.LANG_ID.".json"; 
 		if(file_exists($cache_file)){
 			$output = @file_get_contents($cache_file); 
 		}else{
@@ -50,7 +60,7 @@ class cache extends connection{
 			$cid = Input::method("GET","parent");
 			$select_form = new select_form();
 			$fetch = $select_form->form($c, $cid, LANG_ID); 
-			break;//
+			break;
 			case "catalog_form":
 			$idx = Input::method("GET","idx");
 			$selectform = 'SELECT * FROM `studio404_forms` WHERE `cid`=:cid AND `filter`=:filter AND `lang`=:lang AND `status`!=:status ORDER BY `id` ASC';
@@ -69,6 +79,14 @@ class cache extends connection{
 			$prepare->execute();
 			$fetch = $prepare->fetchAll(PDO::FETCH_ASSOC);
 			break;
+			case "lastproducts":
+			$sql = 'SELECT `idx`,`date`,`title`,`cataloglist`,`insert_admin` FROM `studio404_module_item` WHERE `status`!=1 AND `visibility`=2 AND `lang`=:lang ORDER BY `date` DESC LIMIT 10';
+			$prepare = $conn->prepare($sql); 
+			$prepare->execute(array(
+				":lang"=>LANG_ID
+			));
+			$fetch = $prepare->fetchAll(PDO::FETCH_ASSOC);
+			break;
 			case "catalog_table_list":
 			$sql = 'SELECT `attach_column`,`label` FROM `studio404_forms` WHERE `cid`=:cid AND `list`="yes" AND `lang`=:lang ORDER BY `id` ASC';
 			$prepare = $conn->prepare($sql); 
@@ -82,20 +100,34 @@ class cache extends connection{
 			$offset = (Input::method("GET","pn")) ? Input::method("GET","pn")-1 : 0;
 			$sw = (Input::method("GET","sw") && is_numeric(Input::method("GET","sw"))) ? Input::method("GET","sw") : 10;
 			if(!Input::method("GET","pn") || !is_numeric(Input::method("GET","pn"))){ $offset = 0; }
-			$sql = 'SELECT 
-			`studio404_module_item`.*
-			FROM `studio404_module_item` WHERE 
-			FIND_IN_SET('.Input::method("GET","idx").', `studio404_module_item`.`cataloglist`) AND 
-			`studio404_module_item`.`lang`=:lang AND 
-			`studio404_module_item`.`visibility`!=:visibility AND 
-			`studio404_module_item`.`status`!=:status ORDER BY `id` DESC LIMIT '.$offset.', '.$sw;	
-			$prepare = $conn->prepare($sql); 
-			$prepare->execute(array(
-				":lang"=>LANG_ID, 
-				":status"=>1, 
-				":visibility"=>1 
-			)); 
-			$fetch = $prepare->fetchAll(PDO::FETCH_ASSOC); 
+			if(!Input::method("GET","print")){
+				$limit = ' LIMIT '.($offset*$sw).', '.$sw;
+			}else{
+				$limit = '';
+			}
+			if(Input::method("GET","order") && Input::method("GET","orderType") && (Input::method("GET","orderType")=="ASC" || Input::method("GET","orderType")=="DESC")){
+				$order = " `".Input::method("GET","order")."` ".Input::method("GET","orderType");
+			}else{
+				$order = " `id` DESC";
+			}
+			try{
+				$sql = 'SELECT 
+				`studio404_module_item`.*
+				FROM `studio404_module_item` WHERE 
+				FIND_IN_SET('.Input::method("GET","idx").', `studio404_module_item`.`cataloglist`) AND 
+				`studio404_module_item`.`lang`=:lang AND 
+				`studio404_module_item`.`visibility`!=:visibility AND 
+				`studio404_module_item`.`status`!=:status ORDER BY'.$order.$limit;	
+				$prepare = $conn->prepare($sql); 
+				$prepare->execute(array(
+					":lang"=>LANG_ID, 
+					":status"=>1, 
+					":visibility"=>1 
+				)); 
+				$fetch = $prepare->fetchAll(PDO::FETCH_ASSOC); 
+			}catch(Exception $e){
+				die("Omg, What the hell are you doing ?");
+			}
 			break;
 			case "catalogitemsnovisiable": 
 			

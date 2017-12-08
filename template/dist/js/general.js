@@ -15,134 +15,136 @@ var MESSAGE_OPERATION_DONE_GE = "ოპერაცია წარმატე�
 var MESSAGE_OPERATION_ERROR_EN = "Error !";
 var MESSAGE_OPERATION_ERROR_GE = "მოხდა შეცდომა !";
 
-var interval = setInterval(function(){
-	$.post(AJAX_REQUEST_URL, { checknotification:true }, function(r){
-		if(r!="Error" && /^[\],:{}\s]*$/.test(r.replace(/\\["\\\/bfnrtu]/g, '@').
-replace(/"[^"\\\n\r]*"|true|false|null|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?/g, ']').
-replace(/(?:^|:|,)(?:\s*\[)+/g, '')))
-		{
-			var obj = JSON.parse(r); 
-			var notification_count = parseInt($("#notification_count").text());
-			var message_count = parseInt($("#message_count").text());
-			var cobject = obj.length;
-			if(cobject>0 && $("#message_count").length && $("#notification_count").length){
-				var type = ""; 
-				var newN = 0;
-				var newM = 0;
-				var notification_html = '';
-				var message_html = '';
-				/*
-				
-				*/
-				var l = $("#system-language").text();
-				var x = 0;
-				for (var i = obj.length - 1; i >= 0; i--) {
-					type = obj[i].type;
-					//console.log(type);
-					if(type=="notification"){
-						var go = '';
-						if(obj[i].url!="" && typeof(obj[i].url)!="undefined" && obj[i].url!=null){
-							var sp = obj[i].url.split("::"); 
-							if(l=="EN"){
-								go = sp[0];
-							}else{
-								go = sp[1];
+if($("#message_count").length && $("#notification_count").length){
+	var interval = setInterval(function(){
+		$.post(AJAX_REQUEST_URL, { checknotification:true }, function(r){
+			if(r!="Error" && /^[\],:{}\s]*$/.test(r.replace(/\\["\\\/bfnrtu]/g, '@').
+	replace(/"[^"\\\n\r]*"|true|false|null|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?/g, ']').
+	replace(/(?:^|:|,)(?:\s*\[)+/g, '')))
+			{
+				var obj = JSON.parse(r); 
+				var notification_count = parseInt($("#notification_count").text());
+				var message_count = parseInt($("#message_count").text());
+				var cobject = obj.length;
+				if(cobject>0){
+					var type = ""; 
+					var newN = 0;
+					var newM = 0;
+					var notification_html = '';
+					var message_html = '';
+					/*
+					
+					*/
+					var l = $("#system-language").text();
+					var x = 0;
+					for (var i = obj.length - 1; i >= 0; i--) {
+						type = obj[i].type;
+						//console.log(type);
+						if(type=="notification"){
+							var go = '';
+							if(obj[i].url!="" && typeof(obj[i].url)!="undefined" && obj[i].url!=null){
+								var sp = obj[i].url.split("::"); 
+								if(l=="EN"){
+									go = sp[0];
+								}else{
+									go = sp[1];
+								}
 							}
+							newN++; // 2
+							notification_html += '<li>';
+							notification_html += '<ul class="menu">';
+							notification_html += '<li>';
+							notification_html += '<a href="'+go+'">';
+							notification_html += '<div class="pull-left">';
+							if(obj[i].userspicture==""){
+								notification_html += '<img src="/template/dist/img/avatar04.png" class="img-circle" alt="User Image" width="40" height="40" />';
+							}else{
+								notification_html += '<img src="/files/usersimage/'+obj[i].userspicture+'" class="img-circle" alt="User Image" width="40" height="40" />';	
+							}						
+							notification_html += '</div>';
+							
+							notification_html += "<h4>"+obj[i].usersnamelname+"</h4>";
+							if(l=="EN"){
+								notification_html += "<p>"+obj[i].description_ge+"</p>";
+							}else{
+								notification_html += "<p>"+obj[i].description_en+"</p>";
+							}					
+							notification_html += '</a>';
+							notification_html += '</li>';
+							notification_html += '</ul>';
+							notification_html += '</li>';
+						}else{
+							var go = '';
+							if(obj[i].url!="" && typeof(obj[i].url)!="undefined" && obj[i].url!=null){
+								var sp = obj[i].url.split("::"); 
+								if(l=="EN"){
+									go = sp[0];
+								}else{
+									go = sp[1];
+								}
+							}
+							if(x==0){
+								message_html += '<li><ul class="menu">';
+							}
+							message_html += '<li>';
+							message_html += '<a href="'+go+'">';
+							message_html += '<div class="pull-left">';
+							if(obj[i].userspicture==""){
+								message_html += '<img src="/template/dist/img/avatar04.png" class="img-circle" alt="User Image" width="40" height="40" />';
+							}else{
+								message_html += '<img src="/files/usersimage/'+obj[i].userspicture+'" class="img-circle" alt="User Image" width="40" height="40" />';	
+							}	
+							//message_html += '<img src="" class="img-circle" alt="User Image">';
+							
+							message_html += '</div>';
+							message_html += '<h4>';
+							message_html += obj[i].usersnamelname;
+							message_html += '</h4>';
+
+							if(l=="EN"){
+								message_html += "<p>"+obj[i].description_ge+"</p>";
+							}else{
+								message_html += "<p>"+obj[i].description_en+"</p>";
+							}
+							// message_html += ' <p>Why not buy a new awesome theme?</p>';
+
+							message_html += '</a>';
+							message_html += '</li>'; 
+							if(x==0){
+								message_html += '</ul></li>'; 
+							}
+							newM++; // 1
+							x++;
 						}
-						newN++; // 2
-						notification_html += '<li>';
-						notification_html += '<ul class="menu">';
-						notification_html += '<li>';
-						notification_html += '<a href="'+go+'">';
-						notification_html += '<div class="pull-left">';
-						if(obj[i].userspicture==""){
-							notification_html += '<img src="/template/dist/img/avatar04.png" class="img-circle" alt="User Image" width="40" height="40" />';
-						}else{
-							notification_html += '<img src="/files/usersimage/'+obj[i].userspicture+'" class="img-circle" alt="User Image" width="40" height="40" />';	
-						}						
-						notification_html += '</div>';
-						
-						notification_html += "<h4>"+obj[i].usersnamelname+"</h4>";
-						if(l=="EN"){
-							notification_html += "<p>"+obj[i].description_ge+"</p>";
-						}else{
-							notification_html += "<p>"+obj[i].description_en+"</p>";
-						}					
-						notification_html += '</a>';
-						notification_html += '</li>';
-						notification_html += '</ul>';
-						notification_html += '</li>';
+					};
+
+					if(l=="EN"){
+						notification_html += '<li class="footer"><a href="#">ნახე მეტი</a></li>'; 
+						message_html += '<li class="footer"><a href="'+SYSTEM_WELCOME_PAGE+'/ge/mailbox/inbox">ნახე მეტი</a></li>'; 
 					}else{
-						var go = '';
-						if(obj[i].url!="" && typeof(obj[i].url)!="undefined" && obj[i].url!=null){
-							var sp = obj[i].url.split("::"); 
-							if(l=="EN"){
-								go = sp[0];
-							}else{
-								go = sp[1];
-							}
-						}
-						if(x==0){
-							message_html += '<li><ul class="menu">';
-						}
-						message_html += '<li>';
-						message_html += '<a href="'+go+'">';
-						message_html += '<div class="pull-left">';
-						if(obj[i].userspicture==""){
-							message_html += '<img src="/template/dist/img/avatar04.png" class="img-circle" alt="User Image" width="40" height="40" />';
-						}else{
-							message_html += '<img src="/files/usersimage/'+obj[i].userspicture+'" class="img-circle" alt="User Image" width="40" height="40" />';	
-						}	
-						//message_html += '<img src="" class="img-circle" alt="User Image">';
-						
-						message_html += '</div>';
-						message_html += '<h4>';
-						message_html += obj[i].usersnamelname;
-						message_html += '</h4>';
-
-						if(l=="EN"){
-							message_html += "<p>"+obj[i].description_ge+"</p>";
-						}else{
-							message_html += "<p>"+obj[i].description_en+"</p>";
-						}
-						// message_html += ' <p>Why not buy a new awesome theme?</p>';
-
-						message_html += '</a>';
-						message_html += '</li>'; 
-						if(x==0){
-							message_html += '</ul></li>'; 
-						}
-						newM++; // 1
-						x++;
+						notification_html += '<li class="footer"><a href="#">Read more</a></li>'; 
+						message_html += '<li class="footer"><a href="'+SYSTEM_WELCOME_PAGE+'/en/mailbox/inbox">Read more</a></li>'; 
 					}
-				};
+					if(newN!=notification_count){
+						$("#notification_count").text(newN); 
+						var audio = new Audio('/files/audio/glass.mp3?v=1');
+						audio.play();
+						$(".notification_html").html(notification_html);
+					}
 
-				if(l=="EN"){
-					notification_html += '<li class="footer"><a href="#">ნახე მეტი</a></li>'; 
-					message_html += '<li class="footer"><a href="'+SYSTEM_WELCOME_PAGE+'/ge/mailbox/inbox">ნახე მეტი</a></li>'; 
-				}else{
-					notification_html += '<li class="footer"><a href="#">Read more</a></li>'; 
-					message_html += '<li class="footer"><a href="'+SYSTEM_WELCOME_PAGE+'/en/mailbox/inbox">Read more</a></li>'; 
-				}
-				if(newN!=notification_count){
-					$("#notification_count").text(newN); 
-					var audio = new Audio('/files/audio/glass.mp3');
-					audio.play();
-					$(".notification_html").html(notification_html);
-				}
+					if(newM!=message_count){
+						$("#message_count").text(newM); 
+						var audio2 = new Audio('/files/audio/glass5.mp3?v=1');
+						audio2.play();
+						$(".message_html").html(message_html);
+					}
 
-				if(newM!=message_count){
-					$("#message_count").text(newM); 
-					var audio2 = new Audio('/files/audio/glass5.mp3');
-					audio2.play();
-					$(".message_html").html(message_html);
 				}
-
 			}
-		}
-	});
-	
-}, 1000);
+		});
+		
+	}, 1000);
+}
 
 $(document).on("click",".messageseen",function(){
 	var m = $("#message_count").text(); 
@@ -307,6 +309,57 @@ $(document).on("click","#add-catalogue-nouser",function(){
 	});
 });
 
+$(document).on("click","#add-blocked-ip",function(){
+	var ip = $("#ip").val(); 
+	var dlang = $(this).data("dlang");
+	if(typeof(ip)=="undefined" || ip==null || ip==""){
+		$(".ip-required").fadeIn("slow");
+		return false;
+	}else{
+		$(".overlay-loader").fadeIn("slow");
+		$.post(AJAX_REQUEST_URL, { addblockedip:true, i:ip }, function(result){
+			$(".overlay-loader").fadeOut("slow");
+			if(result=="Done"){
+				if(dlang=="ge"){
+					$(".form-message-output").text(MESSAGE_OPERATION_DONE_GE).fadeIn("slow");
+				}else{
+					$(".form-message-output").text(MESSAGE_OPERATION_DONE_EN).fadeIn("slow");
+				}				
+			}else{
+				if(dlang=="ge"){
+					$(".form-message-output").text(MESSAGE_OPERATION_ERROR_GE).fadeIn("slow");
+				}else{
+					$(".form-message-output").text(MESSAGE_OPERATION_ERROR_EN).fadeIn("slow");
+				}
+			}
+		});
+	}
+});
+
+//
+$(document).on("click","#add-blocked-ip-close",function(){
+	var ip = $("#ip").val(); 
+	var dlang = $(this).data("dlang");
+	if(typeof(ip)=="undefined" || ip==null || ip==""){
+		$(".ip-required").fadeIn("slow");
+		return false;
+	}else{
+		$(".overlay-loader").fadeIn("slow");
+		$.post(AJAX_REQUEST_URL, { addblockedip:true, i:ip }, function(result){
+			$(".overlay-loader").fadeOut("slow");
+			if(result=="Done"){
+				location.href = PROTOCOL+document.domain+"/"+dlang+"/dablokili-momxmareblebi";			
+			}else{
+				if(dlang=="ge"){
+					$(".form-message-output").text(MESSAGE_OPERATION_ERROR_GE).fadeIn("slow");
+				}else{
+					$(".form-message-output").text(MESSAGE_OPERATION_ERROR_EN).fadeIn("slow");
+				}
+			}
+		});
+	}
+});
+
 $(document).on("click","#login-button",function(){
 
 	$(".text-red").text(MESSAGE_WAIT);
@@ -335,6 +388,7 @@ $(document).on("click","#login-button",function(){
 			}else if(result=="NoUser"){
 				$(".text-red").text(MESSAGE_NO_USER);
 			}
+			console.log(result);
 		});
 	}
 
@@ -715,6 +769,104 @@ $(document).on("click","#edit-catalogue-item",function(){
 /* EDIT end */
 
 
+$(document).on("click","#edit-catalogue-item-close",function(){
+	var gotourl = $(this).attr("data-back");
+	var dbcolumn = '';
+	var typeArray = new Array();
+	var valueArray = new Array();
+	var nameArray = new Array();
+	var columnArray = new Array();
+	var checkedArray = new Array();
+	var importantArray = new Array();
+	var mainpagecategory = $("#mainpagecategory").val();
+	var param = urlParamiters(); 
+	var parent = param["parent"]; 
+
+	$(".catalog-add-form-data .form-input").each(function(){
+		$(".overlay-loader").fadeIn("slow");
+		var type = $(this).attr("data-type"); 
+		if(type=="text"){
+			valueArray.push($(this).val());
+			typeArray.push($(this).attr("data-type"));
+			nameArray.push($(this).attr("data-name"));
+			importantArray.push($(this).attr("data-important"));
+			dbcolumn = $(this).attr("data-attach").split(" ");
+			columnArray.push(dbcolumn[0]);
+			checkedArray.push("no");
+		}else if(type=="select"){
+			valueArray.push($(this).val());
+			typeArray.push($(this).attr("data-type"));
+			nameArray.push($(this).attr("data-name"));
+			importantArray.push($(this).attr("data-important"));
+			dbcolumn = $(this).attr("data-attach").split(" ");
+			columnArray.push(dbcolumn[0]);
+			checkedArray.push("no");
+		}else if(type=="checkbox"){
+			valueArray.push($(this).val());
+			nameArray.push($(this).attr("data-name"));
+			typeArray.push($(this).attr("data-type"));
+			importantArray.push($(this).attr("data-important"));
+			dbcolumn = $(this).attr("data-attach").split(" ");
+			columnArray.push(dbcolumn[0]);
+			if($(this).is(':checked')){
+				checkedArray.push("yes");	
+			}else{
+				checkedArray.push("no");	
+			}			
+		}else if(type=="file"){
+			
+		}else if(type=="date"){
+			valueArray.push($(this).val());
+			nameArray.push($(this).attr("data-name"));
+			typeArray.push($(this).attr("data-type"));
+			importantArray.push($(this).attr("data-important"));
+			dbcolumn = $(this).attr("data-attach").split(" ");
+			columnArray.push(dbcolumn[0]);
+			checkedArray.push("no");
+		}else if(type=="textarea"){
+			valueArray.push($(this).val());
+			typeArray.push($(this).attr("data-type"));
+			nameArray.push($(this).attr("data-name"));
+			importantArray.push($(this).attr("data-important"));
+			dbcolumn = $(this).attr("data-attach").split(" ");
+			columnArray.push(dbcolumn[0]);
+			checkedArray.push("no");
+		}
+	});
+	var param = urlParamiters();
+	var l = $("#system-language").text();
+	var dlang = (l=="EN") ? "1" : "2";
+	var dlang2 = (l=="EN") ? "ge" : "en";
+	$.post(AJAX_REQUEST_URL, { 
+		editCatalogItem:true, 
+		editidx:param["idx"],
+		edit_language:dlang,
+		ta:JSON.stringify(typeArray), 
+		va:JSON.stringify(valueArray), 
+		na:JSON.stringify(nameArray), 
+		ca:JSON.stringify(columnArray), 
+		ca2:JSON.stringify(checkedArray), 
+		ia:JSON.stringify(importantArray), 
+		macat:JSON.stringify(mainpagecategory), 
+		p:parent 
+	}, function(result){
+		$(".overlay-loader").fadeOut("slow");
+		if(result=="Done"){
+			$("#monacemisdamatebaform").append('<input type="hidden" name="gallery_idx_post" value="'+param["idx"]+'" />');
+			var file_length = $(".catalog-add-form-data input[type='file']").length;
+			if(file_length > 0){
+				$("#monacemisdamatebaform").submit();
+			}else{
+				location.href = gotourl; 
+			}			
+			
+		}else{
+			alert("Error: 3001");
+		}
+	});
+});
+
+
 $(document).on("click",".makemedouble",function(){
 	var doubleid = $(this).attr("data-doubleid"); 
 	var filename = $(this).attr("data-filename"); 
@@ -774,8 +926,15 @@ function upload(file,typesx){
 
 }
 
+$(document).on("change","#catalog-image", function(e){
+	 e.preventDefault();
+     var fileInput = document.getElementById('catalog-image');
+     var file = fileInput.files[0];     
+     $(".user-image").attr("src", URL.createObjectURL(e.target.files[0])); 
+     console.log(URL.createObjectURL(e.target.files[0]));
+});
 
-$(document).on("click","#add-catalogue",function(){
+$(document).on("click","#add-catalogue",function(e){
 	var name = $("#titlex").val();
 	var parent_idx = $("#parent_idx").val();
 	var dlang = $(this).data("dlang");
@@ -858,8 +1017,8 @@ $(document).on("click","#edit-catalogue",function(){
 				}else{
 					$(".form-message-output").html(MESSAGE_OPERATION_ERROR_GE).fadeIn("slow");
 				}
-				$("#titlex").val('');
 			}
+			$("#catalog-form").submit();
 		});
 	}else{
 		$(".overlay-loader").fadeOut("slow");
@@ -1077,7 +1236,8 @@ $(document).on("change","#showitems",function(){
 	var val = $(this).val();
 	var param = urlParamiters();
 	if(!param["pn"]){ param["pn"] = 1; }
-	var urltogo = "?idx="+param["idx"]+"&pn=1&sw="+val;
+	if(!param["parentidx"]){ var parentidx = ""; }else{ var parentidx = "parentidx="+param["parentidx"]+"&"; }
+	var urltogo = "?"+parentidx+"idx="+param["idx"]+"&pn=1&sw="+val;
 	location.href = urltogo;
 });
 
@@ -1344,6 +1504,8 @@ $(document).on("click","#save-form",function(){
 	var dataCheckbox = new Array();
 	var val = new Array();
 	var params = urlParamiters();
+	var subcategoryadd = $("#subcategoryadd").val(); 
+
 	$(".interface .element-box").each(function(index, value){
 		type.push($(this).attr("data-elemtype").replace(/"/g, '').replace(/'/g, '').replace(/#/g, ''));
 		dlang.push($(this).attr("data-dlang").replace(/"/g, '').replace(/'/g, '').replace(/#/g, ''));
@@ -1388,6 +1550,7 @@ $(document).on("click","#save-form",function(){
 	$.post(AJAX_REQUEST_URL, { 
 		createform:true, 
 		update_lang:update_language, 
+		subcat:subcategoryadd,  
 		catId:params["parent"], 
 		t:JSON.stringify(type),  
 		lang:JSON.stringify(dlang),  
@@ -1429,6 +1592,7 @@ $(document).on("click","#save-form-close",function(){
 	var dataCheckbox = new Array();
 	var val = new Array();
 	var params = urlParamiters();
+	var subcategoryadd = $("#subcategoryadd").val(); 
 	$(".interface .element-box").each(function(index, value){
 		type.push($(this).attr("data-elemtype").replace(/"/g, '').replace(/'/g, '').replace(/#/g, ''));
 		dlang.push($(this).attr("data-dlang").replace(/"/g, '').replace(/'/g, '').replace(/#/g, ''));
@@ -1473,6 +1637,7 @@ $(document).on("click","#save-form-close",function(){
 	$.post(AJAX_REQUEST_URL, { 
 		createform:true, 
 		update_lang:update_language, 
+		subcat:subcategoryadd, 
 		catId:params["parent"], 
 		t:JSON.stringify(type),  
 		lang:JSON.stringify(dlang),  
@@ -1574,7 +1739,12 @@ $(document).on("click",".edit-database-button",function(){
 $(document).on("click",".give-permision",function(){
 	var param = urlParamiters();
 	var dlang = $(this).attr("data-dlang");
-	$.post(AJAX_REQUEST_URL, { givepermision:true, p:param["view"] }, function(result){
+	if(param["idx"]!=null && typeof(param["idx"]) !="undefined"){
+		idx_send = param["idx"];
+	}else{
+		idx_send = param["view"];
+	}
+	$.post(AJAX_REQUEST_URL, { givepermision:true, p:param["view"], i:idx_send }, function(result){
 		if(result=="Done"){
 			location.href = SYSTEM_WELCOME_PAGE + "/"+dlang+"/nebarTvis-micema";
 		}
@@ -1768,7 +1938,9 @@ $(document).on("click",".deleteMailboxMessage",function(){
 
 var call = 0;
 $(document).on("click",".reloadprotect",function(){
-      $.post(AJAX_REQUEST_URL, { reloadImage:true }, function(result){
+	$.post(AJAX_REQUEST_URL, { 
+      	reloadImage:true
+      }, function(result){
       	if(result=="Done"){
       		var pro = PROTOCOL+document.domain+"/protect.php?v="+call;
       		$(".protectimage").attr("src",pro);
@@ -1776,6 +1948,184 @@ $(document).on("click",".reloadprotect",function(){
       });
       call++;
 });
+
+//
+$(document).on("click","#add-new-event",function(){
+	 var etitle = $("#etitle").val();
+	var estart_date = $("#estart_date").val();
+	var eend_date = $("#eend_date").val();
+	var eaddress = $("#eaddress").val();
+	var eprice = $("#eprice").val();
+	var ecurrency = $("#ecurrency").val();
+	var edescription = $("#edescription").val();
+
+      $.post(AJAX_REQUEST_URL, { 
+      	addNewEvent:true, 
+      	etitle: etitle, 
+      	estart_date: estart_date, 
+      	eend_date: eend_date, 
+      	eaddress: eaddress, 
+      	eprice: eprice, 
+      	ecurrency: ecurrency, 
+      	edescription: edescription 
+      }, function(result){
+      	if(result=="Done"){
+      		$("#messagex").html("Done");
+      		location.reload();
+      	}
+      });
+});
+
+$(document).on("click",".removeEvent",function(){
+	var id = $(this).attr("data-id");
+	$("#bs-example-xx").modal("show");
+	$(".removeEventTrue").attr("data-id",id);
+});
+
+$(document).on("click",".removeEventTrue",function(){
+	var id = $(this).attr("data-id");
+	$.post(AJAX_REQUEST_URL, { 
+		removeEvent:true, 
+		id: id
+	}, function(result){
+		if(result == "Done"){
+			location.reload();
+		}
+	});
+});
+
+$(document).on("click",".editEvent",function(){
+	var id = $(this).attr("data-id");
+	var lang = $(this).attr("data-lang");
+	$.post(AJAX_REQUEST_URL, { 
+		selectOneEvent:true, 
+		id: id,
+		lang_id:lang
+	}, function(result){
+		var obj = $.parseJSON(result);
+
+		$("#eidx").val(obj.idx);
+		$("#elang").val(obj.lang);
+		$("#etitle").val(obj.title);
+		$("#estart_date").val(obj.start_date);
+		$("#eend_date").val(obj.end_date);
+		$("#eaddress").val(obj.address);
+		$("#eprice").val(obj.price);		
+		$("#ecurrency").val(obj.currency).trigger("change");
+		$("#edescription").val(obj.description);
+
+		$("#add-new-event").text("რედაქტირება");
+		$("#add-new-event").attr("id","edit-new-event");
+		$("#remove"+obj.idx).remove();
+	});
+});
+
+$(document).on("click","#edit-new-event",function(){
+	var eidx = $("#eidx").val();
+	var elang = $("#elang").val();
+	var etitle = $("#etitle").val();
+	var estart_date = $("#estart_date").val();
+	var eend_date = $("#eend_date").val();
+	var eaddress = $("#eaddress").val();
+	var eprice = $("#eprice").val();
+	var ecurrency = $("#ecurrency").val();
+	var edescription = $("#edescription").val();
+
+      $.post(AJAX_REQUEST_URL, { 
+      	editNewEvent:true, 
+      	eidx: eidx, 
+      	elang: elang, 
+      	etitle: etitle, 
+      	estart_date: estart_date, 
+      	eend_date: eend_date, 
+      	eaddress: eaddress, 
+      	eprice: eprice, 
+      	ecurrency: ecurrency, 
+      	edescription: edescription 
+      }, function(result){
+      	if(result=="Done"){
+      		$("#messagex").html("Done");
+      		location.reload();
+      	}
+      });
+});
+
+$(document).on("click","#send_catalog_list",function(){
+	var send_parentidx = $("#send_parentidx").val();
+	var lang_id = $("#lang_id").val();
+	var send_idx = $("#send_idx").val();
+	var send_email = $("#send_email").val();
+	var send_text = $("#send_text").val();
+	$(".send_message_output").html("Please wait...");
+      $.post(AJAX_REQUEST_URL, { 
+      	sendcataloglist:true, 
+      	lang_id: lang_id, 
+      	send_parentidx: send_parentidx, 
+      	send_idx: send_idx, 
+      	send_email: send_email, 
+      	send_text: send_text  
+      }, function(result){
+      	$(".send_message_output").html(result);
+      	if(result=="Done"){
+      		setTimeout(function(){
+      			location.reload();	
+      		}, 2000);
+      	}
+      });
+});
+
+
+function animateLeft(clas){
+	$(".hiddenSlide").animate({"left":"100%"}, "fast");
+	$(clas+" .hiddenSlide").animate({"left":"0px"}, "slow");
+}
+
+function popupCatalogItem(idx, cataloglist, lang_id){
+	$("#bs-example-catakigitem").modal("show"); 
+	$.post(AJAX_REQUEST_URL, { 
+		selectCatalogItemData:true, 
+		idx: idx, 
+		cataloglist:cataloglist, 
+		lang_id:lang_id
+	}, function(result){
+		var obj = $.parseJSON(result);
+		$(".catalogItemRows").html(obj.table);	
+
+		$(".filterEmptyTdsAjax tr").each(function(){
+	       var td = $("td", this).html(); 
+	       if(td==""){ $(this).hide(); }
+	    });		
+	});
+}
+
+function select_current_day_events(date, lang_id){
+	$(".event_lists").html("Please Wait...");
+	$.post(AJAX_REQUEST_URL, { 
+		selectAllEvents:true, 
+		date: date, 
+		lang_id:lang_id
+	}, function(result){
+		var obj = $.parseJSON(result);
+		var html = "";
+		if(obj.length){			
+			for(var i = 0; i<obj.length; i++){
+				html += "<div class=\"box box-success\" id=\"remove"+obj[i].idx+"\">";
+				html += "<div class=\"box-header with-border\">";
+				html += "<h3 class=\"box-title\">"+obj[i].title+"</h3>";
+				html += "<div class=\"box-tools pull-right\">";
+				html += "<button type=\"button\" class=\"btn btn-box-tool editEvent\" data-id=\""+obj[i].idx+"\" data-lang=\""+obj[i].lang+"\"><i class=\"fa fa-pencil-square-o\"></i></button>";
+				html += "<button type=\"button\" class=\"btn btn-box-tool removeEvent\" data-id=\""+obj[i].idx+"\"><i class=\"fa fa-times\"></i></button>";
+				html += "</div>";
+				html += "</div>";
+				html += "<div class=\"box-body\">";
+				html += obj[i].description;
+				html += "</div>";
+				html += "</div>";
+			}
+			$(".event_lists").html(html);
+		}
+	});
+}
 
 function update_users_profile(type,dlang){
 	var namelname = $("#namelname").val(); 
@@ -1836,4 +2186,28 @@ function urlParamiters()
 		}
 	} 
 	return query_string;		
+}
+
+function printList(){
+	var url = document.location;
+	window.open(url+"&print=true&sw=100000000", '_blank');
+}
+
+function OrderByMe(th, lb){
+	$(".thLabel").css("color","#333");
+	$(th).css("color","red");
+	var url = document.location.toString();
+	var rep = replaceUrlParam(url, "order", lb);
+	var rep2 = replaceUrlParam(rep, "orderType", "ASC");
+	location.href = rep2;
+}
+
+function replaceUrlParam(url, paramName, paramValue){
+    if(paramValue == null)
+        paramValue = '';
+    var pattern = new RegExp('\\b('+paramName+'=).*?(&|$)')
+    if(url.search(pattern)>=0){
+        return url.replace(pattern,'$1' + paramValue + '$2');
+    }
+    return url + (url.indexOf('?')>0 ? '&' : '?') + paramName + '=' + paramValue 
 }

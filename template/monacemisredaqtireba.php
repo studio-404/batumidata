@@ -69,12 +69,31 @@
                     <select class="form-control select2" id="mainpagecategory" multiple="multiple" data-placeholder="Select a State" style="width: 100%;">
                       <?php
                       $x = 0;
+                      $subcategory = new subcategory();
                       foreach ($data["welcomepage_categories"]["item"]["idx"] as $value) {
-                      	$parent = explode(",", Input::method("GET","parent"));
-                      	if(in_array($data["welcomepage_categories"]["item"]["idx"][$x],$parent)){
-                      		echo '<option value="'.$data["welcomepage_categories"]["item"]['idx'][$x].'" selected="selected">'.$data["welcomepage_categories"]["item"]['title'][$x].'</option>';
+                      	$countsub = $subcategory->counts($c,$data["welcomepage_categories"]["item"]["idx"][$x]);
+						$parent = explode(",", Input::method("GET","parent"));
+                      	if($countsub>0){
+                      		?>
+		                  <optgroup label="<?=$data["welcomepage_categories"]["item"]["title"][$x]?>">
+		                    <?php
+		                    $fetch2 = $subcategory->select($c,$data["welcomepage_categories"]["item"]["idx"][$x]);
+		                    foreach ($fetch2 as $value2) {
+		                      if(in_array($value2['idx'],$parent)){
+		                        echo '<option value="'.$value2['idx'].'" selected="selected">'.$value2['title'].'</option>';
+		                      }else{
+		                        echo '<option value="'.$value2['idx'].'">'.$value2['title'].'</option>';
+		                      }
+		                    }
+		                    ?>
+		                  </optgroup>
+		                  <?php
                       	}else{
-                      		echo '<option value="'.$data["welcomepage_categories"]["item"]['idx'][$x].'">'.$data["welcomepage_categories"]["item"]['title'][$x].'</option>';
+	                      	if(in_array($data["welcomepage_categories"]["item"]["idx"][$x],$parent)){
+	                      		echo '<option value="'.$data["welcomepage_categories"]["item"]['idx'][$x].'" selected="selected">'.$data["welcomepage_categories"]["item"]['title'][$x].'</option>';
+	                      	}else{
+	                      		echo '<option value="'.$data["welcomepage_categories"]["item"]['idx'][$x].'">'.$data["welcomepage_categories"]["item"]['title'][$x].'</option>';
+	                      	}
                       	}
                       	$x++;
                       }
@@ -281,7 +300,7 @@
 									<ul class="users-list clearfix">
 										<li style="width:100%;">
 											<img src="<?=$picture?>" alt="User Image">
-											<a class="users-list-name" href="#"><?=$user["namelname"]?></a>
+											<a class="users-list-name" href="#"><?=($user["namelname"]) ? $user["namelname"] : "Unknown: IP-".$data["fetch"]["insert_ip"]?></a>
 										</li>		                    
 									</ul>
 								</div>
@@ -315,6 +334,25 @@
 							</div>
 						</div>
 
+
+						<div class="col-md-12">
+							<div class="box box-danger">
+								<div class="box-header with-border">
+									<h3 class="box-title"><?=$data["language_data"]["val124"]?></h3>
+								</div>
+								<!-- /.box-header -->
+								<div class="box-body no-padding">
+									<?php
+									if($data["fetch"]["updatedate"]=="0"){
+										echo "<p style='padding:10px;'>".date( "d/m/Y H:i:s", $data["fetch"]["date"])."</p>";
+									}else{
+										echo "<p style='padding:10px;'>".date( "d/m/Y H:i:s", $data["fetch"]["updatedate"])."</p>";
+									}
+									?>
+								</div>
+							</div>
+						</div>
+
             		</div>
                 	
                 </div>
@@ -322,9 +360,9 @@
 	          <div class="box-footer">
 			   	  <button class="btn btn-primary" type="submit" data-dlang="<?=LANG?>" id="edit-catalogue-item">
 			   	  	<?=$data["language_data"]["val74"]?></button>
-			   	  <button class="btn btn-primary" type="submit" data-dlang="<?=LANG?>" id="edit-catalogue-item-close">
+			   	  <button class="btn btn-primary" type="submit" data-back="<?=WEBSITE.LANG?>/<?=Input::method("GET","backslug")?>?parentidx=<?=Input::method("GET","backparent")?>&amp;idx=<?=Input::method("GET","parent")?>" data-dlang="<?=LANG?>" id="edit-catalogue-item-close">
 			   	  	<?=$data["language_data"]["val36"]?></button>
-			   	  <button class="btn btn-primary btn-warning gotoUrl" data-goto="<?=Input::method("GET","back")?>" type="submit"><?=$data["language_data"]["val33"]?></button>
+			   	  <button class="btn btn-primary btn-warning gotoUrl" data-goto="<?=WEBSITE.LANG?>/<?=Input::method("GET","backslug")?>?parentidx=<?=Input::method("GET","backparent")?>&amp;idx=<?=Input::method("GET","parent")?>" type="submit"><?=$data["language_data"]["val33"]?></button>
 			  </div>
 	      </div>
 		</section>

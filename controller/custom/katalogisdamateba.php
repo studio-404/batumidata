@@ -43,6 +43,7 @@ class katalogisdamateba extends connection{
 
 
 		$include = WEB_DIR."/katalogisdamateba.php";
+		
 		if(file_exists($include)){
 			@include($include);
 		}else{

@@ -11,13 +11,12 @@
             </div>
             <div class="box-body">
             	<?php
-            	// echo "<pre>";
-             //  print_r($data["labellists"]);
-            	// print_r($data["fetch"]);
-            	// echo "</pre>";
+            	if(isset($_GET['print'])){
+                echo '<script> window.print(); </script>';
+              }
             	?>
 	     	 	<div class="box-body table-responsive no-padding">
-                  <table class="table table-hover">
+                  <table class="table table-hover filterEmptyTds">
                     <tr>
                       <th style="min-width:250px;">ID</th>
                       <td><?=$data["fetch"]["idx"]?></td>
@@ -44,7 +43,7 @@
                     </tr> 
                         
                     <?php 
-                    $select_form_label = new select_form_label();
+                    // $select_form_label = new select_form_label();
                     foreach ($data["labellists"] as $value) {
                       $attach_column = explode(" ",$value['attach_column']);
 
@@ -115,3 +114,9 @@
 <?php
 @include("parts/welcome_footer.php");
 ?>
+<script type="text/javascript">
+     $(".filterEmptyTds tr").each(function(){
+       var td = $("td", this).html(); 
+       if(td==""){ $(this).hide(); }
+      });
+     </script>

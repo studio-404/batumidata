@@ -31,6 +31,41 @@
                             	<font color="red"><?=$data["language_data"]["val31"]?></font>
                             </p>
                         </div>
+
+
+
+                 <div class="form-group">
+                        <form action="" method="post" enctype="multipart/form-data" id="catalog-form">
+                            <?php 
+                            if(isset($data["parent_background"]) && $data["parent_background"]!=""){
+                              
+                              $file = explode("/home/geoweb/batumi.404.ge", $data["parent_background"]);
+                              $file = isset($file[1]) ? $file[1] : "http://batumi.404.ge/template/dist/img/no_image_thumb.gif";
+                              echo '<img src="'.$file.'" style="max-width:250px; border:solid 1px #ccc; border-radius:0" class="user-image img-circle" alt="User Image">';
+                            }else{
+                              echo '<img src="http://batumi.404.ge/template/dist/img/no_image_thumb.gif" style="max-width:250px; border:solid 1px #ccc; border-radius:0" class="user-image img-circle" alt="User Image">';
+                            }
+                            ?>
+                        
+                          
+                            <div style="clear:both"></div>    
+                            <label for="catalog-image">ატვირთეთ ფოტო </label><!-- User Picture -->
+                            <input type="hidden" name="catalogid" value="<?=(isset($_GET["id"])) ? $_GET["id"] : 0?>" />
+                            <input type="file" id="catalog-image" name="catalog-image" value="" />
+                            <p class="help-block file-size" style="display:none"><font color="red">ფაილის ზომა უნდა იყოს 215x215 პიქსელი, JPG ფორმატის და არ უნდა აღემატებოდეს 1MB</font></p>
+                            <div style="clear:both"></div><br />
+                            <div class="form-group">
+                                <label>გამოჩენა მთავარ გვერდზე: </label>
+                                <div class="checkbox">
+                                  <label>
+                                    <input type="checkbox" class="showwelcome" name="showwelcome" value="1" <?=($data["parent_showwelcome"]==1)? 'checked="checked"' : ''?> />გამოჩენა
+                                  </label>
+                                </div>
+                            </div>
+                        </form>
+                      </div>
+
+
                           
                     </div>
                 </div>

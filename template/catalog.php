@@ -23,12 +23,63 @@
 </div>
 <!-- END REGISTER POPUP -->
 
+<!-- START catalog item -->
+<div class="modal fade" id="bs-example-catakigitem" tabindex="-1" role="dialog">
+  <div class="modal-dialog modal-md">
+    <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title"><?=$data["language_data"]["val136"]?></h4>
+        </div>
+        <div class="modal-body catalogItemRows">
+          please wait...
+        </div>
+    </div>
+  </div>
+</div>
+<!-- END catalog item -->
+
+<!-- START catalog list send -->
+<div class="modal fade" id="bs-example-sendlist" tabindex="-1" role="dialog">
+  <div class="modal-dialog modal-md">
+    <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title"><?=$data["language_data"]["val138"]?></h4>
+        </div>
+        <div class="modal-body catalogItemRows">
+          <form action="javascript:void(0)" method="post">
+            <div class="send_message_output"></div>
+            <div class="form-group" style="width:100%">
+              <input type="hidden" id="lang_id" name="lang_id" value="<?=LANG_ID?>">
+              <input type="hidden" id="send_parentidx" name="send_parentidx" value="<?=(isset($_GET['parentidx'])) ? $_GET['parentidx'] : 0?>">
+              <input type="hidden" id="send_idx" name="send_idx" value="<?=(isset($_GET['idx'])) ? $_GET['idx'] : 0?>">
+              <input type="text" id="send_email" class="form-control form-input" name="send_email" placeholder="<?=$data["language_data"]["val137"]?>" />
+
+            </div>
+
+            <div class="form-group" style="width:100%">
+              <textarea class="form-control form-input" name="send_text" id="send_text" placeholder="<?=$data["language_data"]["val139"]?>"></textarea>
+            </div>
+
+            <div class="form-group" style="width:100%">
+              <button id="send_catalog_list" type="button" class="btn btn-primary btn-flat"><?=$data["language_data"]["val111"]?></button>
+            </div>
+          </form>
+        </div>
+    </div>
+  </div>
+</div>
+<!-- END catalog list send -->
+
 	<!-- Content Wrapper. Contains page content -->
 	<div class="content-wrapper">
 	<!-- Content Header (Page header) -->
 		<section class="content-header">
 			<h1>
-				<?=$data["catalog_general"][0]["title"]?>
+				<?=$data["catalog_general"][0]["title"]." ( ".(int)$data["fetch"]["allitems"]." ) "?>
 				<!-- <small>ჰოსტელის გვერდის მოკლე აღწერა</small> -->
 			</h1>
 			<ol class="breadcrumb">
@@ -58,33 +109,33 @@
                   $at = explode(" ", $form["attach_column"]);
                   if($form["type"]=="text"){
                   ?>
-                      <div class="form-group">
+                      <div class="form-group col-md-4">
                         <label><?=$form["label"]?>: </label> <!-- Fisrname & lastname -->
                         <input class="form-control form-input-seach" type="text" placeholder="<?=$form["placeholder"]?>" data-name="<?=$form["name"]?>" data-attach="<?=$form["attach_column"]?>" data-type="text" data-important="<?=$form["important"]?>" value="<?=(Input::method("GET",$at[0]) ? Input::method("GET",$at[0]) : '')?>" />
                       </div>
                     <?php
                     }else if($form["type"]=="select"){
                       ?>
-                      <div class="form-group">
+                      <div class="form-group col-md-4">
                         <label><?=$form["label"]?>: </label> <!-- Fisrname & lastname -->
-                        <select class="form-control form-input-seach" data-name="<?=$form["name"]?>" data-attach="<?=$form["attach_column"]?>" data-important="<?=$form["important"]?>" data-type="select">
-                        <option value=""><?=$data["language_data"]["val93"]?></option>
-                      <?php
-                      $fetchx = $select_form->select_options($c,$form["id"],Input::method("GET","idx"));
-                      foreach ($fetchx as $value) {
-                        if(Input::method("GET",$at[0])==$value["text"]){
-                          $sel = 'selected="selected"';
-                        }else{ $sel = ''; }
-                        echo '<option value="'.htmlentities($value["text"]).'" '.$sel.'>'.$value["text"].'</option>';
-                      }
-                      ?>
-                    </select>
+                          <select class="form-control form-input-seach" data-name="<?=$form["name"]?>" data-attach="<?=$form["attach_column"]?>" data-important="<?=$form["important"]?>" data-type="select">
+                              <option value=""><?=$data["language_data"]["val93"]?></option>
+                            <?php
+                            $fetchx = $select_form->select_options($c,$form["id"],Input::method("GET","idx"));
+                            foreach ($fetchx as $value) {
+                              if(Input::method("GET",$at[0])==$value["text"]){
+                                $sel = 'selected="selected"';
+                              }else{ $sel = ''; }
+                              echo '<option value="'.htmlentities($value["text"]).'" '.$sel.'>'.$value["text"].'</option>';
+                            }
+                            ?>
+                          </select>
                         </div>
                       <?php
                     }else if($form["type"]=="checkbox"){
 
                       ?>
-                      <div class="form-group">
+                      <div class="form-group col-md-4">
                       <label><?=$form["label"]?>: </label> <!-- Fisrname & lastname -->
                       <?php
                       $fetchx = $select_form->select_options($c,$form["id"],Input::method("GET","idx"));
@@ -113,7 +164,7 @@
                         $va = '';
                       }
                       ?>
-                      <div class="form-group">
+                      <div class="form-group col-md-4">
                           <label><?=$form["label"]?>: </label> <!-- Fisrname & lastname -->
                         <input type="text" class="form-control form-input-seach" data-inputmask="'alias': 'dd/mm/yyyy'" data-mask="" data-name="<?=$form["name"]?>" data-attach="<?=$form["attach_column"]?>" data-important="<?=$form["important"]?>" data-type="date" value="<?=$va?>" />
                       </div>
@@ -163,13 +214,20 @@
                 <div class="box-body table-responsive no-padding">
                   <table class="table table-hover">
                     <tr>
-                      <th>ID</th>
                       <?php
                       foreach($data["catalog_table_list"] as $val){
-                        echo '<th>'.$val['label'].'</th>';
+                        $style = "";
+                        $attach_column = explode(" ",$val['attach_column']);
+                        if(Input::method("GET","order") && Input::method("GET","order")==$attach_column[0]){
+                          $style = " style='color: red';";
+                        }
+                        echo '<th onclick="OrderByMe(this,\''.$attach_column[0].'\')" class="thLabel"'.$style.'>'.$val['label'].'</th>';
                       }
                       ?>
-                      <th><?=$data["language_data"]["val80"]?></th>
+                       <?php if(isset($_GET['parentidx']) && $_GET['parentidx']==231) : // if sastumro ?>
+                      <th>ნომ / ადგ</th>
+                      <?php endif; ?>
+
                       <th><?=$data["language_data"]["val81"]?></th>
                     </tr>
                     <?php
@@ -177,21 +235,32 @@
                     foreach($data["catalogitems"] as $key => $val){
                     ?>
                       <tr>
-                        <td><?=$val['idx']?></td>
                         <?php
-                        $actual_link = $c['site.protocol']."$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
+                        $backparent = Input::method("GET","parentidx"); 
                         foreach($data["catalog_table_list"] as $v){
                           $attach_column = explode(" ",$v['attach_column']);
                           echo '<td>'.$val[$attach_column[0]].'</td>';
                         }
                         ?>
-                        <td><a href=""><?=$getusername->names($c,$val['insert_admin'])?></a></td>
+                        <?php if(isset($_GET['parentidx']) && $_GET['parentidx']==231) : // if sastumro ?>
+                        <td><?=$val['roomsnumber']?> / <?=$val['placenums']?></td>
+                        <?php endif; ?>
                         <td>
+                          <a href="javascript:void(0)" style="padding:0 0 0 5px" onclick="popupCatalogItem('<?=$val['idx']?>','<?=$val['cataloglist']?>','<?=LANG_ID?>')"><i class="glyphicon glyphicon-eye-open"></i></a>
                           <a href="<?=WEBSITE.LANG."/monacemis-naxva?view=".$val['idx']?>&amp;cataloglist=<?=$val['cataloglist']?>" target="_blank" style="padding:0 0 0 5px"><i class="glyphicon glyphicon-new-window"></i></a>
+                          <?php 
+                          if(isset($val['webpage']) && $val['webpage']!="") : 
+                            if (!preg_match("~^(?:f|ht)tps?://~i", $val['webpage'])) {
+                                $val['webpage'] = "http://" . $val['webpage'];
+                            }
+                          ?>    
+                          <a href="<?=$val['webpage']?>" target="_blank" style="padding:0 0 0 5px"><i class="glyphicon glyphicon-globe"></i></a>
+                          <a href="<?=WEBSITE.LANG."/monacemis-naxva?view=".$val['idx']?>&amp;cataloglist=<?=$val['cataloglist']?>&amp;print" target="_blank" style="padding:0 0 0 5px"><i class="glyphicon glyphicon-print"></i></a>
+                          <?php endif; ?>
                           <?php
                           if($_SESSION["batumi_user_type"]=="website_manager" || $_SESSION["batumi_user_type"]=="editor"):
                           ?>
-                          <a href="<?=WEBSITE.LANG?>/monacemis-redaqtireba?parent=<?=$val['cataloglist']?>&amp;idx=<?=$val['idx']?>&amp;back=<?=$actual_link?>" style="padding:0 0 0 5px"><i class="glyphicon glyphicon-edit"></i></a>
+                          <a href="<?=WEBSITE.LANG?>/monacemis-redaqtireba?parent=<?=$val['cataloglist']?>&amp;idx=<?=$val['idx']?>&amp;backparent=<?=$backparent?>&amp;backslug=<?=$_SESSION['SLUG.AFTER.LANG']?>" style="padding:0 0 0 5px"><i class="glyphicon glyphicon-edit"></i></a>
                           <a href="javascript:void(0)" style="padding:0 0 0 5px" class="deleteUnpublishData" data-dlang="<?=LANG?>" data-id="<?=$val['idx']?>"><i class="glyphicon glyphicon-remove"></i></a>
                           <?php
                           endif;
@@ -207,27 +276,32 @@
 
 
                 <div class="box-footer clearfix">
-                
+                <?php
+                //echo $data["fetch"]["allitems"]." - ".Input::method("GET","sw");
+                ?>
               <ul class="pagination pagination-sm no-margin pull-right">
                 <?php
-                $sw = (Input::method("GET","sw")) ? '&sw='.Input::method("GET","sw") : '';
+                $sw_real = (Input::method("GET","sw") && is_numeric(Input::method("GET","sw"))) ? Input::method("GET","sw") : 10;
+                $sw = '&sw='.$sw_real;
                 $back = (Input::method("GET","pn")>2) ? Input::method("GET","pn")-1 : 1;
                 $froward = (Input::method("GET","pn")<$data["fetch"]["allitems"]) ? Input::method("GET","pn")+1 : $data["fetch"]["allitems"];
                 if(!Input::method("GET","pn")){ $froward = 2; }
                 ?>
-                <li><a href="?idx=<?=Input::method("GET","idx")?>&amp;pn=<?=$back?><?=$sw?>">«</a></li>
+                <li><a href="?parentidx=<?=Input::method("GET","parentidx")?>&amp;idx=<?=Input::method("GET","idx")?>&amp;order=<?=Input::method("GET","order")?>&amp;orderType=<?=Input::method("GET","orderType")?>&amp;pn=<?=$back?><?=$sw?>">«</a></li>
                 <?php
-                $howmany = $data["fetch"]["allitems"] / Input::method("GET","sw");
+                $howmany = $data["fetch"]["allitems"] / $sw_real;
                 if($howmany<1){ $howmany = 1; }
                 
                 for($x=1;$x<=ceil($howmany);$x++){
                   $active = (Input::method("GET","pn")==$x) ? ' class="active"' : '';
                   if(!Input::method("GET","pn") && $x==1){ $active = ' class="active"'; }
                 ?>
-                <li<?=$active?>><a href="?idx=<?=Input::method("GET","idx")?>&amp;pn=<?=$x?><?=$sw?>"><?=$x?></a></li>
+                <li<?=$active?>><a href="?parentidx=<?=Input::method("GET","parentidx")?>&amp;idx=<?=Input::method("GET","idx")?>&amp;order=<?=Input::method("GET","order")?>&amp;orderType=<?=Input::method("GET","orderType")?>&amp;pn=<?=$x?><?=$sw?>"><?=$x?></a></li>
                 <?php } ?>
-                <li><a href="?idx=<?=Input::method("GET","idx")?>&amp;pn=<?=$froward?><?=$sw?>">»</a></li>
+                <li><a href="?parentidx=<?=Input::method("GET","parentidx")?>&amp;idx=<?=Input::method("GET","idx")?>&amp;order=<?=Input::method("GET","order")?>&amp;orderType=<?=Input::method("GET","orderType")?>&amp;pn=<?=$froward?><?=$sw?>">»</a></li>
               </ul>
+              <a href="javascript:void(0);" onclick="$('#bs-example-sendlist').modal('show')" style="clear:both; float:left; color: red; text-decoration: underline"><?=$data["language_data"]["val138"]?></a>
+              <a href="javascript:void(0);" onclick="printList()" style="clear:both; float:left; color: red; text-decoration: underline"><?=$data["language_data"]["val140"]?></a>
             </div>
 
               </div><!-- /.box -->
@@ -238,5 +312,12 @@
      
 
 <?php
+if(isset($_GET['print'])){
+  ?>
+  <script type="text/javascript">
+  window.print();
+  </script>
+  <?php
+}
 @include("parts/welcome_footer.php");
 ?>

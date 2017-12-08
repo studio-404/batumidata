@@ -14,44 +14,103 @@
 			</ol>
 		</section>
 
-		<section class="content">
+  <section class="content">
+    <div class="row">
+          
+      <?php 
+      if(count($data["categories_list_items"])):
+        foreach ($data["categories_list_items"] as $v):
+          $inner = 'SELECT `idx`,`title`,`background`,`slug` FROM `studio404_pages` WHERE `cid`=:cid AND `page_type`=:page_type AND `status`!=1 AND `lang`=:lang ORDER BY `position` ASC';
+          $prepareInner = $conn->prepare($inner);
+          $prepareInner->execute(array(
+            ":page_type"=>'catalogpage', 
+            ":cid"=>$v['idx'], 
+            ":lang"=>LANG_ID
+          ));
+          if($prepareInner->rowCount()){
+            $fetchInner = $prepareInner->fetchAll(PDO::FETCH_ASSOC);
+            $url = "javascript:void(0)";
+            $onclick = "animateLeft('#homepageItems".$v['idx']."')";
+          }else{
+            $url = "/".LANG."/".$v['slug']."?parentidx=".$v['idx']."&idx=".$v['idx']."&yyo"; 
+            $onclick = "";
+          }
+        ?>
+          <div class="col-md-4">
+            <a href="<?=$url?>" onclick="<?=$onclick?>">
+            <div class="box box-solid homepageItems" id="homepageItems<?=$v['idx']?>">
+              <div class="box-header with-border">
+                <i class="fa fa-list-ul"></i>
+                <h3 class="box-title"><?=$v['title']?></h3>
+              </div>
+              <div class="box-body">
+                <?php 
+                $background = ($v['background']!="") ? $v['background'] : "http://batumi.404.ge/template/dist/img/no_image_thumb.gif";
+                $background = str_replace("/home/geoweb/batumi.404.ge","", $background);
+                ?>
+                <div style="margin:0; padding:0; width:100%; height: 250px; background-image:url('<?=$background?>'); background-size: cover; background-repeat: no-repeat; background-position: center center;">
+                </div>
+              </div>
+              <?php if($prepareInner->rowCount()) :?>
+              <div class="hiddenSlide">
+              <?php
+              echo "<ul>"; 
+              foreach ($fetchInner as $in) {
+                $url = "/".LANG."/".$in['slug']."?parentidx=".$v['idx']."&idx=".$in['idx']; 
+                echo sprintf(
+                  "<li><a href=\"%s\">%s</a></li>", 
+                  $url, 
+                  $in['title']
+                );
+              }
+              echo "</ul>";
+              ?>
+              </div>
+              <?php endif; ?>
+
+            </div>
+
+            
+
+            </a>
+          </div>
+        <?php 
+        endforeach;
+      endif;
+      ?>
+
+
+    </div>
+  </section>
+
+		<!--<section class="content">
 			<div class="row">
 				<div class="col-md-6">
 					<div class="box box-primary">
             <div class="box-header with-border">
-              <h3 class="box-title">Recently Added Products</h3>
-
-              <div class="box-tools pull-right">
-                <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
-                </button>
-                <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
-              </div>
+              <h3 class="box-title"><?=$data["language_data"]["val132"]?></h3>
             </div>
-            <!-- /.box-header -->
             <div class="box-body">
-              <ul class="products-list product-list-in-box">
+             
 
-                <li class="item">
-                  <div class="product-img">
-                    <img src="<?=TEMPLATE?>dist/img/default-50x50.gif" alt="Product Image">
-                  </div>
-                  <div class="product-info">
-                    <a href="javascript::;" class="product-title">Samsung TV
-                      <span class="label label-warning pull-right">$1800</span></a>
-                        <span class="product-description">
-                          Samsung 32" 1080p 60Hz LED Smart HDTV.
-                        </span>
-                  </div>
-                </li>                
-               
-               
+              <ul class="products-list product-list-in-box">
+                <?php
+                $getusername = new getusername();
+                foreach ($data["lastproducts"] as $value) {
+                ?>
+                  <li class="item">
+                    <div class="product-info" style="margin-left:0px;">
+                      <a href="<?=WEBSITE.LANG?>/monacemis-naxva?view=<?=$value['idx']?>&amp;cataloglist=<?=$value['cataloglist']?>" class="product-title">
+                        <?=date("d/m/Y g:i:s",$value['date'])?>
+                        <span class="label label-warning pull-right"><?=$getusername->names($c,$value['insert_admin'])?></span></a>
+                          <span class="product-description">
+                            <?=strip_tags($value['title'])?>
+                          </span>
+                    </div>
+                  </li> 
+                <?php } ?>             
               </ul>
             </div>
-            <!-- /.box-body -->
-            <div class="box-footer text-center">
-              <a href="javascript::;" class="uppercase">View All Products</a>
-            </div>
-            <!-- /.box-footer -->
           </div>					                  
 				</div>
 
@@ -64,13 +123,8 @@
                   <div class="box-tools pull-right">
                   	<?php $count = count($data["userlist"]); ?>
                     <span class="label label-danger"><?=$count?> <?=$data["language_data"]["val56"]?></span>
-                    <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
-                    </button>
-                    <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i>
-                    </button>
                   </div>
                 </div>
-                <!-- /.box-header -->
                 <div class="box-body no-padding">
                   <ul class="users-list clearfix">
                   	<?php
@@ -88,11 +142,9 @@
                     endif;
                     ?>
                   </ul>
-                  <!-- /.users-list -->
                 </div>
-                <!-- /.box-body -->
                 <?php
-                if($_SESSION["batumi_user_type"]=="website_manager" || $_SESSION["batumi_user_type"]=="editor"):
+                if($_SESSION["batumi_user_type"]=="website_manager"):
                 ?>
                 <div class="box-footer text-center">
                   <a href="<?=WEBSITE.LANG?>/momxmareblis-marTva" class="uppercase"><?=$data["language_data"]["val58"]?></a>
@@ -100,13 +152,12 @@
                 <?php
                 endif;
                 ?>
-                <!-- /.box-footer -->
               </div>
              </div>
 
 
 			</div>
-		</section>
+		</section>-->
 	</div>
      
 

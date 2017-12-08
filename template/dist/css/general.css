@@ -4,3 +4,36 @@
 .form-message-output{ font-size: 18px; color:#f39c12 ; font-weight: bold; }
 .checkbox-inside{ margin: 0; padding: 0 20px; }
 .dropdown-menu{ max-height: 250px !important; overflow-y: auto !important; }
+.eventCalendar{ margin: 0; padding: 0; width: 100%; background-color: white; border: solid 1px #cccccc; overflow: hidden; border-top: solid 3px #3c8dbc; }
+.eventCalendar #title-calendar{ text-align: center; color: #333; font-size: 24px; }
+.eventCalendar #title-calendar a{ color: #3c8dbc; font-size: 16px; }
+.eventCalendar #title-calendar a i{ font-size: 24px; }
+.eventCalendar tr{ margin: 0; padding: 0; }
+.eventCalendar tr th{ margin: 0; padding: 10px; border: solid 2px #f2f2f2; font-weight: bold; background-color: #fafafa; }
+.eventCalendar tr td{ margin: 0; padding: 20px; border: solid 2px #f2f2f2; font-size: 20px; position: relative; }
+.eventCalendar tr .events_box{ margin: 0; padding: 0; width: 100%; height: 100%; position: absolute; top: 0px; left: 0px; }
+.add_event_box input{ margin:5px 0px; }
+.add_event_box textarea{ margin:5px 0px; }
+.add_event_box select{ margin:5px 0px; }
+.add_event_box #add-new-event{ margin:10px 0px 0px 0px; }
+.add_event_box #edit-new-event{ margin:10px 0px 0px 0px; }
+.datepicker{ padding: 6px 12px !important; }
+.homepageItems{ position: relative; overflow: hidden; }
+.homepageItems .hiddenSlide{ margin:0; padding: 0; width: 100%; height: 100%; position: absolute; background-color: #3c8dbc; left: 100%; top: 0; z-index: 1000; overflow: auto; }
+.homepageItems .hiddenSlide ul{ margin: 0; padding: 0; list-style-type: none; }
+.homepageItems .hiddenSlide ul li{ margin: 0; padding: 5px 10px; width: calc(100% - 20px); float: left; }
+.homepageItems .hiddenSlide ul li a{ margin: 0; padding: 0; color: white; }
+.homepageItems .hiddenSlide ul li a:hover{ text-decoration: underline; }
+.thLabel{ cursor: pointer; }
+.thLabel:hover{ color: red; }
+@media print
+{
+	@page { size: landscape; }
+	a[href]:after {
+		content:"" !important;
+	}
+	.pagination, .box-header, .box-footer, .mailbox-controls{
+		display: none;
+	}
+	.box{ border-top: none; }
+}

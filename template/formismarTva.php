@@ -42,6 +42,15 @@
 		              				<option value="both"><?=$data["language_data"]["val78"]?></option>
 		              			</select>
 		              		</div>
+
+		              		<div class="form-group">
+		              			<label><?=$data["language_data"]["val133"]?></label>
+		              			<select class="form-control" id="subcategoryadd">
+		              				<option value="yes"><?=$data["language_data"]["val134"]?></option>
+		              				<option value="no" selected="selected"><?=$data["language_data"]["val135"]?></option>
+		              			</select>
+		              		</div>
+
 			              	<div class="interface">
 
 			              		<?php
@@ -218,3 +227,7 @@
 @include("parts/welcome_footer.php");
 ?>
 <script src="<?=TEMPLATE?>dist/js/form_manipulate.js?v=<?=$c['websitevertion']?>" type="text/javascript" charset="utf-8"></script>
+<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+<script type="text/javascript">
+jQuery(".interface").sortable();
+</script>

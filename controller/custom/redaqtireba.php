@@ -42,8 +42,49 @@ class redaqtireba extends connection{
 			redirect::url(WEBSITE);
 		}
 
+		/* POST START */
+		if(Input::method("POST","catalogid")){
+			if(isset($_FILES["catalog-image"])){
+				$uploaddir = DIR."files/background/";
+				$name = basename($_FILES['catalog-image']['name']);
+				$ext = ".jpg";
+				switch($_FILES['catalog-image']['type']){
+					case "image/png":
+						$ext = ".png";
+						break;
+					case "image/gif":
+						$ext = ".gif";
+						break;
+				}
+				$uploadfile = $uploaddir . md5($name).$ext;
+				
+				if (@move_uploaded_file($_FILES['catalog-image']['tmp_name'], $uploadfile)) {
+					
+					$insertImage = 'UPDATE `studio404_pages` SET `background`=:background WHERE `idx`=:idx AND `page_type`=:page_type AND `status`!=1 AND `lang`=:lang';
+					$updateParent = $conn->prepare($insertImage);
+					$updateParent->execute(array(
+						":background"=>$uploadfile, 
+						":page_type"=>'catalogpage', 
+						":idx"=>Input::method("GET","id"), 
+						":lang"=>LANG_ID
+					));
+				}
+			}
+
+			$showwelcome = (Input::method("POST","showwelcome")==1) ? 1 : 0;
+			$updateShow = 'UPDATE `studio404_pages` SET `showwelcome`='.$showwelcome.' WHERE `idx`=:idx AND `page_type`=:page_type AND `status`!=1 AND `lang`=:lang';
+			$updateParent = $conn->prepare($updateShow);
+			$updateParent->execute(array(
+				":page_type"=>'catalogpage', 
+				":idx"=>Input::method("GET","id"), 
+				":lang"=>LANG_ID
+			));
+		}
+		/* POST End */
+
+
 		if(Input::method("GET","id")!=""){
-			$parent = 'SELECT `title` FROM `studio404_pages` WHERE `idx`=:idx AND `page_type`=:page_type AND `status`!=1 AND `lang`=:lang';
+			$parent = 'SELECT `title`,`background`,`showwelcome` FROM `studio404_pages` WHERE `idx`=:idx AND `page_type`=:page_type AND `status`!=1 AND `lang`=:lang';
 			$prepareParent = $conn->prepare($parent);
 			$prepareParent->execute(array(
 				":page_type"=>'catalogpage', 
@@ -52,11 +93,18 @@ class redaqtireba extends connection{
 			));
 			if($prepareParent->rowCount() > 0){
 				$parent_fetch = $prepareParent->fetch(PDO::FETCH_ASSOC);
+
+				
+
 				$data["parent_title"] = $parent_fetch["title"];
+				$data["parent_showwelcome"] = $parent_fetch["showwelcome"];
+				$data["parent_background"] = $parent_fetch["background"];
 			}else{
 				redirect::url(WEBSITE.LANG."/katalogis-marTva");
 			}
 		}
+
+		
 
 		$include = WEB_DIR."/redaqtireba.php";
 		if(file_exists($include)){

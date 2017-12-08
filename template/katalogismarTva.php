@@ -34,7 +34,7 @@
 	            				<th><?=$data["language_data"]["val21"]?></th>	            				
 	            				<th><?=$data["language_data"]["val18"]?></th>
 	            				<th><?=$data["language_data"]["val19"]?></th>
-	            				<th><?=$data["language_data"]["val20"]?></th>
+	            				<th width="180"><?=$data["language_data"]["val20"]?></th>
 	            			</tr>
 	            			<?php
 	            			$select_sub_catalog = new select_sub_catalog();
@@ -88,7 +88,7 @@
 				            				<td><a href="<?=WEBSITE.LANG."/".$value2['slug']?>"><?=WEBSITE.LANG."/".$value2['slug']?></a></td>
 				            				<td>
 				            					<a href="<?=WEBSITE.LANG?>/katalogis-marTva/redaqtireba?id=<?=$value2['idx']?>" style="padding:0 0 0 5px"><i class="glyphicon glyphicon-edit"></i></a>
-		            							<!-- <a href="" style="padding:0 0 0 5px"><i class="glyphicon glyphicon-plus-sign"></i></a> -->
+		            							<a href="<?=WEBSITE.LANG?>/katalogis-marTva/formis-marTva?parent=<?=$value2['idx']?>" style="padding:0 0 0 5px"><i class="glyphicon glyphicon-wrench"></i></a>
 		            							<a href="javascript:void(0)" style="padding:0 0 0 5px" class="remove-catalogue" data-dlang="<?=LANG?>" data-catid="<?=$value2["idx"]?>"><i class="glyphicon glyphicon-remove"></i></a>	
 				            				</td>
 				            			</tr>

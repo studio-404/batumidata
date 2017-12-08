@@ -41,7 +41,7 @@ class url_controll{
 				$s = @explode("?",$actual_link);
 				$s = @explode("/", $s[0]);
 				if(is_array($s)){
-					return $s[$segment];
+					return @$s[$segment];
 				}
 				
 			}catch(Exeption $e){
