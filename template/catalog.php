@@ -171,6 +171,11 @@
                     }
                   }
                   ?>
+
+                  <?php if(isset($_GET["parentidx"]) && $_GET["parentidx"]==231): // განთავსება ?>
+                  <div class="form-group col-md-12">
+                    &nbsp;
+                  </div>
                   <div class="form-group col-md-6">
                     <label>ფასი არასეზონური ( დან ): </label> 
                     <input type="text" class="form-control" name="pricefrom" id="pricefrom" value="<?=(Input::method("GET","pricefrom")) ? Input::method("GET","pricefrom") : ''?>" />
@@ -188,6 +193,7 @@
                     <label>ფასი სეზონური ( მდე ): </label> 
                     <input type="text" class="form-control" name="priceseasonto" id="priceseasonto" value="<?=(Input::method("GET","priceseasonto")) ? Input::method("GET","priceseasonto") : ''?>" />
                   </div>
+                  <?php endif; ?>
               </div>
               <!-- /.box-body -->
 

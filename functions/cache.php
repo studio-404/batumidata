@@ -108,7 +108,7 @@ class cache extends connection{
 			if(Input::method("GET","order") && Input::method("GET","orderType") && (Input::method("GET","orderType")=="ASC" || Input::method("GET","orderType")=="DESC")){
 				$order = " `".Input::method("GET","order")."` ".Input::method("GET","orderType");
 			}else{
-				$order = " `id` DESC";
+				$order = " `title` ASC";
 			}
 			try{
 				$sql = 'SELECT 

@@ -53,7 +53,7 @@ class catalog extends connection{
 				$searchKey = ' AND ';
 				$idx = Input::method("GET","idx");
 				foreach ($_GET as $key => $value) {
-					if($key=="pricefrom" || $key=="priceto"){ continue; }
+					if($key=="pricefrom" || $key=="priceto" || $key=="priceseasonfrom" || $key=="priceseasonto"){ continue; }
 					if($key=="idx" || $key=="filter" || $value=="" || empty($value)){ continue; }
 					if(is_array($value)){// checkbox 
 						if(!in_array($key, $already)){
@@ -80,22 +80,20 @@ class catalog extends connection{
 				}
 
 				if(Input::method("GET","pricefrom") && is_numeric(Input::method("GET","pricefrom")) && (int)Input::method("GET","pricefrom")>0){
-					$searchKey .= '( `studio404_module_item`.`price`<='.(int)Input::method("GET","pricefrom").' AND 
-						`studio404_module_item`.`priceto`>='.(int)Input::method("GET","pricefrom").' ) AND ';
+					$searchKey .= '`studio404_module_item`.`price`>='.(int)Input::method("GET","pricefrom").' AND ';
 				}
 
 				if(Input::method("GET","priceto") && is_numeric(Input::method("GET","priceto")) && (int)Input::method("GET","priceto")>0){
-					$searchKey .= '( `studio404_module_item`.`price`<='.(int)Input::method("GET","priceto").' AND 
-						`studio404_module_item`.`priceto`>='.(int)Input::method("GET","priceto").' ) AND ';
+					$searchKey .= '`studio404_module_item`.`priceto`<='.(int)Input::method("GET","priceto").' AND ';
 				}
 
-				// if(Input::method("GET","priceseasonfrom") && is_numeric(Input::method("GET","priceseasonfrom")) && (int)Input::method("GET","priceseasonfrom")>0){
-				// 	$searchKey .= '`studio404_module_item`.`priceseason`>='.(int)Input::method("GET","priceseasonfrom").' AND ';
-				// }
+				if(Input::method("GET","priceseasonfrom") && is_numeric(Input::method("GET","priceseasonfrom")) && (int)Input::method("GET","priceseasonfrom")>0){
+					$searchKey .= '`studio404_module_item`.`priceseasonto`>='.(int)Input::method("GET","priceseasonfrom").' AND ';
+				}
 
-				// if(Input::method("GET","priceseasonto") && is_numeric(Input::method("GET","priceseasonto")) && (int)Input::method("GET","priceseasonto")>0){
-				// 	$searchKey .= '`studio404_module_item`.`priceseason`<='.(int)Input::method("GET","priceseasonto").' AND ';
-				// }
+				if(Input::method("GET","priceseasonto") && is_numeric(Input::method("GET","priceseasonto")) && (int)Input::method("GET","priceseasonto")>0){
+					$searchKey .= '`studio404_module_item`.`priceseasonto`>='.(int)Input::method("GET","priceseasonto").' AND ';
+				}
 
 				$searchKey .= '`studio404_module_item`.`id` != "0" ';
 				$offset = (Input::method("GET","pn")) ? Input::method("GET","pn")-1 : 0;
@@ -103,9 +101,6 @@ class catalog extends connection{
 				
 
 				if(!Input::method("GET","pn") || !is_numeric(Input::method("GET","pn"))){ $offset = 0; }
-				
-				echo $searchKey;
-
 
 				$sql = 'SELECT 
 				`studio404_module_item`.*
@@ -113,7 +108,7 @@ class catalog extends connection{
 				FIND_IN_SET('.Input::method("GET","idx").', `studio404_module_item`.`cataloglist`) AND 
 				`studio404_module_item`.`lang`=:lang AND 
 				`studio404_module_item`.`visibility`!=:visibility AND 
-				`studio404_module_item`.`status`!=:status '.$searchKey.' ORDER BY `studio404_module_item`.`id` DESC LIMIT '.$offset.', '.$sw;	
+				`studio404_module_item`.`status`!=:status '.$searchKey.' ORDER BY `studio404_module_item`.`title` ASC LIMIT '.$offset.', '.$sw;	
 				
 
 				// echo $sql;
