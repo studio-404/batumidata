@@ -469,7 +469,8 @@ $(document).on("click","#add-catalogue-item",function(){
 
 	$(".catalog-add-form-data .form-input").each(function(){
 		$(".overlay-loader").fadeIn("slow");
-		var type = $(this).attr("data-type"); 
+		var type = $(this).attr("data-type");
+
 		if(type=="text"){
 			valueArray.push($(this).val());
 			typeArray.push($(this).attr("data-type"));
@@ -508,6 +509,15 @@ $(document).on("click","#add-catalogue-item",function(){
 			dbcolumn = $(this).attr("data-attach").split(" ");
 			columnArray.push(dbcolumn[0]);
 			checkedArray.push("no");
+		}else if(type=="dateandtimerange"){
+			var dtrangeValue = String($("#"+$(this).attr("data-hiddenname")).val());
+			valueArray.push(dtrangeValue);
+			nameArray.push($(this).attr("data-name"));
+			typeArray.push($(this).attr("data-type"));
+			importantArray.push($(this).attr("data-important"));
+			dbcolumn = $(this).attr("data-attach").split(" ");
+			columnArray.push(dbcolumn[0]);
+			checkedArray.push("no");
 		}else if(type=="textarea"){
 			valueArray.push($(this).val());
 			typeArray.push($(this).attr("data-type"));
@@ -517,6 +527,8 @@ $(document).on("click","#add-catalogue-item",function(){
 			columnArray.push(dbcolumn[0]);
 			checkedArray.push("no");
 		}
+
+		
 	});
 	
 	$.post(AJAX_REQUEST_URL, { 
@@ -605,6 +617,15 @@ $(document).on("click","#add-catalogue-item-close",function(){
 			
 		}else if(type=="date"){
 			valueArray.push($(this).val());
+			nameArray.push($(this).attr("data-name"));
+			typeArray.push($(this).attr("data-type"));
+			importantArray.push($(this).attr("data-important"));
+			dbcolumn = $(this).attr("data-attach").split(" ");
+			columnArray.push(dbcolumn[0]);
+			checkedArray.push("no");
+		}else if(type=="dateandtimerange"){
+			var dtrangeValue = String($("#"+$(this).attr("data-hiddenname")).val());
+			valueArray.push(dtrangeValue);
 			nameArray.push($(this).attr("data-name"));
 			typeArray.push($(this).attr("data-type"));
 			importantArray.push($(this).attr("data-important"));
@@ -717,6 +738,15 @@ $(document).on("click","#edit-catalogue-item",function(){
 			dbcolumn = $(this).attr("data-attach").split(" ");
 			columnArray.push(dbcolumn[0]);
 			checkedArray.push("no");
+		}else if(type=="dateandtimerange"){
+			var dtrangeValue = String($("#"+$(this).attr("data-hiddenname")).val());
+			valueArray.push(dtrangeValue);
+			nameArray.push($(this).attr("data-name"));
+			typeArray.push($(this).attr("data-type"));
+			importantArray.push($(this).attr("data-important"));
+			dbcolumn = $(this).attr("data-attach").split(" ");
+			columnArray.push(dbcolumn[0]);
+			checkedArray.push("no");
 		}else if(type=="textarea"){
 			valueArray.push($(this).val());
 			typeArray.push($(this).attr("data-type"));
@@ -817,6 +847,15 @@ $(document).on("click","#edit-catalogue-item-close",function(){
 			
 		}else if(type=="date"){
 			valueArray.push($(this).val());
+			nameArray.push($(this).attr("data-name"));
+			typeArray.push($(this).attr("data-type"));
+			importantArray.push($(this).attr("data-important"));
+			dbcolumn = $(this).attr("data-attach").split(" ");
+			columnArray.push(dbcolumn[0]);
+			checkedArray.push("no");
+		}else if(type=="dateandtimerange"){
+			var dtrangeValue = String($("#"+$(this).attr("data-hiddenname")).val());
+			valueArray.push(dtrangeValue);
 			nameArray.push($(this).attr("data-name"));
 			typeArray.push($(this).attr("data-type"));
 			importantArray.push($(this).attr("data-important"));

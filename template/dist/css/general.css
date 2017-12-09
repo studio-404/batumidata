@@ -3,7 +3,7 @@
 .overley-loader-icon{ font-size:55px; position:absolute; left:50%; top:45%; z-index:10000 }
 .form-message-output{ font-size: 18px; color:#f39c12 ; font-weight: bold; }
 .checkbox-inside{ margin: 0; padding: 0 20px; }
-.dropdown-menu{ max-height: 250px !important; overflow-y: auto !important; }
+.dropdown-menu{ max-height: 350px !important; overflow-y: auto !important; }
 .eventCalendar{ margin: 0; padding: 0; width: 100%; background-color: white; border: solid 1px #cccccc; overflow: hidden; border-top: solid 3px #3c8dbc; }
 .eventCalendar #title-calendar{ text-align: center; color: #333; font-size: 24px; }
 .eventCalendar #title-calendar a{ color: #3c8dbc; font-size: 16px; }

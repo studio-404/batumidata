@@ -89,6 +89,18 @@
 			              							</div>
 			              						</div>
 			              					<?php
+			              				}else if($data["select_form"]["type"][$x]=="dateandtimerange"){
+			              					?>
+			              					<div class="form-group element-box" id="elementinserted<?=$x?>" data-dlang="<?=$data["select_form"]["lang"][$x]?>" data-elemtype="<?=$data["select_form"]["type"][$x]?>" data-elemlabel="<?=$data["select_form"]["label"][$x]?>" data-elemname="<?=$data["select_form"]["name"][$x]?>" data-database="<?=$data["select_form"]["attach_column"][$x]?>" data-important="<?=$data["select_form"]["important"][$x]?>" data-list="<?=$data["select_form"]["list"][$x]?>" data-filter="<?=$data["select_form"]["filter"][$x]?>">
+			              						<label><?=$data["select_form"]["label"][$x]?></label>
+			              						<a href="javascript:void(0)" data-uniqueclass="elementinserted<?=$x?>" data-dlang="<?=$data["select_form"]["lang"][$x]?>" style="float:right; margin-left:5px;" class="remove-element"><i class="glyphicon glyphicon-remove"></i></a>
+			              						<a href="javascript:void(0)" data-uniqueclass="elementinserted<?=$x?>" style="float:right; margin-left:5px;" onclick="editInputDateTimeRangeElement(this)"><i class="glyphicon glyphicon-edit"></i></a>
+												<div class="input-group">
+													<div class="input-group-addon"><i class="fa fa-clock-o"></i></div>
+													<input type="text" class="form-control pull-right reservationtime" value="MM/DD/YYYY h:mm A - MM/DD/YYYY h:mm A" disabled="disabled" />
+												</div>
+			              					</div>
+			              					<?php
 			              				}else if($data["select_form"]["type"][$x]=="textarea"){
 			              					?>
 			              						<div class="form-group element-box" id="elementinserted<?=$x?>" data-dlang="<?=$data["select_form"]["lang"][$x]?>" data-elemtype="<?=$data["select_form"]["type"][$x]?>" data-elemlabel="<?=$data["select_form"]["label"][$x]?>" data-elemname="<?=$data["select_form"]["name"][$x]?>" data-database="<?=$data["select_form"]["attach_column"][$x]?>" data-important="<?=$data["select_form"]["important"][$x]?>" data-list="<?=$data["select_form"]["list"][$x]?>" data-filter="<?=$data["select_form"]["filter"][$x]?>">

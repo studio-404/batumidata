@@ -103,6 +103,7 @@
 						<?php
 						$select_form = new select_form();
 						$file_count = 0;
+						$datetime_count = 0;
 						foreach($data["form"] as $form){
 							$attach_column = explode(" ",$form["attach_column"]);
 							$value_input = $data["fetch"][$attach_column[0]];
@@ -252,6 +253,19 @@
 	                        		<input type="text" class="form-control form-input" data-inputmask="'alias': 'dd/mm/yyyy'" data-mask="" data-name="<?=$form["name"]?>" data-attach="<?=$form["attach_column"]?>" data-important="<?=$form["important"]?>" data-type="date" value="<?=date("d/m/Y",$value_input)?>" />
 	                        	</div>
                         		<?php
+                        	}else if($form["type"]=="dateandtimerange"){
+                        		?>
+                        		<div class="form-group">
+	                            	<label><?=$form["label"]?>: <?=($form["important"]=="yes") ? '<font color="red">*</font>' : ''?></label> <!-- Fisrname & lastname -->
+	                        		
+	                        		<div class="input-group">
+										<div class="input-group-addon"><i class="fa fa-clock-o"></i></div>
+										<input type="hidden" name="hidden<?=$datetime_count?>" id="hidden<?=$datetime_count?>" value="<?=$value_input?>" />
+										<input type="text" class="form-control form-input pull-right reservationtime" data-hiddenname="hidden<?=$datetime_count?>" data-name="<?=$form["name"]?>" data-attach="<?=$form["attach_column"]?>" data-important="<?=$form["important"]?>" data-type="dateandtimerange" value="<?=$value_input?>" />
+									</div>
+	                        	</div>
+                        		<?php
+                        		$datetime_count++;
                         	}else if($form["type"]=="textarea"){
                         		?>
                         		<div class="form-group">

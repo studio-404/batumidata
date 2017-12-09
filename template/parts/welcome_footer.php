@@ -62,7 +62,20 @@
         //Date range picker
         $('#reservation').daterangepicker();
         //Date range picker with time picker
-        $('#reservationtime').daterangepicker({timePicker: true, timePickerIncrement: 30, format: 'MM/DD/YYYY h:mm A'});
+        $('.reservationtime').daterangepicker(
+            {
+               showDropdowns: true,
+               showWeekNumbers: true,
+               timePicker: true,
+               format: 'MM/DD/YYYY h:mm A'
+                },
+            function(start, end){
+                var uniqueId = $(this)[0].element.context.attributes[2].nodeValue;
+                $("#"+uniqueId).val(start.format('MM/DD/YYYY h:mm A') + ' - ' + end.format('MM/DD/YYYY h:mm A'));
+                startDate = start;
+                endDate = end; 
+            }
+        );
         //Date range as a button
         $('#daterange-btn').daterangepicker(
             {

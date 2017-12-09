@@ -351,7 +351,7 @@ class ajax extends connection{
 			$columns_and_data = '';
 			$xx = 0;
 			foreach($db_columns as $val){
-				if($types[$xx]=="text" || $types[$xx]=="select" || $types[$xx]=="textarea"){
+				if($types[$xx]=="text" || $types[$xx]=="select" || $types[$xx]=="textarea" || $types[$xx]=="dateandtimerange"){
 					$columns_and_data .= '`'.$val.'`="'.str_replace('"',"&quot;",$values[$xx]).'", ';
 				}else if($types[$xx]=="checkbox"){
 					if($checkbox_values[$xx]=="yes"){
@@ -366,7 +366,7 @@ class ajax extends connection{
 				$xx++;
 			}
 			
-			if(is_array($checkboxdata_value)){
+			if(isset($checkboxdata_value) && is_array($checkboxdata_value)){
 				foreach($checkboxdata_value as $key => $value){
 					$columns_and_data .= '`'.$key.'`="'.implode(",",$checkboxdata_value[$key]).'", ';
 				}
@@ -464,7 +464,7 @@ class ajax extends connection{
 			$columns_and_data = '';
 			$xx = 0;
 			foreach($db_columns as $val){
-				if($types[$xx]=="text" || $types[$xx]=="select" || $types[$xx]=="textarea"){
+				if($types[$xx]=="text" || $types[$xx]=="select" || $types[$xx]=="textarea" || $types[$xx]=="dateandtimerange"){
 					$columns_and_data .= '`'.$val.'`="'.str_replace('"',"&quot;",$values[$xx]).'", ';
 				}else if($types[$xx]=="checkbox"){
 					if($checkbox_values[$xx]=="yes"){
@@ -479,7 +479,7 @@ class ajax extends connection{
 				$xx++;
 			}
 			
-			if(is_array($checkboxdata_value)){
+			if(isset($checkboxdata_value) && is_array($checkboxdata_value)){
 				foreach($checkboxdata_value as $key => $value){
 					$columns_and_data .= '`'.$key.'`="'.implode(",",$checkboxdata_value[$key]).'", ';
 				}
@@ -637,7 +637,7 @@ class ajax extends connection{
 					}
 
 					for($x = 0; $x<count($type);$x++){
-						if($type[$x]=="text" || $type[$x]=="date" || $type[$x]=="textarea"){
+						if($type[$x]=="text" || $type[$x]=="date" || $type[$x]=="dateandtimerange" || $type[$x]=="textarea"){
 							$vdb = ($value[$x]) ? $value[$x] : "";
 							$insert = 'INSERT INTO `studio404_forms` SET `cid`=:cid, `label`=:label, `type`=:type, `name`=:name, `placeholder`=:placeholder, `attach_column`=:attach_column, `important`=:important, `list`=:list, `filter`=:filter, `lang`=:lang';
 							$prepare_insert = $conn->prepare($insert); 

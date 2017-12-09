@@ -109,12 +109,12 @@ function editInputDateElement(e){
 /* Date & Time Range START */
 $(document).on("click",".inputdatetimerangeelement",function(){
 	var dlang = $(this).data("dlang"); 
-	createInputDateTimeRangeElement(dlang);
+	var countMe = $(this).attr("data-countme");
+	createInputDateTimeRangeElement(countMe, dlang);
 });
 
-function createInputDateTimeRangeElement(dlang){
-	var countMe = $(this).attr("data-countme");
-	if(!countMe || countMe=="undefined"){
+function createInputDateTimeRangeElement(countMe, dlang){
+	if(!countMe || typeof countMe == "undefined"){
 		 $(this).attr("data-countme",1);
 	}else{
 		countMe = countMe + 1;
@@ -134,19 +134,6 @@ function createInputDateTimeRangeElement(dlang){
 
 	elem += '</div>';
 	$(".interface").append(elem);
-	// $('.reservationtime').daterangepicker(
-	// 	{
-	//        showDropdowns: true,
-	//        showWeekNumbers: true,
-	//        timePicker: true,
-	//        format: 'MM/DD/YYYY h:mm A'
- //      	},
-	// 	function(start, end){
-	// 		$("#"+uniqueClass).attr("data-elemvalue", start.format('MM/DD/YYYY h:mm A') + ' - ' + end.format('MM/DD/YYYY h:mm A'));
-	// 		startDate = start;
-	// 		endDate = end; 
-	// 	}
-	// );
 }
 
 function editInputDateTimeRangeElement(e){
@@ -160,7 +147,7 @@ function editInputDateTimeRangeElement(e){
 	var getElemType = $("#"+uniqueClass).attr("data-elemtype").replace(/"/g, '').replace(/'/g, '').replace(/#/g, '');
 	var getElemLabel = $("#"+uniqueClass).attr("data-elemlabel").replace(/"/g, '').replace(/'/g, '').replace(/#/g, '');
 	var getElemName = $("#"+uniqueClass).attr("data-elemname").replace(/"/g, '').replace(/'/g, '').replace(/#/g, '');
-	var getElemValue = $("#"+uniqueClass).attr("data-elemvalue").replace(/"/g, '').replace(/'/g, '').replace(/#/g, '');
+	// var getElemValue = $("#"+uniqueClass).attr("data-elemvalue").replace(/"/g, '').replace(/'/g, '').replace(/#/g, '');
 	var getElemDatabase = $("#"+uniqueClass).attr("data-database").replace(/"/g, '').replace(/'/g, '').replace(/#/g, '');
 	var getElemImportant = $("#"+uniqueClass).attr("data-important").replace(/"/g, '').replace(/'/g, '').replace(/#/g, '');
 	var getElemList = $("#"+uniqueClass).attr("data-list").replace(/"/g, '').replace(/'/g, '').replace(/#/g, '');

@@ -101,9 +101,6 @@
 		var newWidth = $("#home_slider .carousel-inner .item img").width() / 2 ;
 		$("#home_slider .carousel-inner .item img").css( "margin-left", - newWidth, "width", "120%" );
 	}
-
-
-
 </script>
 
 </body>
