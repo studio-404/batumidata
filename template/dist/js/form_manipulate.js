@@ -102,6 +102,135 @@ function editInputDateElement(e){
 
 /* Date End */
 
+
+
+
+
+/* Date & Time Range START */
+$(document).on("click",".inputdatetimerangeelement",function(){
+	var dlang = $(this).data("dlang"); 
+	createInputDateTimeRangeElement(dlang);
+});
+
+function createInputDateTimeRangeElement(dlang){
+	var countMe = $(this).attr("data-countme");
+	if(!countMe || countMe=="undefined"){
+		 $(this).attr("data-countme",1);
+	}else{
+		countMe = countMe + 1;
+		$(this).attr("data-countme",countMe);
+	}
+	var uniqueClass = "elementuniquedatetimerange"+countMe;
+
+	var elem = '<div class="form-group has-warning element-box" id="'+uniqueClass+'" data-dlang="'+dlang+'" data-elemvalue="" data-elemtype="dateandtimerange" data-elemlabel="Label Text" data-elemname="elemname" data-database="id" data-important="no" data-list="no" data-filter="no">';
+	elem += '<label>Label Text</label>';
+	elem += '<a href="javascript:void(0)" data-uniqueclass="'+uniqueClass+'" data-dlang="'+dlang+'" style="float:right; color:#f39c12; margin-left:5px;" class="remove-element"><i class="glyphicon glyphicon-remove"></i></a>';
+	elem += '<a href="javascript:void(0)" data-uniqueclass="'+uniqueClass+'" style="float:right; margin-left:5px; color:#f39c12" onclick="editInputDateTimeRangeElement(this)"><i class="glyphicon glyphicon-edit"></i></a>';
+	
+	elem += '<div class="input-group">';
+	elem += '<div class="input-group-addon"><i class="fa fa-clock-o"></i></div>';
+	elem += '<input type="text" class="form-control pull-right reservationtime" value="MM/DD/YYYY h:mm A - MM/DD/YYYY h:mm A" disabled="disabled" />';
+	elem += '</div>';
+
+	elem += '</div>';
+	$(".interface").append(elem);
+	// $('.reservationtime').daterangepicker(
+	// 	{
+	//        showDropdowns: true,
+	//        showWeekNumbers: true,
+	//        timePicker: true,
+	//        format: 'MM/DD/YYYY h:mm A'
+ //      	},
+	// 	function(start, end){
+	// 		$("#"+uniqueClass).attr("data-elemvalue", start.format('MM/DD/YYYY h:mm A') + ' - ' + end.format('MM/DD/YYYY h:mm A'));
+	// 		startDate = start;
+	// 		endDate = end; 
+	// 	}
+	// );
+}
+
+function editInputDateTimeRangeElement(e){
+	var uniqueClass = e.getAttribute("data-uniqueclass");
+	/* color chnage active edit inputs START */
+	$(".element-box").removeClass("has-error").addClass("has-warning");
+	$(".element-box a").css("color","#f39c12"); 
+	$("#"+uniqueClass).removeClass("has-warning").addClass("has-error");
+	$("#"+uniqueClass+" a").css("color","#dd4b39"); 
+	/* color chnage active edit inputs END */
+	var getElemType = $("#"+uniqueClass).attr("data-elemtype").replace(/"/g, '').replace(/'/g, '').replace(/#/g, '');
+	var getElemLabel = $("#"+uniqueClass).attr("data-elemlabel").replace(/"/g, '').replace(/'/g, '').replace(/#/g, '');
+	var getElemName = $("#"+uniqueClass).attr("data-elemname").replace(/"/g, '').replace(/'/g, '').replace(/#/g, '');
+	var getElemValue = $("#"+uniqueClass).attr("data-elemvalue").replace(/"/g, '').replace(/'/g, '').replace(/#/g, '');
+	var getElemDatabase = $("#"+uniqueClass).attr("data-database").replace(/"/g, '').replace(/'/g, '').replace(/#/g, '');
+	var getElemImportant = $("#"+uniqueClass).attr("data-important").replace(/"/g, '').replace(/'/g, '').replace(/#/g, '');
+	var getElemList = $("#"+uniqueClass).attr("data-list").replace(/"/g, '').replace(/'/g, '').replace(/#/g, '');
+	var getElemFilter= $("#"+uniqueClass).attr("data-filter").replace(/"/g, '').replace(/'/g, '').replace(/#/g, '');
+	/* Type	*/
+	var _input = '<div class="form-group"><label>Element Type:</label><select class="form-control" disabled="disabled"><option value="dateandtimerange">Date and time range</option></select></div>';
+	/* label	*/
+	_input += '<div class="form-group"><label>Element Label:</label><input type="text" class="form-control" value="'+getElemLabel+'" onkeyup="bindLabel(this, \''+uniqueClass+'\')" /></div>';
+	/* Name */
+	_input += '<div class="form-group"><label>Element Name:</label><input type="text" class="form-control" value="'+getElemName+'" onkeyup="bindName(this, \''+uniqueClass+'\')" /></div>';
+	/* Placeholder */
+	_input += '<div class="form-group"><label>Element Placeholder:</label><input type="text" class="form-control" value="MM/DD/YYYY h:mm A - MM/DD/YYYY h:mm A" onkeyup="bindPlaceholder(this, \''+uniqueClass+'\')" disabled="disabled" /></div>';
+	/* Database attach */
+	_input += '<div class="form-group"><label>Element Database</label>';
+	_input += '<select class="form-control" onchange="bindDatabase(this, \''+uniqueClass+'\')">';
+	var db = $(".database-column-list li");
+	for(var x = 0; x<=(db.length-1); x++){
+		var valdb = db.eq(x).text().replace(/"/g, '').replace(/'/g, '').replace(/#/g, '');
+		if(getElemDatabase==valdb){
+			_input += '<option value="'+valdb+'" selected="selected">'+valdb+'</option>';
+		}else{
+			_input += '<option value="'+valdb+'">'+valdb+'</option>';
+		}
+	}
+	_input += '</select>';
+	_input += '</div>';
+	/* Importent */
+	if(getElemImportant=="yes"){ var y = 'selected="selected"'; var n = ''; }
+	else{ var n = 'selected="selected"'; var y = ''; }
+	_input += '<div class="form-group"><label>Important:</label>';
+	_input += '<select class="form-control" onchange="bindImportant(this, \''+uniqueClass+'\')">';
+	_input += '<option value="yes" '+y+'>Yes</option>';
+	_input += '<option value="no" '+n+'>No</option>';
+	_input += '</select>';
+	_input += '</div>';
+
+	/* list */
+	if(getElemList=="yes"){ var ly = 'selected="selected"'; var ln = ''; }
+	else{ var ln = 'selected="selected"'; var ly = ''; }
+
+	_input += '<div class="form-group"><label>List:</label>';
+	_input += '<select class="form-control" onchange="bindList(this, \''+uniqueClass+'\')">';
+	_input += '<option value="yes" '+ly+'>Yes</option>';
+	_input += '<option value="no" '+ln+'>No</option>';
+	_input += '</select>';
+	_input += '</div>';
+
+	/* Filter */
+	if(getElemFilter=="yes"){ var fy = 'selected="selected"'; var fn = ''; }
+	else{ var fn = 'selected="selected"'; var fy = ''; }
+	_input += '<div class="form-group"><label>Filter:</label>';
+	_input += '<select class="form-control" onchange="bindFilter(this, \''+uniqueClass+'\')">';
+	_input += '<option value="yes" '+fy+'>Yes</option>';
+	_input += '<option value="no" '+fn+'>No</option>';
+	_input += '</select>';
+	_input += '</div>';
+
+	$(".options-box").html(_input); 
+}
+/* Date & Time Range END */
+
+
+
+
+
+
+
+
+
+
  /* File STAR */
  $(document).on("click",".inputfileelement",function(){
 	var dlang = $(this).data("dlang"); 

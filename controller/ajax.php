@@ -1601,12 +1601,12 @@ class ajax extends connection{
 				$sendemailfromserver = new sendemailfromserver(); 
 				$mail = $sendemailfromserver->index(array(
 					"email_host"=>"404.ge", 
-					"email_username"=>"info@404.ge", 
-					"email_password"=>"&lhH=KG9SVhs", 
+					"email_username"=>"batumi@404.ge", 
+					"email_password"=>"Bs9c{rMSEG9r", 
 					"email_name"=>"Batumi Database", 
 					"sendTo"=>Input::method("POST","send_email"), 
 					"attachment"=>$exelPath, 
-					"subject"=>"Database CSV file", 
+					"subject"=>"Database xls file", 
 					"body"=>Input::method("POST","send_text")
 				));
 				if($mail){

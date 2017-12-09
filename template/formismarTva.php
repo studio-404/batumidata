@@ -35,6 +35,9 @@
 			            <!-- form start -->
 			            <form role="form">
 			              <div class="box-body">
+
+			              	
+
 			              	<div class="form-group">
 		              			<label><?=$data["language_data"]["val76"]?></label>
 		              			<select class="form-control" id="update_language">
@@ -173,6 +176,7 @@
 			            <div class="box-body no-padding">
 			              <ul class="nav nav-pills nav-stacked">
 			                <li><a href="javascript:void(0)" class="inputdateelement" data-dlang="<?=LANG_ID?>" data-countme="1"><i class="fa fa-circle-o text-light-blue"></i> Date</a></li>
+			                <li><a href="javascript:void(0)" class="inputdatetimerangeelement" data-dlang="<?=LANG_ID?>" data-countme="1"><i class="fa fa-circle-o text-light-blue"></i> Date & Time Range</a></li>
 			                <li><a href="javascript:void(0)" class="inputtextelement" data-dlang="<?=LANG_ID?>" data-countme="1"><i class="fa fa-circle-o text-light-blue"></i> Text</a></li>
 			                <li><a href="javascript:void(0)" class="inputtextareaelement" data-dlang="<?=LANG_ID?>" data-countme="1"><i class="fa fa-circle-o text-light-blue"></i> TextArea</a></li>
 			                <li><a href="javascript:void(0)" class="selectelement" data-dlang="<?=LANG_ID?>" data-countme="1"><i class="fa fa-circle-o text-light-blue"></i> Select</a></li>
