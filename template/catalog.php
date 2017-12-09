@@ -133,7 +133,6 @@
                         </div>
                       <?php
                     }else if($form["type"]=="checkbox"){
-
                       ?>
                       <div class="form-group col-md-4">
                       <label><?=$form["label"]?>: </label> <!-- Fisrname & lastname -->
@@ -165,13 +164,30 @@
                       }
                       ?>
                       <div class="form-group col-md-4">
-                          <label><?=$form["label"]?>: </label> <!-- Fisrname & lastname -->
+                        <label><?=$form["label"]?>: </label> <!-- Fisrname & lastname -->
                         <input type="text" class="form-control form-input-seach" data-inputmask="'alias': 'dd/mm/yyyy'" data-mask="" data-name="<?=$form["name"]?>" data-attach="<?=$form["attach_column"]?>" data-important="<?=$form["important"]?>" data-type="date" value="<?=$va?>" />
                       </div>
                       <?php
                     }
                   }
                   ?>
+                  <div class="form-group col-md-6">
+                    <label>ფასი არასეზონური ( დან ): </label> 
+                    <input type="text" class="form-control" name="pricefrom" id="pricefrom" value="<?=(Input::method("GET","pricefrom")) ? Input::method("GET","pricefrom") : ''?>" />
+                  </div>
+                  <div class="form-group col-md-6">
+                    <label>ფასი არასეზონური ( მდე ): </label> 
+                    <input type="text" class="form-control" name="priceto" id="priceto" value="<?=(Input::method("GET","priceto")) ? Input::method("GET","priceto") : ''?>" />
+                  </div>
+
+                  <div class="form-group col-md-6">
+                    <label>ფასი სეზონური ( დან ): </label> 
+                    <input type="text" class="form-control" name="priceseasonfrom" id="priceseasonfrom" value="<?=(Input::method("GET","priceseasonfrom")) ? Input::method("GET","priceseasonfrom") : ''?>" />
+                  </div>
+                  <div class="form-group col-md-6">
+                    <label>ფასი სეზონური ( მდე ): </label> 
+                    <input type="text" class="form-control" name="priceseasonto" id="priceseasonto" value="<?=(Input::method("GET","priceseasonto")) ? Input::method("GET","priceseasonto") : ''?>" />
+                  </div>
               </div>
               <!-- /.box-body -->
 

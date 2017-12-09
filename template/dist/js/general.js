@@ -190,6 +190,13 @@ $(document).on("click",".filter-data",function(){
 	var val = new Array();
 	var attach = new Array();
 	var att = '';
+	var pricefrom = $("#pricefrom").val();
+	var priceto = $("#priceto").val();
+
+	var priceseasonfrom = $("#priceseasonfrom").val();
+	var priceseasonto = $("#priceseasonto").val();
+
+
 	$(".form-input-seach").each(function(){
 		if($(this).attr("data-type")=="text" || $(this).attr("data-type")=="select"){
 			att = $(this).attr("data-attach").split(" ");
@@ -211,7 +218,7 @@ $(document).on("click",".filter-data",function(){
 			}
 		}
 	});
-	var url = "?idx="+param["idx"]+"&filter=true";
+	var url = "?idx="+param["idx"]+"&pricefrom="+pricefrom+"&priceto="+priceto+"&priceseasonfrom="+priceseasonfrom+"&priceseasonto="+priceseasonto+"&filter=true";
 	for (var i = 0; i < type.length; i++) {
 		if(type[i]=="text" || type[i]=="date" || type[i]=="select"){
 			url += "&"+attach[i]+"=" + encodeURIComponent(val[i]);
